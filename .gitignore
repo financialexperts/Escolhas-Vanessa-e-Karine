@@ -1,0 +1,16 @@
+# lixo do sistema e do OneDrive
+desktop.ini
+Thumbs.db
+.DS_Store
+*.tmp
+
+# páginas de teste geradas na hora de conferir alguma tela no navegador
+_*.html
+_*.js
+
+# configurações de editor
+.vscode/
+.idea/
+
+# cópia de segurança do sistema antigo (o de escolher caminhos)
+_backup-*.zip

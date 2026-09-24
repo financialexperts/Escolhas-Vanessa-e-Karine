@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Escolhas - Vanessa e Karine</title>
+<meta name="description" content="Com os dados de cada decisão da Vanessa e da Karine, faça os cálculos da planilha, confira as respostas e descubra a diferença entre as duas em 40 anos.">
+<meta name="color-scheme" contenx'xt="light dark">
+<meta name="theme-color" content="#F7F7FA" id="meta-theme-color">
+<link rel="icon" type="image/png" href="frontend/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="frontend/css/styles.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar__in">
+    <a class="brand" href="index.html" aria-label="Recarregar a página">
+      <img class="brand__logo brand__logo--light" src="frontend/img/finexperts-preto.png" alt="Financial Experts">
+      <img class="brand__logo brand__logo--dark" src="frontend/img/financial-experts-branco.png" alt="Financial Experts">
+      <span class="brand__sep" aria-hidden="true"></span>
+      <span class="brand__name">Escolhas - Vanessa e Karine</span>
+    </a>
+
+    <button class="iconbtn glass" id="tema" type="button" aria-label="Alternar tema claro e escuro" title="Alternar tema claro e escuro">
+      <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ============ A VANESSA, A KARINE E O PONTO DE PARTIDA ============ -->
+  <!-- os valores vêm de backend/js/scenario.js e as falas do balão do app.js;
+       os ícones com data-icon são desenhados pelo icons.js -->
+  <section class="card intro" aria-labelledby="intro-title">
+    <div class="intro__text">
+      <p class="card__kicker intro__tag"><span data-icon="balanca"></span>Escolhas Vanessa e Karine</p>
+      <h1 id="intro-title">Quem estará melhor daqui a 40 anos?</h1>
+      <p class="intro__lead">A Vanessa e a Karine tomaram decisões diferentes com o próprio dinheiro. Com os dados de cada decisão, faça os cálculos, confira as suas respostas e descubra quanto cada escolha custou ou rendeu.</p>
+
+      <p class="card__kicker intro__kicker" id="sc-title">O ponto de partida</p>
+      <div class="scenario__grid" role="group" aria-labelledby="sc-title">
+        <div class="fact fx">
+          <span class="itile itile--violet" data-icon="relogio"></span>
+          <div class="fact__body">
+            <p class="fact__label">Período em análise</p>
+            <p class="fact__value" id="sc-years">—</p>
+          </div>
+        </div>
+        <div class="fact fx">
+          <span class="itile itile--green" data-icon="camadas"></span>
+          <div class="fact__body">
+            <p class="fact__label">Cálculos</p>
+            <p class="fact__value" id="sc-count">—</p>
+          </div>
+        </div>
+        <div class="fact fx">
+          <span class="itile itile--pink" data-icon="alvo"></span>
+          <div class="fact__body">
+            <p class="fact__label">Objetivo</p>
+            <p class="fact__value" id="sc-goal">—</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="intro__duo">
+      <div class="bubble" id="duo-bubble">
+        <p class="bubble__who" id="duo-who"></p>
+        <p class="bubble__text" id="duo-fala" aria-live="polite"></p>
+        <p class="bubble__hint" aria-hidden="true">Toque em nós</p>
+      </div>
+      <div class="duo">
+        <button class="persona persona--vanessa" id="p-vanessa" type="button" title="Toque na Vanessa">
+          <img src="frontend/img/vanessa.png" alt="" width="460" height="590">
+        </button>
+        <button class="persona persona--karine" id="p-karine" type="button" title="Toque na Karine">
+          <img src="frontend/img/karine.png" alt="" width="460" height="567">
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AS DECISÕES ============ -->
+  <!-- os medidores grudam no alto só dentro desta seção: quando o resultado
+       aparece embaixo, eles saem junto com as decisões -->
+  <section class="sim" aria-labelledby="dc-title">
+    <div class="sim__head head fx">
+      <span class="itile itile--green itile--lg" data-icon="calculadora"></span>
+      <div>
+        <h2 class="invcard__title" id="dc-title">Os cálculos das duas</h2>
+        <p class="invcard__sub">Em cada decisão, use os dados da história para fazer os cálculos, como na planilha. Depois, confira as suas respostas.</p>
+      </div>
+    </div>
+
+    <!-- como a planilha funciona: as cores das linhas e o que dá pra digitar.
+         A dica muda no celular: o teclado de números dele não tem Enter nem
+         os sinais das contas -->
+    <div class="card howto">
+      <ul class="howto__keys">
+        <li class="howto__key howto__key--data"><span><strong>Laranja:</strong> os dados da história, já preenchidos</span></li>
+        <li class="howto__key howto__key--calc"><span><strong>Em branco:</strong> os cálculos que você faz</span></li>
+        <li class="howto__key howto__key--diff"><span><strong>Verde:</strong> a diferença entre as duas</span></li>
+      </ul>
+      <p class="howto__tip howto__tip--mouse">Digite só o resultado, como <code>1800</code>, ou a conta, como na planilha: <code>=4500*40%</code>. O Enter leva à próxima célula e, na última, confere.</p>
+      <p class="howto__tip howto__tip--touch">Digite só o resultado de cada cálculo, como <code>1800</code> ou <code>1.800,00</code>, e toque em <strong>Conferir os cálculos</strong>.</p>
+    </div>
+
+    <!-- a linha do tempo vem de backend/js/decisions.js (timeline.js monta) -->
+    <div class="card tl">
+      <div class="head fx">
+        <span class="itile itile--violet" data-icon="linha"></span>
+        <div>
+          <p class="card__kicker">Linha do tempo</p>
+          <p class="tl__head">Cada decisão pesa do ano em que acontece até o fim do período.</p>
+        </div>
+      </div>
+      <div id="timeline"></div>
+    </div>
+
+    <!-- a barra dos cálculos tem duas partes: os que o aluno acertou e, mais
+         clara, as respostas que foram mostradas (sheet.js) -->
+    <div class="meters" id="meters">
+      <div class="meter meter--ok fx" id="meter-ok">
+        <div class="meter__top">
+          <p class="meter__label"><span class="meter__ico" data-icon="conferir"></span><span class="meter__more">Cálculos&nbsp;</span>certos</p>
+          <p class="meter__nums"><span class="meter__used" id="meter-ok-used">0</span> / <span id="meter-ok-max"></span></p>
+        </div>
+        <span class="meter__track" aria-hidden="true"><span class="meter__fill" id="meter-ok-fill"></span><span class="meter__fill meter__fill--shown" id="meter-ok-shown"></span></span>
+      </div>
+      <div class="meter meter--dec fx" id="meter-dec">
+        <div class="meter__top">
+          <p class="meter__label"><span class="meter__ico" data-icon="camadas"></span>Decisões<span class="meter__more">&nbsp;concluídas</span></p>
+          <p class="meter__nums"><span class="meter__used" id="meter-dec-used">0</span> / <span id="meter-dec-max"></span></p>
+        </div>
+        <span class="meter__track" aria-hidden="true"><span class="meter__fill" id="meter-dec-fill"></span></span>
+      </div>
+    </div>
+
+    <!-- os 4 cartões e o da diferença total vêm de backend/js/decisions.js
+         (sheet.js monta) -->
+    <div class="declist" id="decisions"></div>
+
+    <div class="actions actions--end">
+      <button class="btn btn--ghost glass fx" type="button" id="btn-reset"><span data-icon="recomecar"></span>Recomeçar o exercício</button>
+    </div>
+  </section>
+
+  <!-- ============ A DIFERENÇA FINAL ============ -->
+  <section class="card invcard panel" id="sec-final" tabindex="-1" aria-labelledby="fn-title" hidden>
+    <div class="head fx">
+      <span class="itile itile--green itile--lg" data-icon="barras"></span>
+      <div>
+        <p class="card__kicker" id="fn-kicker"></p>
+        <h2 class="invcard__title" id="fn-title">A diferença final</h2>
+        <p class="invcard__sub">O que cada uma ganhou ou perdeu, e de onde veio a diferença.</p>
+      </div>
+    </div>
+
+    <!-- o número grande conta até a diferença final (result.js); o leitor de
+         tela ouve só o valor pronto, que fica no .sr-only -->
+    <div class="fhero fx">
+      <span class="itile itile--lg fhero__ico" data-icon="balanca"></span>
+      <div>
+        <p class="fhero__label" id="fn-total-label"></p>
+        <p class="fhero__value"><span id="fn-total-anim" aria-hidden="true"></span><span class="sr-only" id="fn-total"></span></p>
+        <p class="fhero__sub" id="fn-total-sub"></p>
+      </div>
+    </div>
+
+    <div class="stats stats--3" id="fn-stats"></div>
+    <ul class="ledger" id="fn-list"></ul>
+    <div class="insight fx" id="fn-insight"></div>
+
+    <div class="reflect">
+      <p class="reflect__title"><span class="itile itile--amber itile--xs" data-icon="duvida"></span>Para refletir com a turma</p>
+      <ul class="reflect__grid">
+        <li class="reflect__q">Vocês imaginavam que algumas decisões poderiam ter um impacto tão grande no resultado final?</li>
+        <li class="reflect__q">Quais escolhas tiveram o maior impacto no valor final?</li>
+        <li class="reflect__q">Quais decisões beneficiaram a Karine e prejudicaram a Vanessa? E por que isso aconteceu?</li>
+        <li class="reflect__q">Quais decisões você tomaria da mesma forma que a Vanessa, antes de saber o impacto delas? E quais adotaria como a Karine?</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Os valores desta simulação são hipotéticos.</p>
+    <p>Copyright © 2026 Financial Experts.</p>
+  </div>
+</footer>
+
+<!-- aviso de quando uma ação ainda não pode: o toast.js mostra e esconde -->
+<div class="toast" id="toast" role="alert" hidden>
+  <p class="toast__text" id="toast-text"></p>
+  <button class="toast__close" id="toast-close" type="button" aria-label="Fechar aviso">
+    <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg>
+  </button>
+</div>
+
+<!-- os dados vêm antes: os módulos do frontend leem deles assim que carregam -->
+<script src="backend/js/scenario.js"></script>
+<script src="backend/js/decisions.js"></script>
+<script src="frontend/js/format.js"></script>
+<script src="frontend/js/icons.js"></script>
+<script src="frontend/js/parse.js"></script>
+<script src="frontend/js/exercise.js"></script>
+<script src="frontend/js/toast.js"></script>
+<script src="frontend/js/sheet.js"></script>
+<script src="frontend/js/timeline.js"></script>
+<script src="frontend/js/result.js"></script>
+<script src="frontend/js/app.js"></script>
+</body>
+</html>

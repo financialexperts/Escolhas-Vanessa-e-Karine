@@ -1,0 +1,737 @@
+/* ---------- Design tokens ---------- */
+:root{
+  --bg:#E9E9EE;
+  --bg-grid:rgba(39,34,89,.05);
+  --surface:#FFFFFF;
+  --surface-2:#F9F8FA;
+  --ink:#272259;
+  --ink-soft:#57537E;
+  --muted:#827F9F;
+  --line:#DCDCE4;
+  --line-strong:#BEBDCD;
+  --accent:#2FE39A;
+  --accent-hover:#28C183;
+  --accent-ink:#21867A;
+  --accent-soft:#DFF7EC;
+  --accent-contrast:#151238;
+  --warm:#D97B2B;
+  --warm-soft:#F7E3CE;
+  --danger:#B3322A;
+  --focus:#21867A;
+  /* as cores dos quadrinhos de ícone */
+  --violet:#6C5CE7;
+  --violet-soft:#EDEAFF;
+  --blue:#2B74E0;
+  --blue-soft:#E2EEFE;
+  --pink:#DE3F68;
+  --pink-soft:#FDE5EC;
+  --amber:#B87B00;
+  --amber-soft:#FFF1CC;
+  /* as cores das duas personagens: a bolinha que identifica cada uma e o
+     fundo do retrato (par conferido para daltonismo, nos dois temas) */
+  --vanessa:#DE3F68;
+  --vanessa-soft:#FDE5EC;
+  --karine:#2B74E0;
+  --karine-soft:#E2EEFE;
+  /* o fundo laranja das células de dados da planilha */
+  --data:color-mix(in srgb,var(--warm) 14%,var(--surface));
+  --radius:16px;
+  --topbar-h:60px;
+  --shadow-sm:0 1px 2px rgba(39,34,89,.06);
+  --shadow:0 1px 2px rgba(39,34,89,.05), 0 14px 32px -20px rgba(39,34,89,.45);
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --ff-display:"Bricolage Grotesque","Inter",system-ui,sans-serif;
+  --ff-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --ff-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --icon-check:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M3 8.5l3.2 3.2L13 4.5'/%3E%3C/svg%3E");
+  --icon-warning:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round' d='M8 1.6 15 14H1L8 1.6z'/%3E%3Cpath stroke='%23000' stroke-width='1.6' stroke-linecap='round' d='M8 6.4v3.4'/%3E%3Ccircle cx='8' cy='12.1' r='.9' fill='%23000'/%3E%3C/svg%3E");
+  --icon-x:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' d='M4.5 4.5l7 7M11.5 4.5l-7 7'/%3E%3C/svg%3E");
+  --icon-chevron:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' d='M6 3.5 10.5 8 6 12.5'/%3E%3C/svg%3E");
+  /* o selo verde de decisão concluída (desenho já na cor final) */
+  --badge-check:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23151238' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8.5l3 3L12.5 5'/%3E%3C/svg%3E");
+}
+[data-theme="dark"]{
+  --bg:#0F0C29;
+  --bg-grid:rgba(60,239,162,.05);
+  --surface:#1D1A43;
+  --surface-2:#171435;
+  --ink:#EDEDF7;
+  --ink-soft:#C7C5E0;
+  --muted:#9E9CB4;
+  --line:#2A2860;
+  --line-strong:#3B3878;
+  --accent:#3CEFA2;
+  --accent-hover:#33CB8A;
+  --accent-ink:#5FF5B7;
+  --accent-soft:#162E3B;
+  --accent-contrast:#0B0920;
+  --warm:#E39B57;
+  --warm-soft:#33251A;
+  --danger:#F08379;
+  --focus:#3CEFA2;
+  --violet:#AC9FFF;
+  --violet-soft:#2A2460;
+  --blue:#72AAFF;
+  --blue-soft:#172B52;
+  --pink:#FF7E9E;
+  --pink-soft:#3B1832;
+  --amber:#FFC94D;
+  --amber-soft:#382D14;
+  --vanessa:#E8547C;
+  --vanessa-soft:#3B1832;
+  --karine:#4A90F0;
+  --karine-soft:#172B52;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.35);
+  --shadow:0 1px 2px rgba(0,0,0,.35), 0 16px 34px -22px rgba(0,0,0,.9);
+}
+
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;
+  font-family:var(--ff-body);
+  color:var(--ink);
+  background-color:var(--bg);
+  background-image:linear-gradient(var(--bg-grid) 1px,transparent 1px),linear-gradient(90deg,var(--bg-grid) 1px,transparent 1px);
+  background-size:28px 28px;
+  line-height:1.5;
+  font-size:16px;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+/* títulos com as linhas equilibradas e textos sem palavra sozinha na última
+   linha (onde o navegador ainda não sabe fazer isso, nada muda) */
+h1,h2,h3{font-family:var(--ff-display);font-weight:700;letter-spacing:-.02em;margin:0;text-wrap:balance}
+p{margin:0;text-wrap:pretty}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:6px}
+.sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+/* um valor ("R$ 1.800,00", "20 trocas") nunca quebra no meio */
+.nw{white-space:nowrap}
+
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* ---------- Liquid glass ---------- */
+.glass{
+  position:relative;
+  isolation:isolate;
+  background:color-mix(in srgb,var(--surface) 62%,transparent);
+  backdrop-filter:blur(18px) saturate(160%);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  transition:transform .4s var(--spring),background .2s,border-color .2s,box-shadow .25s,color .2s;
+}
+.glass::before,.glass::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none}
+.glass::before{
+  background:linear-gradient(165deg,rgba(255,255,255,.55),rgba(255,255,255,0) 45%);
+  opacity:.5;
+  mix-blend-mode:overlay;
+}
+[data-theme="dark"] .glass::before{opacity:.16}
+.glass::after{
+  background:radial-gradient(160px 160px at var(--gx,50%) var(--gy,40%),color-mix(in srgb,var(--accent) 65%,white),transparent 70%);
+  opacity:0;
+  transition:opacity .35s;
+}
+/* os efeitos de "mouse em cima" só onde existe mouse: no toque o navegador
+   deixa o :hover grudado depois do toque */
+@media (hover:hover){
+  .glass:hover::after{opacity:.28}
+  .glass:hover{box-shadow:var(--shadow)}
+}
+.glass:active{transform:scale(.97)}
+
+/* ---------- Topbar ---------- */
+.topbar{border-bottom:1px solid var(--line);background:color-mix(in srgb,var(--surface) 70%,transparent);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);position:sticky;top:0;z-index:20;box-shadow:0 1px 0 rgba(255,255,255,.5) inset}
+[data-theme="dark"] .topbar{box-shadow:0 1px 0 rgba(255,255,255,.06) inset}
+.topbar__in{display:flex;align-items:center;gap:14px;min-height:var(--topbar-h)}
+.brand{display:flex;align-items:center;gap:12px;margin-right:auto;min-width:0;text-decoration:none;border-radius:8px;transition:opacity .15s}
+.brand:hover{opacity:.8}
+.brand__logo{height:26px;width:auto;flex:none;display:block}
+[data-theme="light"] .brand__logo--dark{display:none}
+[data-theme="dark"] .brand__logo--light{display:none}
+.brand__sep{width:1px;height:22px;background:var(--line-strong);flex:none}
+.brand__name{font-family:var(--ff-display);font-weight:600;font-size:15px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink-soft)}
+.iconbtn{width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:10px;border:1px solid var(--line);cursor:pointer;box-shadow:var(--shadow-sm)}
+.iconbtn:hover{border-color:var(--line-strong)}
+.iconbtn svg{position:absolute;top:50%;left:50%;width:17px;height:17px;stroke:var(--ink-soft);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;transform:translate(-50%,-50%);transition:opacity .35s,transform .5s var(--spring)}
+[data-theme="dark"] .icon-moon{opacity:0;transform:translate(-50%,-50%) rotate(-100deg) scale(.4)}
+[data-theme="light"] .icon-sun{opacity:0;transform:translate(-50%,-50%) rotate(100deg) scale(.4)}
+
+/* ---------- Cartões ---------- */
+@keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.panel:not([hidden]){animation:panelIn .45s cubic-bezier(.16,1,.3,1)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card__kicker{font-family:var(--ff-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* o título de cada seção, com o quadrinho do ícone do lado */
+.head{display:flex;align-items:flex-start;gap:14px}
+.head > div{min-width:0}
+
+/* ---------- Quadrinhos de ícone ---------- */
+/* --t é a cor do desenho e --ts a do fundo; cada tom troca as duas */
+.itile{--t:var(--ink-soft);--ts:var(--surface-2);position:relative;flex:none;display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--ts);color:var(--t);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--t) 16%,transparent)}
+.itile .ico{width:52%;height:52%}
+.itile--xs{width:26px;height:26px;border-radius:8px}
+.itile--xs .ico{width:62%;height:62%}
+.itile--sm{width:36px;height:36px;border-radius:11px}
+.itile--lg{width:48px;height:48px;border-radius:14px}
+.itile--green{--t:var(--accent-ink);--ts:var(--accent-soft)}
+.itile--violet{--t:var(--violet);--ts:var(--violet-soft)}
+.itile--blue{--t:var(--blue);--ts:var(--blue-soft)}
+.itile--pink{--t:var(--pink);--ts:var(--pink-soft)}
+.itile--amber{--t:var(--amber);--ts:var(--amber-soft)}
+
+/* ---------- Retratos ---------- */
+/* o rosto de cada uma num círculo com a cor dela ao fundo */
+.avatar{--ts:var(--surface-2);position:relative;flex:none;display:block;width:40px;height:40px;border-radius:50%;background:var(--ts);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ink) 8%,transparent)}
+.avatar img{display:block;width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:50% 18%}
+.avatar--vanessa{--ts:var(--vanessa-soft)}
+.avatar--karine{--ts:var(--karine-soft)}
+.avatar--xs{width:22px;height:22px}
+.avatar--sm{width:36px;height:36px}
+
+/* ---------- Ícones animados ---------- */
+/* O app.js põe .is-poked num .fx quando o mouse entra, quando é tocado ou
+   quando recebe o foco; cada ícone lá dentro faz a sua animação uma vez. */
+.ico{display:block;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.ico *{transform-box:fill-box;transform-origin:center}
+.ico .ico-hands{transform-box:view-box;transform-origin:12px 12px}
+.ico .ico-beam{transform-box:view-box;transform-origin:12px 6.5px}
+.ico .ico-flame,.ico--barras rect{transform-origin:50% 100%}
+.ico .ico-line{stroke-dasharray:1}
+.ico .ico-keys{stroke-width:2.4}
+.ico--ajustes circle{fill:var(--ts,var(--surface))}
+
+@keyframes ico-wiggle{0%,100%{transform:rotate(0)}20%{transform:rotate(-14deg)}45%{transform:rotate(10deg)}70%{transform:rotate(-5deg)}}
+@keyframes ico-hop{0%,100%{transform:translateY(0)}35%{transform:translateY(-4px)}60%{transform:translateY(0)}80%{transform:translateY(-1.5px)}}
+@keyframes ico-spin{to{transform:rotate(360deg)}}
+@keyframes ico-spin-back{to{transform:rotate(-360deg)}}
+@keyframes ico-draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes ico-launch{0%{transform:none;opacity:1}40%{transform:translateY(-14px);opacity:0}41%{transform:translateY(12px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes ico-flicker{0%,100%{transform:scale(1)}25%{transform:scale(1.25,1.5)}50%{transform:scale(.85,.9)}75%{transform:scale(1.15,1.3)}}
+@keyframes ico-thunk{0%{transform:translate(6px,-6px);opacity:0}55%{transform:translate(-1px,1px);opacity:1}75%{transform:translate(.5px,-.5px)}100%{transform:none}}
+@keyframes ico-grow{from{transform:scaleY(.15)}to{transform:none}}
+@keyframes ico-slide-l{50%{transform:translateX(-6px)}}
+@keyframes ico-slide-r{50%{transform:translateX(6px)}}
+@keyframes ico-pulse{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.3}}
+@keyframes ico-shake{0%,100%{transform:none}20%{transform:translateX(-2px) rotate(-10deg)}40%{transform:translateX(2px) rotate(10deg)}60%{transform:translateX(-1px) rotate(-5deg)}80%{transform:translateX(1px)}}
+@keyframes ico-tilt{0%,100%{transform:none}25%{transform:rotate(-12deg)}55%{transform:rotate(9deg)}80%{transform:rotate(-4deg)}}
+@keyframes ico-drop{0%{transform:none;opacity:1}55%{transform:translateY(4px);opacity:0}56%{transform:translateY(-4px);opacity:0}100%{transform:none;opacity:1}}
+@keyframes tile-bump{0%,100%{transform:none}40%{transform:scale(1.1)}}
+@keyframes ico-look{30%{transform:translateX(-2.5px)}70%{transform:translateX(2.5px)}}
+
+.fx.is-poked :is(.itile,.avatar){animation:tile-bump .45s var(--spring)}
+.fx.is-poked :is(.ico--predio,.ico--heranca,.ico--duvida){animation:ico-wiggle .6s ease}
+.fx.is-poked :is(.ico--moedas,.ico--camadas,.ico--tv){animation:ico-hop .6s ease}
+.fx.is-poked .ico--celular{animation:ico-shake .5s ease}
+.fx.is-poked .ico--carro{animation:ico-slide-r .7s ease-in-out}
+.fx.is-poked .ico--relogio .ico-hands{animation:ico-spin .9s cubic-bezier(.45,0,.2,1)}
+.fx.is-poked .ico-line{animation:ico-draw .7s ease-out}
+.fx.is-poked .ico--balanca .ico-beam{animation:ico-tilt .8s ease}
+.fx.is-poked .ico--cofrinho .ico-coin{animation:ico-drop .8s ease}
+.fx.is-poked .ico--calculadora .ico-keys{animation:ico-pulse .45s ease 2}
+.fx.is-poked .ico--foguete .ico-rocket{animation:ico-launch .8s ease-in-out}
+.fx.is-poked .ico-flame{animation:ico-flicker .6s ease}
+.fx.is-poked .ico--recomecar{animation:ico-spin-back .7s cubic-bezier(.45,0,.2,1)}
+.fx.is-poked .ico--alvo .ico-arrow{animation:ico-thunk .5s ease-out}
+.fx.is-poked .ico--ajustes .ico-k1{animation:ico-slide-l .7s ease-in-out}
+.fx.is-poked .ico--ajustes .ico-k2{animation:ico-slide-r .7s ease-in-out}
+.fx.is-poked .ico--ajustes .ico-k3{animation:ico-slide-l .7s .1s ease-in-out}
+.fx.is-poked .ico--barras rect{animation:ico-grow .5s var(--spring) backwards}
+.fx.is-poked .ico--barras .ico-b2{animation-delay:.08s}
+.fx.is-poked .ico--barras .ico-b3{animation-delay:.16s}
+.fx.is-poked .ico--lampada .ico-rays{animation:ico-pulse .45s ease 2}
+.fx.is-poked .ico--olho .ico-pupil{animation:ico-look .8s ease-in-out}
+
+/* ---------- Botões ---------- */
+.actions{display:flex;gap:10px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}
+/* só o botão de recomeçar: ele fica à direita, do tamanho do texto */
+.actions--end{justify-content:flex-end}
+.actions--end .btn{flex:0 0 auto;padding:11px 18px}
+.btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:9px;border-radius:12px;padding:12px 14px;font-weight:600;font-size:14.5px;line-height:1.3;cursor:pointer;border:1px solid var(--line-strong)}
+.btn [data-icon]{flex:none}
+.btn .ico{width:18px;height:18px}
+.btn--primary{background:var(--accent);border-color:var(--accent);color:var(--accent-contrast)}
+@media (hover:hover){.btn--primary:hover{background:var(--accent-hover);border-color:var(--accent-hover)}}
+.btn--primary:disabled{opacity:.6;cursor:default}
+@media (hover:hover){.btn--ghost:hover{border-color:var(--line-strong);background:var(--surface-2)}}
+
+/* ---------- Abertura: as duas e o ponto de partida ---------- */
+/* No computador, o texto fica à esquerda e as duas à direita, em pé na
+   borda de baixo do cartão, com o balão de fala em cima delas. As imagens
+   têm um pedaço a mais embaixo, escondido pelo clip-path: quando uma delas
+   pula, aparece a roupa e não um buraco. */
+.intro{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 340px;column-gap:24px;margin-top:40px;padding:30px 24px 0 30px}
+.intro__text{min-width:0;padding-bottom:28px;container-type:inline-size}
+.intro__tag{display:inline-flex;align-items:center;gap:7px;padding:5px 12px 5px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent-ink);font-weight:600}
+.intro__tag .ico{width:14px;height:14px}
+.intro h1{margin-top:14px;font-size:clamp(26px,4.2vw,40px);line-height:1.08;max-width:15ch}
+.intro__lead{margin-top:12px;max-width:54ch;color:var(--ink-soft);font-size:15px}
+.intro__kicker{margin-top:26px}
+
+.intro__duo{position:relative;align-self:end;clip-path:inset(-400px -400px 0 -400px)}
+.duo{position:relative;display:flex;align-items:flex-end}
+.persona{position:relative;z-index:1;flex:0 0 56%;display:block;padding:0;border:0;background:none;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;border-radius:28px 28px 0 0}
+.persona--vanessa{z-index:2}
+.persona--karine{margin-left:-12%}
+/* o círculo colorido atrás de cada uma, na cor dela e em proporção a ela */
+.persona::before{content:"";position:absolute;z-index:-1;left:4%;top:-4%;width:92%;aspect-ratio:1;border-radius:50%;background:var(--ts);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ink) 7%,transparent)}
+.persona--vanessa{--ts:var(--vanessa-soft)}
+.persona--karine{--ts:var(--karine-soft)}
+.persona img{display:block;width:100%;height:auto;margin-bottom:-10%;transform-origin:50% 100%;transition:transform .35s var(--spring);animation:persona-in .8s var(--spring) both}
+.persona--karine img{animation-delay:.12s}
+@media (hover:hover){
+  .persona--vanessa:hover img{transform:translateY(-4px) rotate(-1.5deg)}
+  .persona--karine:hover img{transform:translateY(-4px) rotate(1.5deg)}
+}
+.persona.is-talking img{animation:persona-hop .65s var(--spring)}
+@keyframes persona-in{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:none}}
+@keyframes persona-hop{0%{transform:none}30%{transform:translateY(-14px) rotate(-2deg)}55%{transform:translateY(0) scale(1.02,.98)}75%{transform:translateY(-4px) rotate(1deg)}100%{transform:none}}
+
+/* o balão fica em cima das duas e aponta pra quem está falando */
+.bubble{--tail:50%;position:absolute;z-index:3;left:50%;bottom:calc(100% + 14px);translate:-50% 0;width:max-content;max-width:236px;padding:10px 14px 9px;border:1px solid var(--line-strong);border-radius:18px;background:var(--surface);box-shadow:var(--shadow);transform-origin:var(--tail) 100%;animation:bubble-in .5s .45s var(--spring) both}
+.bubble[data-who="vanessa"]{--tail:26%}
+.bubble[data-who="karine"]{--tail:74%}
+.bubble::after{content:"";position:absolute;left:var(--tail);bottom:-7px;width:12px;height:12px;margin-left:-6px;background:var(--surface);border-right:1px solid var(--line-strong);border-bottom:1px solid var(--line-strong);transform:rotate(45deg);transition:left .3s var(--spring)}
+.bubble.is-talking{animation:bubble-in .4s var(--spring)}
+.bubble__who{display:flex;align-items:center;gap:6px;margin-bottom:3px;font-family:var(--ff-mono);font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.bubble__who:empty{display:none}
+.bubble__who::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.bubble[data-who="vanessa"] .bubble__who::before{background:var(--vanessa)}
+.bubble[data-who="karine"] .bubble__who::before{background:var(--karine)}
+.bubble__text{font-family:var(--ff-display);font-weight:600;font-size:14.5px;line-height:1.3;letter-spacing:-.01em;color:var(--ink)}
+.bubble__hint{margin-top:5px;font-family:var(--ff-mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink)}
+.bubble.is-known .bubble__hint{display:none}
+@keyframes bubble-in{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:none}}
+
+/* período e decisões são curtos: ficam do tamanho do conteúdo, e o objetivo leva o resto */
+.scenario__grid{display:grid;grid-template-columns:auto auto minmax(0,1fr);gap:10px;margin-top:10px}
+.fact{display:flex;align-items:center;gap:12px;min-width:0;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2);transition:border-color .15s,box-shadow .2s}
+@media (hover:hover){.fact:hover{border-color:var(--line-strong);box-shadow:var(--shadow-sm)}}
+.fact__body{min-width:0}
+.fact__label{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.fact__value{margin-top:2px;font-family:var(--ff-display);font-weight:700;font-size:19px;letter-spacing:-.02em;line-height:1.15}
+/* sem largura pros três lado a lado: um embaixo do outro, com o valor à direita */
+@container (max-width:620px){
+  .scenario__grid{grid-template-columns:1fr;gap:8px}
+  .fact{padding:10px 12px}
+  .fact .itile{width:34px;height:34px;border-radius:10px}
+  .fact__body{flex:1;display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+  .fact__value{margin-top:0;font-size:18px;text-align:right}
+}
+/* celular: o rótulo em cima e o valor embaixo. Com o valor à direita, o
+   objetivo ("Comparar gastos e receitas") quebraria em duas linhas */
+@container (max-width:400px){
+  .fact__body{display:block}
+  .fact__value{margin-top:1px;font-size:17px;text-align:left}
+}
+
+/* ---------- As decisões ---------- */
+.sim__head{margin-top:44px}
+.invcard__title{font-size:clamp(21px,2.6vw,26px);line-height:1.15}
+.invcard__sub{margin-top:5px;font-size:14.5px;color:var(--ink-soft)}
+
+/* ---------- Linha do tempo ---------- */
+/* Uma barra por decisão, do ano em que ela acontece até o fim do período,
+   todas na mesma escala. As linhas verticais marcam os anos da história. */
+.tl{margin-top:20px;padding:18px 22px 16px}
+.tl__head{margin-top:3px;font-size:14.5px;color:var(--ink-soft)}
+.tl__rows{display:grid;gap:4px;margin-top:14px}
+.tl__row{display:grid;grid-template-columns:190px minmax(0,1fr);align-items:center;gap:16px;margin:0 -8px;padding:6px 8px;border-radius:10px;color:inherit;text-decoration:none;transition:background .15s}
+@media (hover:hover){.tl__row:hover{background:var(--surface-2)}}
+.tl__name{display:flex;align-items:center;gap:10px;min-width:0}
+.tl__text{display:flex;flex-direction:column;min-width:0}
+.tl__title{font-weight:600;font-size:14.5px;line-height:1.3}
+.tl__when{font-family:var(--ff-mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+.tl__track{position:relative;display:block;height:30px}
+.tl__grid{position:absolute;top:0;bottom:0;width:1px;margin-left:-.5px;background:var(--line)}
+.tl__bar{position:absolute;right:0;top:50%;height:14px;margin-top:-7px;border-radius:4px;background:var(--violet);transform-origin:0 50%;animation:tl-grow .7s cubic-bezier(.16,1,.3,1) both}
+.tl__row:nth-child(2) .tl__bar{animation-delay:.08s}
+.tl__row:nth-child(3) .tl__bar{animation-delay:.16s}
+.tl__row:nth-child(4) .tl__bar{animation-delay:.24s}
+@keyframes tl-grow{from{transform:scaleX(0)}to{transform:none}}
+.tl__axis{display:grid;grid-template-columns:190px minmax(0,1fr);gap:16px;margin-top:4px}
+.tl__scale{position:relative;display:block;height:18px}
+.tl__tick{position:absolute;top:0;translate:-50% 0;font-family:var(--ff-mono);font-size:11.5px;font-weight:500;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.tl__tick--first{translate:0 0}
+.tl__tick--last{translate:-100% 0}
+.tl__unit{margin-top:2px;text-align:right;font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+/* Os medidores do alto. Grudam logo abaixo da barra do topo e, grudados,
+   viram uma cápsula de vidro por onde as decisões passam por baixo. O
+   padding e a borda existem desde o começo (transparentes) pra nada pular de
+   lugar na hora de grudar; a margem negativa compensa o padding e mantém os
+   medidores alinhados com os cartões. */
+.meters{position:sticky;top:calc(var(--topbar-h) + 8px);z-index:10;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:20px -6px 14px;padding:6px;border:1px solid transparent;border-radius:calc(var(--radius) + 6px);transition:background .2s,border-color .2s,box-shadow .2s,opacity .2s}
+.meters.is-stuck{background:color-mix(in srgb,var(--surface) 70%,transparent);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);border-color:var(--line);box-shadow:var(--shadow)}
+/* No celular, com o teclado aberto sobra pouca tela: enquanto o aluno
+   escreve numa célula, os medidores grudados saem da frente (voltam quando
+   ele sai da célula). Em tela baixa (celular deitado), eles nem grudam. */
+@media (max-width:720px){
+  .sim:has(.cell__input:focus:not([readonly])) .meters.is-stuck{opacity:0;pointer-events:none}
+}
+@media (max-height:500px){
+  .meters{position:static}
+}
+.meter{--m:var(--accent-ink);padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow-sm)}
+.meter--dec{--m:var(--violet)}
+.meter__top{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:2px 12px}
+.meter__label{display:flex;align-items:center;gap:7px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.meter__ico{flex:none;color:var(--m)}
+.meter__ico .ico{width:16px;height:16px}
+.meter__nums{font-family:var(--ff-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.meter__used{font-size:15px;font-weight:600;color:var(--ink)}
+.meter__track{display:flex;height:8px;margin-top:10px;border-radius:999px;background:color-mix(in srgb,var(--m) 16%,transparent);overflow:hidden}
+.meter__fill{display:block;flex:none;height:100%;width:0;background:var(--m);transition:width .6s cubic-bezier(.16,1,.3,1)}
+/* as respostas mostradas: a mesma cor, mais clara, logo depois dos acertos */
+.meter__fill--shown{background:color-mix(in srgb,var(--m) 42%,transparent)}
+
+/* ---------- Como fazer: as cores da planilha ---------- */
+.howto{margin-top:20px;padding:14px 18px}
+.howto__keys{display:flex;flex-wrap:wrap;gap:8px 20px;margin:0;padding:0;list-style:none;font-size:14px;color:var(--ink-soft)}
+.howto__keys strong{font-weight:600;color:var(--ink)}
+/* o quadradinho da cor fica alinhado com a primeira linha do texto */
+.howto__key{display:flex;align-items:flex-start;gap:8px}
+.howto__key::before{content:"";flex:none;width:16px;height:16px;margin-top:2.5px;border-radius:4px;border:1px solid var(--line-strong)}
+.howto__key--data::before{background:var(--data);border-color:color-mix(in srgb,var(--warm) 40%,transparent)}
+.howto__key--calc::before{background:var(--surface);border:1.5px solid var(--line-strong)}
+.howto__key--diff::before{background:var(--accent-soft);border-color:var(--accent-ink)}
+.howto__tip{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:13.5px;color:var(--ink-soft)}
+.howto__tip code{padding:1px 6px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line);font-family:var(--ff-mono);font-size:12.5px;color:var(--ink);white-space:nowrap}
+.howto__tip strong{font-weight:600;color:var(--ink)}
+/* no toque (celular, tablet) vale a dica sem Enter e sem contas */
+.howto__tip--touch{display:none}
+@media (hover:none),(pointer:coarse){
+  .howto__tip--mouse{display:none}
+  .howto__tip--touch{display:block}
+}
+
+/* ---------- Cartão de cada decisão ---------- */
+.declist{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+/* o cartão para abaixo da barra do topo e dos medidores */
+.deccard{padding:20px 22px 22px;scroll-margin-top:calc(var(--topbar-h) + 100px)}
+.deccard:focus,.deccard:focus-visible{outline:none}
+.deccard .invcard__title{margin-top:4px}
+
+/* decisão concluída: o quadrinho ganha o selo verde (o mesmo da linha do
+   tempo) */
+.deccard.is-done > .head > .itile::after,.tl__row.is-done .itile::after{content:"";position:absolute;right:-6px;bottom:-6px;width:20px;height:20px;border-radius:50%;border:2px solid var(--surface);background:var(--accent) var(--badge-check) center/11px no-repeat;animation:badge-pop .45s var(--spring)}
+.tl__row.is-done .itile::after{right:-5px;bottom:-5px;width:15px;height:15px;background-size:9px;border-width:1.5px}
+@keyframes badge-pop{from{transform:scale(0)}to{transform:none}}
+
+/* ---------- A planilha de cada decisão ---------- */
+/* as duas lado a lado, como as colunas da planilha */
+.scols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
+.scol{min-width:0;padding:14px 16px 16px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}
+.scol__head{display:flex;align-items:center;gap:12px}
+.scol__avatar{width:48px;height:48px}
+.scol__who{min-width:0}
+.scol__name{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 9px;font-family:var(--ff-display);font-weight:700;font-size:17px;letter-spacing:-.01em;line-height:1.25}
+.scol__label{font-family:var(--ff-mono);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.scol__pick{font-weight:500;font-size:14px;line-height:1.35;color:var(--ink)}
+.scol__story{margin-top:10px;font-size:13.5px;line-height:1.55;color:var(--ink-soft)}
+.srows{display:grid;gap:5px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
+.scol__note{margin-top:10px;padding:9px 11px;border:1px dashed var(--line-strong);border-radius:8px;font-size:13px;line-height:1.5;color:var(--ink-soft)}
+
+/* Uma linha da planilha: o rótulo à esquerda e o valor (ou a célula) à
+   direita. Sem espaço pros dois, a célula desce pra linha de baixo. */
+.srow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;padding:7px 8px 7px 10px;border-radius:8px;font-size:13.5px;line-height:1.4}
+.srow__label{flex:1 1 11em;min-width:0;color:var(--ink-soft)}
+.srow--data{border:1px solid color-mix(in srgb,var(--warm) 22%,transparent);background:var(--data)}
+/* o valor do dado só desce quando o rótulo ficaria com menos de 9,5em: nos
+   celulares de 360px pra cima, ele fica sempre ao lado, como na planilha */
+.srow--data .srow__label{flex-basis:9.5em}
+.srow__value{margin-left:auto;font-family:var(--ff-mono);font-weight:600;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
+.srow--calc{border:1px solid var(--line);background:var(--surface)}
+.srow--calc .srow__label{font-weight:500;color:var(--ink)}
+
+/* a célula onde o aluno escreve: o "R$" antes, a unidade depois e, no fim,
+   a marca de certo ou errado */
+.cell{position:relative;flex:0 1 12em;min-width:9em;margin-left:auto;display:flex;align-items:center;height:40px;border:1.5px solid var(--line-strong);border-radius:9px;background:var(--surface);transition:border-color .15s,box-shadow .15s,background .15s}
+.cell:focus-within{border-color:var(--focus);box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 22%,transparent)}
+.cell__pre,.cell__suf{flex:none;font-family:var(--ff-mono);font-size:12.5px;color:var(--muted)}
+.cell__pre{padding-left:10px}
+.cell__suf{padding-right:10px}
+/* 16px: menos que isso, o iPhone dá zoom na tela ao tocar na célula */
+.cell__input{flex:1;min-width:0;width:100%;height:100%;padding:0 8px;border:0;border-radius:inherit;background:transparent;font-family:var(--ff-mono);font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink);text-align:right;outline:none}
+.cell__input::placeholder{font-family:var(--ff-body);font-size:13.5px;font-weight:400;color:var(--muted);opacity:.75}
+.cell__input:read-only{cursor:default}
+.cell__mark{display:none;flex:none;width:16px;height:16px;margin-right:9px;background-color:currentColor;-webkit-mask:var(--icon-check) center/contain no-repeat;mask:var(--icon-check) center/contain no-repeat}
+/* a mensagem embaixo: o resultado da conta enquanto o aluno digita, a dica
+   quando errou */
+.srow__msg{flex-basis:100%;text-align:right;font-family:var(--ff-mono);font-size:12.5px;line-height:1.45;color:var(--muted)}
+.srow__msg:empty{display:none}
+.srow__msg strong{font-weight:600}
+
+@keyframes cell-shake{0%,100%{transform:none}20%{transform:translateX(-5px)}40%{transform:translateX(4px)}60%{transform:translateX(-3px)}80%{transform:translateX(2px)}}
+@keyframes mark-pop{from{transform:scale(0)}60%{transform:scale(1.25)}to{transform:none}}
+.srow.is-ok .cell{border-color:var(--accent-ink);background:var(--accent-soft)}
+.srow.is-ok .cell__mark{display:block;color:var(--accent-ink);animation:mark-pop .4s var(--spring)}
+.srow.is-wrong .cell,.srow.is-invalid .cell{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 7%,var(--surface));animation:cell-shake .45s ease}
+.srow.is-wrong .cell__mark,.srow.is-invalid .cell__mark{display:block;color:var(--danger);-webkit-mask-image:var(--icon-x);mask-image:var(--icon-x)}
+.srow.is-missing .cell{border-style:dashed;border-color:var(--warm)}
+.srow.is-shown .cell{border-color:color-mix(in srgb,var(--violet) 60%,transparent);background:var(--violet-soft)}
+.srow:is(.is-wrong,.is-invalid,.is-missing,.is-shown) .srow__msg{text-align:left;font-family:var(--ff-body);font-size:13px}
+.srow:is(.is-wrong,.is-invalid) .srow__msg{color:var(--danger)}
+.srow.is-missing .srow__msg{color:var(--warm)}
+.srow.is-shown .srow__msg{color:var(--violet)}
+
+/* a célula verde da planilha: a diferença entre as duas */
+.sdiff{display:flex;align-items:flex-start;gap:12px;margin-top:12px;padding:12px 14px 12px 16px;border:1px solid var(--accent-ink);border-radius:14px;background:var(--accent-soft)}
+.sdiff__ico{margin-top:4px;background:var(--surface)}
+.sdiff .srow{flex:1;min-width:0;padding:0;border:0;background:none}
+.sdiff .srow__label{font-family:var(--ff-display);font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink)}
+.sdiff .cell{flex-basis:13em;height:44px}
+.sdiff .cell__input{font-size:17px}
+.sdiff .srow.is-ok .cell{background:var(--surface)}
+
+/* o pé do cartão: quantos certos e os botões */
+.sfoot{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px 16px;margin-top:16px}
+.sfoot__status{flex:1 1 16em;font-size:14px;color:var(--ink-soft)}
+.deccard.is-done .sfoot__status{font-weight:600;color:var(--accent-ink)}
+.sfoot__btns{display:flex;flex-wrap:wrap;gap:8px}
+.sfoot__btns .btn{flex:0 0 auto;padding:11px 18px}
+/* concluída, os botões somem (e não deixam o espaço deles pra trás) */
+.deccard.is-done .sfoot__btns{display:none}
+
+/* a pergunta de discussão, quando a decisão termina */
+.swhy{margin-top:14px;scroll-margin-bottom:24px}
+.swhy:focus,.swhy:focus-visible{outline:none}
+.answer{margin-top:10px;border-top:1px dashed color-mix(in srgb,var(--accent-ink) 35%,transparent);padding-top:10px}
+.answer summary{display:inline-flex;align-items:center;gap:6px;font-family:var(--ff-mono);font-size:12px;font-weight:600;letter-spacing:.04em;color:var(--accent-ink);cursor:pointer;list-style:none;border-radius:6px}
+.answer summary::-webkit-details-marker{display:none}
+/* no toque, o "Ver uma resposta" ganha área pro dedo, sem mudar de lugar */
+@media (pointer:coarse){.answer summary{padding:10px 12px 10px 0;margin:-10px 0}}
+.answer summary::before{content:"";width:12px;height:12px;background-color:currentColor;-webkit-mask:var(--icon-chevron) center/contain no-repeat;mask:var(--icon-chevron) center/contain no-repeat;transition:transform .2s}
+.answer[open] summary::before{transform:rotate(90deg)}
+.answer p{margin-top:8px}
+
+/* a diferença de cada decisão, no cartão da diferença total */
+.srecap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin:18px 0 0;padding:0;list-style:none}
+.srecap__link{display:flex;align-items:center;gap:10px;height:100%;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--surface-2);color:inherit;text-decoration:none;transition:border-color .15s}
+@media (hover:hover){.srecap__link:hover{border-color:var(--line-strong)}}
+.srecap__name{flex:1;min-width:0;font-size:14px;font-weight:500}
+.srecap__value{font-family:var(--ff-mono);font-size:14px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--accent-ink);white-space:nowrap}
+.srecap__row:not(.is-done) .srecap__value{font-family:var(--ff-body);font-size:13px;font-weight:400;color:var(--muted)}
+
+/* ---------- Resultado final ---------- */
+.invcard{margin-top:16px;padding:20px 22px 22px;scroll-margin-top:calc(var(--topbar-h) + 16px)}
+/* o cartão recebe o foco quando aparece (é o que o leitor de tela anuncia);
+   quem vê já tem a rolagem dizendo onde está */
+.invcard:focus,.invcard:focus-visible{outline:none}
+#sec-final{margin-top:32px}
+.invcard .invcard__title{margin-top:4px}
+
+/* a diferença final, o número que a aula inteira constrói */
+.fhero{display:flex;align-items:center;gap:18px;margin-top:20px;padding:20px 22px;border:1px solid var(--accent-ink);border-radius:var(--radius);background:var(--accent-soft)}
+.fhero > div{min-width:0}
+.fhero__ico{--t:var(--accent-ink);--ts:var(--surface)}
+.fhero__label{font-weight:600;font-size:15px}
+.fhero__value{margin-top:4px;font-family:var(--ff-mono);font-size:clamp(30px,5vw,46px);font-weight:600;line-height:1.1;letter-spacing:-.01em;color:var(--accent-ink);white-space:nowrap}
+.fhero__sub{margin-top:6px;font-size:14px;color:var(--ink-soft)}
+
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}
+.stat{padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}
+.stat__label{display:flex;align-items:center;gap:8px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.stat__value{margin-top:8px;font-family:var(--ff-mono);font-size:22px;font-weight:600;line-height:1.15;white-space:nowrap}
+.stat__value.is-down{color:var(--danger)}
+.stat__value.is-up{color:var(--accent-ink)}
+.stat__value.is-score{color:var(--ink)}
+.stat__sub{margin-top:3px;font-size:12.5px;color:var(--muted)}
+.stat--hl{border-color:var(--accent-ink);background:var(--accent-soft)}
+.stat--hl .itile{background:var(--surface)}
+
+/* uma linha por decisão: o ícone, o que cada uma escolheu, quanto da
+   diferença final veio dela e, à direita, os números das duas */
+.ledger{list-style:none;margin:22px 0 0;padding:0;border-top:1px solid var(--line-strong)}
+.ledger__row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px 18px;align-items:center;padding:14px 2px;border-bottom:1px solid var(--line)}
+.ledger__row > .itile{align-self:start;margin-top:2px}
+.ledger__main{min-width:0}
+.ledger__badge{font-family:var(--ff-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.ledger__title{margin-top:2px;font-weight:500;font-size:15px;line-height:1.4}
+.ledger__label{font-family:var(--ff-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.ledger__num{margin-top:2px;font-family:var(--ff-mono);font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.ledger__num.is-down{color:var(--danger)}
+.ledger__num.is-up{color:var(--accent-ink)}
+.ledger__num.is-diff{color:var(--ink)}
+.cmp{display:grid;grid-template-columns:repeat(3,auto);gap:22px;text-align:right}
+
+/* o pedaço da diferença final que veio de cada decisão, todas na mesma
+   escala (o trilho é o total) */
+.share{display:flex;align-items:center;gap:10px;margin-top:8px}
+.share__track{flex:1;max-width:260px;height:8px;border-radius:999px;background:color-mix(in srgb,var(--accent-ink) 14%,transparent);overflow:hidden}
+.share__fill{display:block;height:100%;min-width:3px;border-radius:0 4px 4px 0;background:var(--accent-ink);transform-origin:0 50%;animation:tl-grow .9s .2s cubic-bezier(.16,1,.3,1) both}
+.share__label{font-family:var(--ff-mono);font-size:11.5px;color:var(--muted);white-space:nowrap}
+
+.insight{margin-top:22px;padding:16px 18px;border-left:3px solid var(--accent-ink);border-radius:12px;background:color-mix(in srgb,var(--accent-ink) 8%,transparent);font-size:15px;line-height:1.6;color:var(--ink-soft)}
+[data-theme="dark"] .insight{background:color-mix(in srgb,var(--accent-ink) 10%,transparent)}
+.insight p + p{margin-top:8px}
+.insight__title{display:flex;align-items:center;gap:9px;margin-bottom:8px;font-family:var(--ff-display);font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--ink)}
+.insight strong{color:var(--ink);font-weight:600}
+
+/* as perguntas do slide de reflexão, para a turma discutir */
+.reflect{margin-top:22px;padding-top:20px;border-top:1px dashed var(--line-strong)}
+.reflect__title{display:flex;align-items:center;gap:9px;font-family:var(--ff-display);font-weight:700;font-size:16px;letter-spacing:-.01em}
+.reflect__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0 0;padding:0;list-style:none;counter-reset:q}
+.reflect__q{position:relative;padding:14px 16px 14px 48px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2);font-size:14.5px;line-height:1.5;counter-increment:q}
+.reflect__q::before{content:counter(q);position:absolute;left:14px;top:13px;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--amber-soft);font-family:var(--ff-mono);font-size:12px;font-weight:600;color:var(--amber)}
+
+/* ---------- Aviso (toast) ---------- */
+/* preso no pé da tela, pra aparecer onde o aluno estiver na página */
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:50;width:min(560px,calc(100% - 32px));display:flex;align-items:flex-start;gap:10px;padding:13px 12px 13px 16px;background:var(--surface);border:1px solid var(--warm);border-radius:var(--radius);box-shadow:var(--shadow)}
+.toast:not([hidden]){animation:toastIn .3s cubic-bezier(.16,1,.3,1)}
+.toast::before{content:"";flex:none;width:15px;height:15px;margin-top:3px;background-color:var(--warm);-webkit-mask:var(--icon-warning) center/contain no-repeat;mask:var(--icon-warning) center/contain no-repeat}
+.toast:not([hidden])::before{animation:ico-shake .5s .2s ease}
+.toast__text{flex:1;min-width:0;font-size:14px;line-height:1.5}
+.toast__close{flex:none;width:32px;height:32px;margin:-6px -2px -6px 0;display:grid;place-items:center;border:0;border-radius:8px;background:transparent;color:var(--muted);cursor:pointer;transition:color .15s,background .15s}
+.toast__close:hover{color:var(--ink);background:var(--surface-2)}
+.toast__close svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round}
+
+/* ---------- Footer ---------- */
+footer{margin-top:46px;border-top:1px solid var(--line);padding:22px 0 40px;font-size:13px;color:var(--muted);text-align:center}
+
+/* ---------- Responsive ---------- */
+@media (max-width:900px){
+  .ledger__row{grid-template-columns:auto minmax(0,1fr)}
+  .cmp{grid-column:1 / -1;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;text-align:left}
+}
+
+/* Até 1040px a coluna das duas deixaria o texto apertado. Então elas sobem
+   pro alto do cartão, em pé numa linha, com o balão do lado, e o texto vem
+   embaixo na largura toda. */
+@media (max-width:1040px){
+  .intro{grid-template-columns:minmax(0,1fr);margin-top:72px;padding:0 24px 22px}
+  .intro__duo{order:-1;display:flex;align-items:center;justify-content:center;gap:8px;margin:-56px -24px 0;padding:0 24px}
+  /* a linha onde elas "pisam" fica por cima da imagem (a roupa escondida não cobre) */
+  .intro__duo::after{content:"";position:absolute;z-index:3;left:0;right:0;bottom:0;height:1px;background:var(--line)}
+  .duo{flex:none;width:280px}
+  /* o balão vai pro lado esquerdo delas e aponta pra direita */
+  .bubble{position:relative;left:auto;bottom:auto;translate:none;flex:0 1 250px;width:auto;max-width:none;margin-top:56px;border-radius:18px 18px 4px 18px;transform-origin:100% 100%}
+  .bubble::after{left:auto;right:-7px;bottom:9px;margin-left:0;transform:rotate(-45deg)}
+  .intro__text{padding:20px 0 0}
+  .intro h1{max-width:none}
+}
+
+@media (max-width:760px){
+  .scols,.srecap{grid-template-columns:minmax(0,1fr)}
+  .stats{grid-template-columns:1fr;gap:8px}
+  .stat{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:10px;padding:11px 13px 12px}
+  .stat__label{flex-basis:100%}
+  .stat__value{margin-top:6px;font-size:19px}
+  .stat__sub{margin-top:0}
+  .reflect__grid{grid-template-columns:1fr}
+}
+
+/* Celular: as duas e o balão menores; a linha do tempo põe o nome em cima
+   da barra */
+@media (max-width:720px){
+  :root{--topbar-h:56px}
+  .wrap{padding:0 16px}
+  .topbar__in{gap:8px}
+  .brand__name,.brand__sep{display:none}
+  .actions{flex-direction:column-reverse}
+  .btn{padding:13px 14px}
+
+  .intro{margin-top:60px;padding:0 16px 18px}
+  .intro__duo{margin:-44px -16px 0;padding:0 12px 0 16px}
+  .duo{width:214px}
+  .bubble{flex-basis:210px;margin-top:44px}
+  .intro__text{padding-top:18px}
+  .intro h1{margin-top:12px;font-size:clamp(24px,7vw,30px)}
+  .intro__lead{font-size:14.5px}
+  .intro__kicker{margin-top:20px}
+
+  .sim__head{margin-top:36px}
+  .head{gap:12px}
+  .head .itile--lg{width:42px;height:42px;border-radius:12px}
+  .invcard,.deccard{padding:16px 16px 18px}
+  .tl{padding:16px}
+  .tl__row{grid-template-columns:1fr;gap:6px;padding:8px}
+  .tl__axis{grid-template-columns:1fr;gap:0}
+  .tl__axis-pad{display:none}
+  .tl__track{height:20px}
+  /* grudados no alto do celular, os medidores ficam mais baixos */
+  .meters{gap:5px;padding:5px;margin:18px -5px 12px}
+  .meter{padding:10px 12px}
+  .meter__track{margin-top:8px}
+
+  .howto{padding:12px 14px}
+  .howto__keys{flex-direction:column;gap:6px}
+  .scol{padding:12px 12px 14px}
+  .scol__avatar{width:44px;height:44px}
+  .srow{padding:7px 8px}
+  /* 44px: a altura mínima confortável pro dedo */
+  .cell{height:44px}
+  .sdiff{padding:12px}
+  .sdiff .cell{height:46px}
+  /* os botões do pé ficam um embaixo do outro, com o de conferir em cima */
+  .sfoot{flex-direction:column;align-items:stretch}
+  .sfoot__status{flex-basis:auto;text-align:center}
+  .sfoot__btns{flex-direction:column-reverse}
+  .sfoot__btns .btn{padding:13px 14px}
+  .fhero{gap:14px;padding:16px}
+}
+
+@media (max-width:560px){
+  /* meia tela pra cada medidor: o rótulo fica com uma palavra só */
+  .meter{padding:10px}
+  .meter__label{gap:5px;font-size:10px;letter-spacing:.07em}
+  .meter__ico .ico{width:14px;height:14px}
+  .meter__more{display:none}
+  .meter__nums{font-size:12px}
+  .meter__used{font-size:13.5px}
+  .ledger__row{gap:10px 12px}
+  /* os números das duas viram uma lista: o nome à esquerda, o valor à direita */
+  .cmp{grid-template-columns:1fr;gap:4px}
+  .cmp__col{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+  .share__track{max-width:none}
+  /* o ícone vai pra linha do título e o valor ganha a largura toda */
+  .fhero{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:12px}
+  .fhero > div{display:contents}
+  .fhero__value,.fhero__sub{grid-column:1 / -1}
+  .fhero__value{margin-top:10px;font-size:clamp(22px,7.4vw,34px)}
+  .fhero .itile--lg{width:34px;height:34px;border-radius:10px}
+  /* a célula desce pra baixo do rótulo e ocupa a largura toda: fica mais
+     fácil de tocar e os números seguem alinhados à direita */
+  .srow--calc .cell,.sdiff .cell{flex-basis:100%}
+  /* no bloco verde, o ícone sai: o título cabe numa linha e a célula fica
+     do tamanho das outras */
+  .sdiff__ico{display:none}
+}
+
+/* Celular em pé: do lado das duas não sobra largura pro balão. Elas ficam no
+   meio, em pé na linha, e o balão vem embaixo, na largura toda, com a ponta
+   virada pra quem está falando. --pw é a largura de cada uma e --po o quanto
+   uma passa por trás da outra; a ponta do balão sai dos dois. */
+@media (max-width:480px){
+  .intro__duo{--pw:124px;--po:14px;flex-direction:column;align-items:stretch;gap:14px;padding:0;clip-path:none}
+  .intro__duo::after{display:none}
+  .duo{order:-1;width:auto;justify-content:center;clip-path:inset(-400px 0 0 0)}
+  .duo::after{content:"";position:absolute;z-index:3;left:0;right:0;bottom:0;height:1px;background:var(--line)}
+  .persona{flex:0 0 var(--pw)}
+  .persona--karine{margin-left:calc(-1 * var(--po))}
+  .bubble{flex:none;margin:0 16px;border-radius:18px;transform-origin:var(--tail) 0}
+  .bubble[data-who="vanessa"]{--tail:calc(50% - (var(--pw) - var(--po)) / 2)}
+  .bubble[data-who="karine"]{--tail:calc(50% + (var(--pw) - var(--po)) / 2)}
+  .bubble::after{left:var(--tail);right:auto;top:-7px;bottom:auto;margin-left:-6px;transform:rotate(-135deg)}
+  .intro__text{padding-top:16px}
+}
+@media (max-width:380px){
+  .meter__label{font-size:9.5px;letter-spacing:.05em}
+  .meter__nums{font-size:11.5px;white-space:normal}
+  .meter__used{font-size:13px;white-space:nowrap}
+  /* a barrinha de cada decisão fica com a largura toda e o texto vai embaixo */
+  .share{flex-wrap:wrap;row-gap:5px}
+  .share__track{flex-basis:100%}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+@media print{
+  .topbar,.actions,.sfoot__btns,.howto__tip,footer,.toast,.bubble{display:none}
+  .meters{position:static}
+  body{background:#fff}
+  .card{box-shadow:none}
+}
