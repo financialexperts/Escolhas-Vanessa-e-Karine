@@ -4,7 +4,6 @@ Exercício da Aula 4 (Equilibrista de Escolhas) em que o próprio aluno faz os c
 
 Não tem build, instalação nem banco de dados: é `index.html` + alguns arquivos `.js` e `.css` estáticos, na mesma identidade visual do Simulador de Renda da Laura. Para rodar, basta abrir o `index.html` no navegador (ou publicar a pasta no GitHub Pages).
 
----
 
 ## O caminho do aluno
 
