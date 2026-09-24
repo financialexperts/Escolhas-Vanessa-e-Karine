@@ -14,3 +14,7 @@ _*.js
 
 # cópia de segurança do sistema antigo (o de escolher caminhos)
 _backup-*.zip
+
+# a planilha do professor é o gabarito do exercício: fica só no computador
+# (o repositório é público e, com o GitHub Pages, ela ficaria no site)
+Escolhas Karine e Vanessa - PROFESSOR.xlsx
