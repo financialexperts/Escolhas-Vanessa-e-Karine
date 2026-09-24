@@ -17,7 +17,6 @@
 
   function el(id) { return document.getElementById(id); }
   function dir(v) { return v < 0 ? "is-down" : v > 0 ? "is-up" : "is-same"; }
-  function plural(n, one, many) { return n + " " + (n === 1 ? one : many); }
 
   function statHTML(icon, label, value, cls, sub, highlight) {
     return '<div class="stat fx' + (highlight ? " stat--hl" : "") + '">' +
@@ -69,12 +68,6 @@
       "<p>" + LICAO + "</p>";
   }
 
-  // quantos cálculos o aluno acertou sozinho
-  function scoreSub(c) {
-    if (!c.shown) return "certos, sem ver nenhuma resposta";
-    return "certos · " + plural(c.shown, "resposta mostrada", "respostas mostradas");
-  }
-
   // o número grande conta de zero até a diferença final (quem pede menos
   // movimento já vê o número pronto). O leitor de tela ouve só o valor final.
   function contar(alvo) {
@@ -107,13 +100,14 @@
     el("fn-total-label").textContent = "Por causa dessas " + n + " decisões, a diferença entre as duas foi de";
     el("fn-total-sub").textContent = "em " + S.years + " anos, somando as " + n + " decisões";
 
+    // só se chega aqui com as etapas todas certas: o placar é sempre cheio
     el("fn-stats").innerHTML =
       statHTML(Icons.avatar("vanessa", "avatar--xs"), "Resultado da " + Format.esc(S.people.vanessa.name),
         Format.esc(Format.signed(t.vanessa)), dir(t.vanessa), "somando as " + n + " decisões") +
       statHTML(Icons.avatar("karine", "avatar--xs"), "Resultado da " + Format.esc(S.people.karine.name),
         Format.esc(Format.signed(t.karine)), dir(t.karine), "somando as " + n + " decisões") +
       statHTML(Icons.tile("calculadora", "green", "itile--xs"), "Os seus cálculos",
-        c.ok + " de " + c.total, "is-score", Format.esc(scoreSub(c)), true);
+        c.ok + " de " + c.total, "is-score", "certos, todos feitos por você", true);
 
     el("fn-list").innerHTML = Catalog.list.map(function (d) { return rowHTML(d, t.diff); }).join("");
     el("fn-insight").innerHTML = insightHTML(t);

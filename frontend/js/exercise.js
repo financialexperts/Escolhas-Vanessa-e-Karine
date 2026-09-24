@@ -13,13 +13,14 @@
   // (uma linha em branco da planilha), "1.diff" (a diferença entre as duas
   // numa decisão) e "total" (a diferença total, no fim). Os campos se juntam
   // em grupos, que são conferidos juntos: cada decisão ("1" a "4") e o
-  // "total".
+  // "total". Cada grupo é uma etapa, e as etapas vão em ordem: uma só abre
+  // quando todos os campos das de antes estão certos.
   //
   // text: o que o aluno digitou em cada campo.
-  // done: os campos resolvidos, "ok" (o aluno acertou) ou "shown" (a
-  //   resposta foi mostrada). Resolvido, o campo não muda mais.
-  // checked: os grupos que o aluno já conferiu pelo menos uma vez. Só
-  //   depois disso aparece o botão que mostra as respostas.
+  // done: os campos que o aluno acertou ("ok"). Certo, o campo não muda
+  //   mais (só refazendo a etapa).
+  // checked: os grupos que o aluno já conferiu desde que começou (ou
+  //   refez) a etapa. Só depois disso aparece o botão de refazer.
   var text = {};
   var done = {};
   var checked = {};
@@ -137,9 +138,9 @@
   }
 
   // A dica de um cálculo, escrita a partir da própria conta: "Desvalorização
-  // do celular no período × Preço médio do celular", "40 anos ÷ Quantidade
-  // de anos com cada aparelho", "Perda total da Vanessa − Perda total da
-  // Karine".
+  // do celular até a troca × Preço médio do celular", "40 anos ÷ Quantidade
+  // de anos com cada aparelho", "Perda total em 40 anos da Vanessa − Perda
+  // total em 40 anos da Karine".
   function hintOf(expr, dec, who) {
     var sheet = sheetOf(dec);
     return expr.map(function (tok, i) {
@@ -243,13 +244,24 @@
     return "Faltam as Decisões " + ids.slice(0, -1).join(", ") + " e " + ids[ids.length - 1] + ".";
   }
 
-  // A diferença total só pode ser conferida com as decisões concluídas.
-  // Devolve a frase que explica por que não, ou "".
+  // a etapa em que o aluno está: a primeira que ainda não está toda certa
+  // (com tudo certo, a última)
+  function current() {
+    var list = groups();
+    return list.filter(function (g) { return !isDone(g); })[0] || list[list.length - 1];
+  }
+
+  // Uma etapa só abre quando as de antes estão 100% certas: a Decisão 2
+  // depois da 1, e a diferença total depois das 4 decisões. Devolve a frase
+  // que explica por que ainda não, ou "".
   function blocked(group) {
-    if (group !== "total") return "";
-    var falta = openDecisions();
+    var list = groups();
+    var falta = list.slice(0, list.indexOf(group)).filter(function (g) { return !isDone(g); });
     if (!falta.length) return "";
-    return "Termine os cálculos das " + Catalog.list.length + " decisões antes de calcular a diferença total. " + faltaText(falta);
+    if (group === "total") {
+      return "A diferença total só abre quando todos os cálculos das " + Catalog.list.length + " decisões estiverem certos. " + faltaText(openDecisions());
+    }
+    return "A Decisão " + group + " só abre quando todos os cálculos da Decisão " + falta[0] + " estiverem certos.";
   }
 
   // Confere os campos de um grupo. Os certos ficam resolvidos (e passam a
@@ -273,29 +285,29 @@
     return { results: results };
   }
 
-  // mostra as respostas dos campos que ainda estão em aberto no grupo (só
-  // depois de o aluno ter conferido o grupo pelo menos uma vez)
-  function show(group) {
-    if (!checked[group]) return "Confira os seus cálculos antes de ver as respostas.";
+  // Refaz uma etapa que ainda não está toda certa: apaga tudo o que o aluno
+  // digitou nela, até os cálculos que já estavam certos, e ela volta a ficar
+  // como no começo. Devolve a frase que explica por que não pode, ou "".
+  function redo(group) {
     var err = blocked(group);
     if (err) return err;
+    if (isDone(group)) return "Esta etapa já está toda certa.";
     fieldsOf(group).forEach(function (f) {
-      if (done[f.id]) return;
-      done[f.id] = "shown";
-      text[f.id] = Format.plain(Math.abs(f.expected), f.unit);
+      delete text[f.id];
+      delete done[f.id];
     });
+    delete checked[group];
     save();
     return "";
   }
 
-  // quantos campos o aluno acertou e quantos tiveram a resposta mostrada,
-  // num grupo ou em tudo (group vazio)
+  // quantos campos o aluno acertou e quantos ainda faltam, num grupo ou em
+  // tudo (group vazio)
   function counts(group) {
     var list = group ? fieldsOf(group) : FIELDS;
-    var c = { ok: 0, shown: 0, open: 0, total: list.length };
+    var c = { ok: 0, open: 0, total: list.length };
     list.forEach(function (f) {
-      if (done[f.id] === "ok") c.ok++;
-      else if (done[f.id] === "shown") c.shown++;
+      if (done[f.id]) c.ok++;
       else c.open++;
     });
     return c;
@@ -343,8 +355,7 @@
   }
 
   // Volta o que estava guardado. Se os dados de decisions.js mudaram depois,
-  // um "ok" que não bate mais com a conta volta a ficar em aberto, e uma
-  // resposta mostrada passa a mostrar o valor novo.
+  // um "ok" que não bate mais com a conta volta a ficar em aberto.
   function load() {
     var saved = null;
     try { saved = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (err) { saved = null; }
@@ -353,13 +364,11 @@
     var d = saved.done || {};
     var c = saved.checked || {};
     FIELDS.forEach(function (f) {
+      // uma resposta mostrada (da versão que tinha o botão de mostrar as
+      // respostas) não volta: o texto dela era a própria resposta
+      if (d[f.id] === "shown") return;
       if (typeof t[f.id] === "string") text[f.id] = t[f.id].slice(0, 80);
-      if (d[f.id] === "shown") {
-        done[f.id] = "shown";
-        text[f.id] = Format.plain(Math.abs(f.expected), f.unit);
-      } else if (d[f.id] === "ok" && judge(f.id) === "ok") {
-        done[f.id] = "ok";
-      }
+      if (d[f.id] === "ok" && judge(f.id) === "ok") done[f.id] = "ok";
     });
     groups().forEach(function (g) { if (c[g] === true) checked[g] = true; });
   }
@@ -381,9 +390,10 @@
     setText: setText,
     isDone: isDone,
     wasChecked: wasChecked,
+    current: current,
     blocked: blocked,
     check: check,
-    show: show,
+    redo: redo,
     counts: counts,
     decisionsDone: decisionsDone,
     totals: totals,

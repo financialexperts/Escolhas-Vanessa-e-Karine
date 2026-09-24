@@ -134,9 +134,8 @@
     window.TimelineView.sync(function (id) { return Ex.isDone(String(id)); });
   }
 
-  // Um grupo foi conferido ou teve as respostas mostradas: a linha do tempo
-  // acompanha e, quando a diferença total fica resolvida, o resultado final
-  // aparece.
+  // Um grupo foi conferido: a linha do tempo acompanha e, quando a diferença
+  // total fica certa, o resultado final aparece.
   function aoMudar(group) {
     syncTimeline();
     if (group === "total" && Ex.isDone("total")) {
@@ -146,7 +145,7 @@
   }
 
   Toast.mount();
-  window.SheetView.mount(el("decisions"), irPara, aoMudar);
+  window.SheetView.mount(el("decisions"), aoMudar);
   window.TimelineView.mount(el("timeline"), window.SheetView.show);
   syncTimeline();
 

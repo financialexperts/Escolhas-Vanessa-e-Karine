@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Escolhas - Vanessa e Karine</title>
 <meta name="description" content="Com os dados de cada decisão da Vanessa e da Karine, faça os cálculos da planilha, confira as respostas e descubra a diferença entre as duas em 40 anos.">
-<meta name="color-scheme" contenx'xt="light dark">
+<meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F7F7FA" id="meta-theme-color">
 <link rel="icon" type="image/png" href="frontend/img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -93,7 +93,7 @@
       <span class="itile itile--green itile--lg" data-icon="calculadora"></span>
       <div>
         <h2 class="invcard__title" id="dc-title">Os cálculos das duas</h2>
-        <p class="invcard__sub">Em cada decisão, use os dados da história para fazer os cálculos, como na planilha. Depois, confira as suas respostas.</p>
+        <p class="invcard__sub">Cada decisão é uma etapa: use os dados da história para fazer os cálculos, como na planilha, e confira as suas respostas. A próxima etapa só abre quando todos os cálculos estão certos.</p>
       </div>
     </div>
 
@@ -106,8 +106,8 @@
         <li class="howto__key howto__key--calc"><span><strong>Em branco:</strong> os cálculos que você faz</span></li>
         <li class="howto__key howto__key--diff"><span><strong>Verde:</strong> a diferença entre as duas</span></li>
       </ul>
-      <p class="howto__tip howto__tip--mouse">Digite só o resultado, como <code>1800</code>, ou a conta, como na planilha: <code>=4500*40%</code>. O Enter leva à próxima célula e, na última, confere.</p>
-      <p class="howto__tip howto__tip--touch">Digite só o resultado de cada cálculo, como <code>1800</code> ou <code>1.800,00</code>, e toque em <strong>Conferir os cálculos</strong>.</p>
+      <p class="howto__tip howto__tip--mouse">Digite só o resultado, como <code>1800</code> (os pontos e os centavos entram sozinhos: <code>1.800,00</code>), ou a conta, como na planilha: <code>=4500*40%</code>. O Enter põe o resultado da conta na célula e leva à próxima; na última, confere.</p>
+      <p class="howto__tip howto__tip--touch">Digite só o resultado de cada cálculo, como <code>1800</code>: os pontos e os centavos entram sozinhos (<code>1.800,00</code>). Depois, toque em <strong>Conferir os cálculos</strong>.</p>
     </div>
 
     <!-- a linha do tempo vem de backend/js/decisions.js (timeline.js monta) -->
@@ -122,15 +122,14 @@
       <div id="timeline"></div>
     </div>
 
-    <!-- a barra dos cálculos tem duas partes: os que o aluno acertou e, mais
-         clara, as respostas que foram mostradas (sheet.js) -->
+    <!-- quantos cálculos o aluno acertou e quantas decisões terminou (sheet.js) -->
     <div class="meters" id="meters">
       <div class="meter meter--ok fx" id="meter-ok">
         <div class="meter__top">
           <p class="meter__label"><span class="meter__ico" data-icon="conferir"></span><span class="meter__more">Cálculos&nbsp;</span>certos</p>
           <p class="meter__nums"><span class="meter__used" id="meter-ok-used">0</span> / <span id="meter-ok-max"></span></p>
         </div>
-        <span class="meter__track" aria-hidden="true"><span class="meter__fill" id="meter-ok-fill"></span><span class="meter__fill meter__fill--shown" id="meter-ok-shown"></span></span>
+        <span class="meter__track" aria-hidden="true"><span class="meter__fill" id="meter-ok-fill"></span></span>
       </div>
       <div class="meter meter--dec fx" id="meter-dec">
         <div class="meter__top">
@@ -141,8 +140,9 @@
       </div>
     </div>
 
-    <!-- os 4 cartões e o da diferença total vêm de backend/js/decisions.js
-         (sheet.js monta) -->
+    <!-- as 5 etapas (as 4 decisões e a diferença total) vêm de
+         backend/js/decisions.js: sheet.js monta as etapas e um cartão pra
+         cada, e só o da etapa aberta aparece -->
     <div class="declist" id="decisions"></div>
 
     <div class="actions actions--end">
@@ -210,6 +210,7 @@
 <script src="frontend/js/format.js"></script>
 <script src="frontend/js/icons.js"></script>
 <script src="frontend/js/parse.js"></script>
+<script src="frontend/js/mask.js"></script>
 <script src="frontend/js/exercise.js"></script>
 <script src="frontend/js/toast.js"></script>
 <script src="frontend/js/sheet.js"></script>

@@ -32,7 +32,8 @@
     foguete: '<g class="ico-rocket"><path d="M12 2.5c3 2.4 4.5 5.8 4.5 9.5l-1.8 3.5H9.3L7.5 12c0-3.7 1.5-7.1 4.5-9.5z"/><circle cx="12" cy="9.5" r="1.8"/><path d="M7.6 12.8L5 15.5v3l4-1.8M16.4 12.8l2.6 2.7v3l-4-1.8"/><path class="ico-flame" d="M10.3 18.5c0 1.6.7 2.4 1.7 3.3 1-.9 1.7-1.7 1.7-3.3"/></g>',
     recomecar: '<path d="M4 12a8 8 0 1 0 2.4-5.7L4 8.5"/><path d="M4 4v4.5h4.5"/>',
     conferir: '<circle cx="12" cy="12" r="9"/><path class="ico-line" pathLength="1" d="M7.8 12.4l2.9 2.9 5.5-6"/>',
-    olho: '<path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle class="ico-pupil" cx="12" cy="12" r="3"/>',
+    refazer: '<path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>',
+    avancar: '<path d="M4 12h15"/><path d="M13 6l6 6-6 6"/>',
 
     // o resultado
     barras: '<path d="M3 21h18"/><rect class="ico-b1" x="5" y="12" width="3.5" height="8" rx="1"/><rect class="ico-b2" x="10.25" y="6" width="3.5" height="14" rx="1"/><rect class="ico-b3" x="15.5" y="9" width="3.5" height="11" rx="1"/>',

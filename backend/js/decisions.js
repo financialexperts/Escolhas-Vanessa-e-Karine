@@ -49,8 +49,8 @@
   function contaDeTrocas(item, valor) {
     return [
       { key: "perda", label: "Perda por troca de " + item, calc: ["desv", "×", valor], unit: "money" },
-      { key: "trocas", label: "Quantidade de trocas no período", calc: ["years", "÷", "anos"], unit: "trocas" },
-      { key: "total", label: "Perda total", calc: ["perda", "×", "trocas"], unit: "money" }
+      { key: "trocas", label: "Quantidade de trocas em {years} anos", calc: ["years", "÷", "anos"], unit: "trocas" },
+      { key: "total", label: "Perda total em {years} anos", calc: ["perda", "×", "trocas"], unit: "money" }
     ];
   }
 
@@ -70,7 +70,7 @@
         story: "Sempre busca estar atualizada com a última versão de tudo. Está constantemente com o celular em mãos, compartilhando momentos no Instagram.",
         rows: [
           { key: "anos", label: "Quantidade de anos com cada aparelho", value: 2, unit: "anos" },
-          { key: "desv", label: "Desvalorização do celular no período", value: 0.4, unit: "pct" },
+          { key: "desv", label: "Desvalorização do celular até a troca", value: 0.4, unit: "pct" },
           { key: "preco", label: "Preço médio do celular", value: 4500, unit: "money" }
         ].concat(contaDeTrocas("telefone", "preco")),
         result: ["total"],
@@ -82,7 +82,7 @@
         story: "Não se preocupa em ter o celular mais moderno e utiliza apenas as funções básicas.",
         rows: [
           { key: "anos", label: "Quantidade de anos com cada aparelho", value: 5, unit: "anos" },
-          { key: "desv", label: "Desvalorização do celular no período", value: 0.5, unit: "pct" },
+          { key: "desv", label: "Desvalorização do celular até a troca", value: 0.5, unit: "pct" },
           { key: "preco", label: "Preço médio do celular", value: 2300, unit: "money" }
         ].concat(contaDeTrocas("telefone", "preco")),
         result: ["total"],
@@ -105,7 +105,7 @@
         story: "Adora assistir séries e faz questão de ter uma TV de 60 polegadas, sempre priorizando as melhores tecnologias disponíveis.",
         rows: [
           { key: "anos", label: "Quantidade de anos com cada TV", value: 4, unit: "anos" },
-          { key: "desv", label: "Depreciação no período", value: 0.5, unit: "pct" },
+          { key: "desv", label: "Depreciação da TV até a troca", value: 0.5, unit: "pct" },
           { key: "valor", label: "Valor da TV", value: 3800, unit: "money" }
         ].concat(contaDeTrocas("TV", "valor")),
         result: ["total"],
@@ -117,7 +117,7 @@
         story: "Não se importa em ter uma TV grande, por isso opta por uma de 32 polegadas, já que faz pouco uso.",
         rows: [
           { key: "anos", label: "Quantidade de anos com cada TV", value: 8, unit: "anos" },
-          { key: "desv", label: "Depreciação no período", value: 0.6, unit: "pct" },
+          { key: "desv", label: "Depreciação da TV até a troca", value: 0.6, unit: "pct" },
           { key: "valor", label: "Valor da TV", value: 2300, unit: "money" }
         ].concat(contaDeTrocas("TV", "valor")),
         result: ["total"],
@@ -140,10 +140,10 @@
         rows: [
           { key: "anos", label: "Quantidade de anos que ficou com o carro", value: 6, unit: "anos" },
           { key: "valor", label: "Valor do carro", value: 120000, unit: "money" },
-          { key: "desv", label: "Depreciação do carro no período", value: 0.45, unit: "pct" },
-          { key: "trocas", label: "Quantidade de trocas no período", value: 6, unit: "trocas" },
+          { key: "desv", label: "Depreciação do carro até a troca", value: 0.45, unit: "pct" },
+          { key: "trocas", label: "Quantidade de trocas em {years} anos", value: 6, unit: "trocas" },
           { key: "perda", label: "Valor da perda do carro por troca", calc: ["valor", "×", "desv"], unit: "money" },
-          { key: "total", label: "Valor total da perda", calc: ["trocas", "×", "perda"], unit: "money" }
+          { key: "total", label: "Valor total da perda em {years} anos", calc: ["trocas", "×", "perda"], unit: "money" }
         ],
         result: ["total"],
         kind: "perda"
@@ -156,7 +156,7 @@
           { key: "valor", label: "Valor da compra do apartamento", value: 120000, unit: "money" },
           { key: "aluguel", label: "Valor do aluguel por mês", value: 850, unit: "money" },
           { key: "meses", label: "Quantidade de meses em {years} anos", calc: ["years", "×", { n: 12, unit: "meses" }], unit: "meses" },
-          { key: "ganho", label: "Ganho com o aluguel", calc: ["meses", "×", "aluguel"], unit: "money" },
+          { key: "ganho", label: "Ganho com o aluguel em {years} anos", calc: ["meses", "×", "aluguel"], unit: "money" },
           { key: "valorFinal", label: "Após {years} anos, o apartamento manteve o mesmo valor", value: ["valor"], unit: "money" }
         ],
         result: ["ganho"],
@@ -194,8 +194,8 @@
           { key: "banco", label: "Investiu no banco", value: 150000, unit: "money" },
           { key: "juros", label: "Aplicação de risco médio, juros por mês (0,7% ao mês)", value: ["banco", "×", { n: 0.007, unit: "pct" }], unit: "money" },
           { key: "mensal", label: "Total da receita mensal", calc: ["div", "+", "juros"], unit: "money" },
-          { key: "meses", label: "Período de receita", calc: ["years", "×", { n: 12, unit: "meses" }], unit: "meses" },
-          { key: "receita", label: "Receita total", calc: ["mensal", "×", "meses"], unit: "money" },
+          { key: "meses", label: "Período de receita em {years} anos", calc: ["years", "×", { n: 12, unit: "meses" }], unit: "meses" },
+          { key: "receita", label: "Receita total em {years} anos", calc: ["mensal", "×", "meses"], unit: "money" },
           { key: "valorizacao", label: "Valorização da startup (de R$ 150.000,00 para R$ 300.000,00)", value: 150000, unit: "money" }
         ],
         result: ["receita", "+", "valorizacao"],

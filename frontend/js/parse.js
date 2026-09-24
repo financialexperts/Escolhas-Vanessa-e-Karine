@@ -11,7 +11,9 @@
 
   // Um número com ponto e vírgula do jeito brasileiro: com vírgula, o ponto
   // separa os milhares ("1.800,50"). Sem vírgula, "1.800" é mil e oitocentos
-  // e "0.4" é quatro décimos (o ponto só é de milhar em grupos de 3).
+  // e "0.4" é quatro décimos (o ponto só é de milhar em grupos de 3). Em
+  // "1.234.5", os pontos de milhar são os da máscara (mask.js) e o último,
+  // com menos de 3 algarismos depois, é o decimal.
   function number(s) {
     if (s.indexOf(",") >= 0) {
       if (s.indexOf(",") !== s.lastIndexOf(",")) return NaN;
@@ -20,6 +22,8 @@
       return Number((parts[0].replace(/\./g, "") || "0") + "." + parts[1]);
     }
     if (/^\d{1,3}(\.\d{3})+$/.test(s)) return Number(s.replace(/\./g, ""));
+    var m = /^(\d{1,3}(?:\.\d{3})+)\.(\d{1,2})$/.exec(s);
+    if (m) return Number(m[1].replace(/\./g, "") + "." + m[2]);
     return /^\d*\.?\d+$|^\d+\.$/.test(s) ? Number(s) : NaN;
   }
 
