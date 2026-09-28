@@ -142,7 +142,9 @@ Com essas rodadas, o placar vai de −5 a +16 na receita, de −27 a +6 no patri
 
 ### O ranking
 
-No placar final, o ranking geral mostra, pra cada categoria (quem fez mais receita, mais patrimônio, mais conhecimento e mais bem-estar), os 5 primeiros colocados entre todo mundo que jogou: ouro, prata e bronze nos três primeiros, e empate divide a posição. Se o aluno ficou mais pra baixo, a posição dele aparece no fim, e a linha dele fica em destaque.
+No placar final, o ranking geral junta todo mundo que jogou num quadro só, com uma aba pra cada categoria: o aluno escolhe se quer ver quem fez mais receita, mais patrimônio, mais conhecimento ou mais bem-estar (dá pra trocar com as setas do teclado também). Cada aba já mostra a posição dele naquela categoria, pra ele ver de relance onde foi melhor.
+
+Na categoria escolhida aparecem a frase com a posição dele ("Você está em 3º lugar na receita, entre 8 jogadores"), o **pódio** dos 3 primeiros (ouro no meio, prata e bronze dos lados, com os degraus subindo como no fim do Kahoot) e a lista do 4º ao 10º. Empate divide a posição (e a medalha). Se o aluno ficou mais pra baixo, a linha dele aparece no fim, em destaque. No computador, o pódio fica ao lado da lista; no celular, em cima dela.
 
 Na abertura, o aluno pode pôr um **apelido** (opcional, até 24 letras). No ranking, o apelido aparece em destaque e, embaixo dele, pequeno, o nome que o aluno cadastrou no login: os alunos se divertem com o apelido e o professor sabe quem é quem. Sem apelido, aparece só o nome do login.
 

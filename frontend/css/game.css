@@ -205,10 +205,12 @@
 .gscore__from{display:grid;gap:4px;margin:12px 0 0;padding:12px 0 0;border-top:1px dashed color-mix(in srgb,var(--k) 35%,var(--line));list-style:none;font-size:14px;line-height:1.45;color:var(--ink-soft)}
 .gscore__from strong{font-family:var(--ff-mono);font-weight:600;color:var(--ink)}
 
-/* O ranking geral: um cartão por categoria, com os primeiros colocados
-   (ouro, prata e bronze nos três primeiros) e a linha de quem está jogando
-   em destaque. Em cada linha, o apelido e, embaixo, o nome do login. */
-.granking{margin-top:24px;padding-top:20px;border-top:1px dashed var(--line-strong)}
+/* O ranking geral: as abas das categorias (cada uma com a posição de quem
+   está jogando nela) e, embaixo, a categoria escolhida: o pódio dos 3
+   primeiros (ouro, prata e bronze) e a lista do 4º em diante, com a linha
+   de quem está jogando em destaque. Em cada nome, o apelido e, embaixo, o
+   nome do login. */
+.granking{--gold:#F2C14E;--gold-ink:#3B2B00;--silver:#CDD3DC;--silver-ink:#262B33;--bronze:#DA9A64;--bronze-ink:#381C06;margin-top:24px;padding-top:20px;border-top:1px dashed var(--line-strong)}
 /* o título e o Atualizar na mesma linha, e a frase embaixo, na largura toda
    (no celular estreito ela não fica espremida ao lado do botão) */
 .granking__head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 12px}
@@ -217,25 +219,83 @@
 .granking__sub{grid-column:1 / -1;font-size:13.5px;color:var(--ink-soft)}
 .granking__sub:empty{display:none}
 .granking__msg{margin-top:12px;padding:12px 14px;border:1px dashed var(--warm);border-radius:12px;font-size:14px;line-height:1.5;color:var(--ink-soft)}
-.granking__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
-.rrank{min-width:0;padding:12px 10px 10px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}
-.rrank__title{display:flex;align-items:center;gap:8px;padding:0 4px;font-family:var(--ff-display);font-weight:700;font-size:15px;letter-spacing:-.01em}
-.rrank__title .itile{--ts:var(--surface)}
-.rrank__list{display:grid;gap:3px;margin:10px 0 0;padding:0;list-style:none}
-.rrank__row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;min-height:34px;padding:4px 6px;border-radius:9px;font-size:13.5px}
-.rrank__row.is-me{background:var(--ks);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--k) 40%,transparent);font-weight:600}
-.rrank__pos{display:grid;place-items:center;min-width:30px;height:24px;padding:0 5px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);font-family:var(--ff-mono);font-size:11.5px;font-weight:600;color:var(--ink-soft)}
-.rrank__pos--1{background:#F2C14E;box-shadow:none;color:#3B2B00}
-.rrank__pos--2{background:#CDD3DC;box-shadow:none;color:#262B33}
-.rrank__pos--3{background:#DA9A64;box-shadow:none;color:#381C06}
+
+/* as abas: a escolhida fica na cor da categoria, como um botão apertado */
+.granking__tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:14px}
+.granking__tab{display:flex;align-items:center;gap:9px;min-width:0;padding:9px 10px 9px 9px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface-2);font-family:var(--ff-display);font-weight:700;font-size:14.5px;letter-spacing:-.01em;line-height:1.2;color:var(--ink-soft);text-align:left;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:border-color .15s,background .15s,color .15s,box-shadow .2s,transform .35s var(--spring)}
+.granking__tab .itile{--ts:var(--surface)}
+.granking__tabname{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.granking__tabpos{flex:none;padding:2px 7px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);font-family:var(--ff-mono);font-size:11.5px;font-weight:600;color:var(--ink-soft)}
+@media (hover:hover){.granking__tab:not([aria-selected="true"]):hover{border-color:var(--line-strong);color:var(--ink);transform:translateY(-2px)}}
+.granking__tab[aria-selected="true"]{border-color:var(--k);background:var(--ks);color:var(--ink);box-shadow:0 3px 0 color-mix(in srgb,var(--k) 40%,transparent)}
+.granking__tab[aria-selected="true"] .granking__tabpos{background:var(--k);box-shadow:none;color:var(--surface)}
+/* o "você em" só aparece no celular; no computador, fica pro leitor de tela */
+.granking__tabvoce{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* a categoria escolhida; no computador, o pódio à esquerda e a lista à
+   direita (o pódio fica "no chão", alinhado com o fim da lista) */
+.granking__panel{margin-top:10px;padding:18px;border:1px solid color-mix(in srgb,var(--k) 35%,var(--line));border-radius:var(--radius);background:color-mix(in srgb,var(--k) 5%,var(--surface))}
+.granking__panel.is-anim{animation:panelIn .35s cubic-bezier(.16,1,.3,1)}
+.granking__you{font-size:14.5px;color:var(--ink-soft)}
+.granking__you strong{color:var(--k)}
+.granking__body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:end;gap:18px 32px;margin-top:14px}
+.granking__body.is-solo{grid-template-columns:minmax(0,1fr)}
+.granking__body.is-solo .rpodium{width:100%;max-width:520px;margin:0 auto}
+
+/* O pódio: o 1º no meio e mais alto, o 2º à esquerda e o 3º à direita (no
+   empate, a mesma medalha e a mesma altura). */
+.rpodium{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:end;gap:8px;margin:0;padding:0;list-style:none}
+.rpodium__spot{--m:var(--bronze);--mi:var(--bronze-ink);display:flex;flex-direction:column;align-items:center;min-width:0;text-align:center}
+.rpodium__spot--1{--m:var(--gold);--mi:var(--gold-ink)}
+.rpodium__spot--2{--m:var(--silver);--mi:var(--silver-ink)}
+.rpodium__spot:nth-child(1){grid-column:2;grid-row:1}
+.rpodium__spot:nth-child(2){grid-column:1;grid-row:1}
+.rpodium__spot:nth-child(3){grid-column:3;grid-row:1}
+.rpodium__avatar{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--m);box-shadow:0 0 0 3px var(--surface),0 0 0 5px color-mix(in srgb,var(--m) 55%,transparent);font-family:var(--ff-display);font-weight:700;font-size:18px;letter-spacing:-.02em;color:var(--mi)}
+.rpodium__spot--1 .rpodium__avatar{width:64px;height:64px;font-size:22px}
+.rpodium__spot.is-me .rpodium__avatar{box-shadow:0 0 0 3px var(--surface),0 0 0 6px var(--k)}
+.rpodium__spot .rrank__name{align-items:center;max-width:100%;margin-top:10px;font-size:14px;font-weight:600}
+.rpodium__spot .rrank__line{justify-content:center;max-width:100%}
+.rpodium__spot .rrank__real{max-width:100%}
+.rpodium__pts{margin-top:3px;font-family:var(--ff-mono);font-size:17px;font-weight:600;color:var(--k)}
+.rpodium__step{display:flex;justify-content:center;width:100%;margin-top:10px;padding-top:10px;border-radius:12px 12px 4px 4px;background:linear-gradient(color-mix(in srgb,var(--m) 55%,var(--surface)),color-mix(in srgb,var(--m) 20%,var(--surface)));box-shadow:inset 0 3px 0 var(--m);transform-origin:50% 100%}
+.rpodium__pos{font-family:var(--ff-display);font-weight:700;font-size:22px;line-height:1;color:var(--ink)}
+.rpodium__spot--1 .rpodium__step{height:96px}
+.rpodium__spot--2 .rpodium__step{height:70px}
+.rpodium__spot--3 .rpodium__step{height:52px}
+
+/* a lista, do 4º em diante */
+.rrank__list{display:grid;gap:4px;margin:0;padding:0;list-style:none}
+.rrank__row{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:10px;min-height:46px;padding:5px 12px 5px 7px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:14px}
+.rrank__row.is-me{border-color:color-mix(in srgb,var(--k) 55%,transparent);background:var(--ks);font-weight:600}
+.rrank__pos{display:grid;place-items:center;min-width:30px;height:24px;padding:0 5px;border-radius:999px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);font-family:var(--ff-mono);font-size:11.5px;font-weight:600;color:var(--ink-soft)}
+.rrank__pos--1{background:var(--gold);box-shadow:none;color:var(--gold-ink)}
+.rrank__pos--2{background:var(--silver);box-shadow:none;color:var(--silver-ink)}
+.rrank__pos--3{background:var(--bronze);box-shadow:none;color:var(--bronze-ink)}
+.rrank__avatar{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line);font-family:var(--ff-display);font-weight:700;font-size:12px;color:var(--ink-soft)}
+.rrank__row.is-me .rrank__avatar{background:var(--k);box-shadow:none;color:var(--surface)}
 .rrank__name{display:flex;flex-direction:column;min-width:0;line-height:1.3}
 .rrank__line{display:flex;align-items:baseline;gap:6px;min-width:0}
 /* o nome comprido é cortado com "…", mas o "você" fica sempre à vista */
 .rrank__who{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rrank__real{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;font-weight:400;color:var(--muted)}
 .rrank__me{flex:none;font-family:var(--ff-mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--k)}
-.rrank__pts{font-family:var(--ff-mono);font-weight:600;color:var(--k)}
-.rrank__gap{padding:0 10px;line-height:1;color:var(--muted)}
+.rrank__pts{font-family:var(--ff-mono);font-size:15px;font-weight:600;color:var(--k)}
+.rrank__gap{padding:0 14px;line-height:1;color:var(--muted)}
+
+/* a entrada: os degraus sobem do 3º pro 1º, como no Kahoot, e depois
+   aparecem os nomes e as linhas (na primeira vez e na troca de aba) */
+.granking__panel.is-anim .rpodium__step{animation:step-up .7s var(--spring) backwards}
+.granking__panel.is-anim .rpodium__spot > :not(.rpodium__step){animation:fade-up .45s var(--spring) backwards}
+.granking__panel.is-anim .rpodium__spot:nth-child(3) .rpodium__step{animation-delay:.05s}
+.granking__panel.is-anim .rpodium__spot:nth-child(2) .rpodium__step{animation-delay:.2s}
+.granking__panel.is-anim .rpodium__spot:nth-child(1) .rpodium__step{animation-delay:.35s}
+.granking__panel.is-anim .rpodium__spot:nth-child(3) > :not(.rpodium__step){animation-delay:.3s}
+.granking__panel.is-anim .rpodium__spot:nth-child(2) > :not(.rpodium__step){animation-delay:.45s}
+.granking__panel.is-anim .rpodium__spot:nth-child(1) > :not(.rpodium__step){animation-delay:.6s}
+.granking__panel.is-anim .rrank__row{animation:ropt-in .45s var(--spring) backwards;animation-delay:calc(.25s + var(--i) * 45ms)}
+@keyframes step-up{from{transform:scaleY(0)}to{transform:none}}
+@keyframes fade-up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 
 /* os tipos das escolhas: quantas vezes e quantos pontos cada um deu; os
    que o aluno não escolheu ficam apagados */
@@ -291,12 +351,10 @@
   .gkinds{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
 
-/* sem largura pro quadro das regras do lado, ele desce pra baixo do texto;
-   o ranking fica com duas categorias por linha */
+/* sem largura pro quadro das regras do lado, ele desce pra baixo do texto */
 @media (max-width:1040px){
   .gintro{grid-template-columns:minmax(0,1fr);gap:22px}
   .grules__list{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
-  .granking__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 
 /* Rodadas com 3 opções: sem largura pras três lado a lado, uma embaixo da
@@ -306,6 +364,9 @@
   .ropts[data-count="3"]{grid-template-columns:minmax(0,1fr)}
   .ropts[data-count="3"] .ropt{min-height:84px}
   .steps--many .steps__kicker{display:none}
+  /* o ranking: o pódio em cima e a lista embaixo */
+  .granking__body{grid-template-columns:minmax(0,1fr)}
+  .granking__body .rpodium{width:100%;max-width:520px;margin:0 auto}
   .meters--game .meter__more{display:none}
   /* a escolha numa linha só dela e o impacto nas categorias embaixo */
   .rrow__cells{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -359,7 +420,25 @@
 }
 
 @media (max-width:560px){
-  .granking__grid{grid-template-columns:minmax(0,1fr)}
+  /* o ranking: as abas duas a duas, com o "você em 3º" embaixo do nome, e o
+     pódio mais baixo */
+  .granking__tabs{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .granking__tab{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:1px 8px;padding:8px}
+  .granking__tab .itile{grid-row:span 2}
+  .granking__tabpos,.granking__tab[aria-selected="true"] .granking__tabpos{justify-self:start;padding:0;background:none;box-shadow:none;font-size:11px;font-weight:500;color:var(--muted)}
+  .granking__tab[aria-selected="true"] .granking__tabpos{font-weight:600;color:var(--k)}
+  .granking__tabvoce{position:static;width:auto;height:auto;overflow:visible;clip:auto}
+  .granking__panel{padding:14px 12px}
+  .rpodium{gap:6px}
+  .rpodium__avatar{width:44px;height:44px;font-size:16px}
+  .rpodium__spot--1 .rpodium__avatar{width:54px;height:54px;font-size:19px}
+  .rpodium__spot .rrank__name{font-size:13px}
+  .rpodium__pts{font-size:15px}
+  .rpodium__pos{font-size:19px}
+  .rpodium__spot--1 .rpodium__step{height:78px}
+  .rpodium__spot--2 .rpodium__step{height:58px}
+  .rpodium__spot--3 .rpodium__step{height:44px}
+  .rrank__row{gap:8px;padding:5px 10px 5px 6px}
   .rrow__cells{grid-template-columns:repeat(2,minmax(0,1fr))}
   .gtable{font-size:13.5px}
   .gtable th,.gtable td{padding:9px 8px}
@@ -377,6 +456,10 @@
 @media (max-width:380px){
   .granking__btntext{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
   .granking__head .btn{padding:8px}
+  /* as abas sem o ícone, pro nome ("Conhecimento") caber inteiro */
+  .granking__tab{grid-template-columns:minmax(0,1fr);padding:8px 9px;font-size:13.5px;letter-spacing:-.02em}
+  .granking__tab .itile{display:none}
+  .rpodium__spot .rrank__name{font-size:12.5px}
   .steps--many .steps__num{width:25px;height:25px;border-width:1.5px;font-size:11.5px}
   .steps--many .steps__item.is-done .steps__num{background-size:12px}
   .steps--many .steps__item.is-active .steps__num{box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 22%,transparent)}
