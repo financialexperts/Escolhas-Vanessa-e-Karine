@@ -29,7 +29,7 @@
 
   function markup() {
     return '<div class="auth__intro">' +
-        '<p class="card__kicker intro__tag">Atividades da Aula 4</p>' +
+        '<p class="card__kicker intro__tag">Educação financeira</p>' +
         "<h1>Entre para fazer as atividades.</h1>" +
         "<p>Com a sua conta, você faz os cálculos das escolhas da Vanessa e da Karine e joga o Seu dinheiro no tempo. " +
           "Já tem conta no <strong>Fluxo de Caixa</strong>? Entre com o mesmo e-mail e a mesma senha.</p>" +

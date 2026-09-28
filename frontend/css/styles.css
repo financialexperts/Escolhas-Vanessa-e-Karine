@@ -322,7 +322,16 @@ button{font:inherit;color:inherit}
 .fx.is-poked .ico--carteira .ico-coin{animation:ico-drop .8s ease}
 .fx.is-poked .ico--sacola .ico-bag{animation:ico-shake .5s ease}
 .fx.is-poked .ico--trofeu{animation:ico-hop .6s ease}
-.ico .ico-chips{stroke-width:2.6}
+.fx.is-poked .ico--capelo .ico-cap{animation:ico-hop .6s ease}
+.fx.is-poked .ico--coracao .ico-heart{animation:ico-pulse .45s ease 2}
+.fx.is-poked .ico--cartao .ico-card{animation:ico-slide-r .7s ease-in-out}
+.fx.is-poked .ico--dados .ico-die{animation:ico-spin .7s cubic-bezier(.45,0,.2,1)}
+.fx.is-poked .ico--gaveta .ico-knob{animation:ico-slide-r .7s ease-in-out}
+.fx.is-poked .ico--tenis{animation:ico-hop .6s ease}
+.fx.is-poked .ico--maleta{animation:ico-wiggle .6s ease}
+.fx.is-poked .ico--notebook{animation:ico-hop .6s ease}
+.fx.is-poked .ico--alerta .ico-mark{animation:ico-pulse .45s ease 2}
+.ico .ico-chips,.ico .ico-pips{stroke-width:2.6}
 
 /* ---------- Botões ---------- */
 .actions{display:flex;gap:10px;margin-top:22px;padding-top:18px;border-top:1px solid var(--line)}

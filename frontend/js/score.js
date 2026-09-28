@@ -7,14 +7,15 @@
   var Icons = global.Icons;
   var PlayView = global.PlayView;
 
-  // O placar do fim do jogo: quantos pontos o aluno fez em cada categoria
-  // (receita e patrimônio), de que tipos de escolha eles vieram, a tabela do
-  // slide preenchida rodada por rodada e o que os pontos mostram.
+  // O placar do fim do jogo: quantos pontos o aluno fez em cada categoria,
+  // quantas escolhas ele fez de cada tipo, a tabela preenchida rodada por
+  // rodada e o que os pontos mostram. O ranking da turma fica no
+  // ranking.js (o game-app.js mostra os dois juntos).
 
-  // A última frase do que os pontos mostram: a lição da atividade.
+  // A última frase do que os pontos mostram: a lição do jogo.
   var LICAO = "Consumir não é proibido: o importante é saber o que cada escolha faz com o seu dinheiro no tempo. " +
-    "O consumo imediato tira do <strong>patrimônio</strong>, as escolhas que geram renda aumentam a " +
-    "<strong>receita</strong> e as equilibradas fazem o <strong>patrimônio</strong> crescer aos poucos.";
+    "Quem equilibra aproveita o agora (<strong>bem-estar</strong>) sem esquecer o depois " +
+    "(<strong>patrimônio</strong>, <strong>receita</strong> e <strong>conhecimento</strong>).";
 
   var semAnimacao = global.matchMedia && global.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var quadro = null;
@@ -25,12 +26,6 @@
   // "1 escolha que gera renda", "2 escolhas que geram renda"
   function kindCount(kind, n) {
     return n + " " + (n === 1 ? kind.label : kind.plural).toLowerCase();
-  }
-
-  // "a, b e c"
-  function lista(items) {
-    if (items.length < 2) return items.join("");
-    return items.slice(0, -1).join(", ") + " e " + items[items.length - 1];
   }
 
   /* ============ o placar de cada categoria ============ */
@@ -105,26 +100,34 @@
   }
 
   /* ============ os tipos de escolha ============ */
-  function kindStatHTML(key, k) {
-    var kind = Catalog.kinds[key];
-    return '<div class="stat fx">' +
-      '<p class="stat__label">' + Icons.tile(kind.icon, kind.tone, "itile--xs") + Format.esc(kind.name) + "</p>" +
-      '<p class="stat__value is-score">' + k.count + (k.count === 1 ? " escolha" : " escolhas") + "</p>" +
-      '<p class="stat__sub">' + Format.esc(Game.effectText(k.points)) + "</p>" +
-      "</div>";
+  // Uma linha por tipo: quantas vezes o aluno escolheu e quantos pontos deu.
+  // Os tipos que ele não escolheu ficam apagados, mas aparecem: "0 apostas"
+  // também conta.
+  function kindsHTML(kinds) {
+    return Object.keys(Catalog.kinds).map(function (key) {
+      var kind = Catalog.kinds[key];
+      var k = kinds[key];
+      return '<li class="gkind fx' + (k.count ? "" : " is-zero") + '">' +
+        Icons.tile(kind.icon, kind.tone, "itile--sm") +
+        '<span class="gkind__name">' + Format.esc(kind.name) + "</span>" +
+        '<span class="gkind__count">' + k.count + (k.count === 1 ? " escolha" : " escolhas") + "</span>" +
+        '<span class="gkind__pts">' + (k.count ? PlayView.effect(k.points) : "—") + "</span>" +
+        "</li>";
+    }).join("");
   }
 
-  /* ============ a tabela do slide ============ */
+  /* ============ a tabela ============ */
   function numCell(catKey, v) {
-    return '<td class="gtable__num" data-tone="' + Game.toneOf(catKey, v) + '">' + Format.points(v) + "</td>";
+    return '<td class="gtable__num gtable__cat" data-tone="' + Game.toneOf(catKey, v) + '">' + Format.points(v) + "</td>";
   }
 
+  // No celular, as colunas das categorias saem e o impacto vira uma frase
+  // embaixo da escolha (gtable__effect).
   function tableHTML(t) {
     var head = "<thead><tr>" +
       '<th scope="col">Rodada</th><th scope="col">Minha escolha</th>' +
       Catalog.categories.map(function (c) {
-        return '<th scope="col" class="gtable__num"><span class="gtable__long">Impacto ' + Format.esc(c.where) + "</span>" +
-          '<span class="gtable__short" aria-hidden="true">' + Format.esc(c.name) + "</span></th>";
+        return '<th scope="col" class="gtable__num gtable__cat">' + Format.esc(c.name) + "</th>";
       }).join("") +
       "</tr></thead>";
 
@@ -136,7 +139,9 @@
         '<th scope="row"><span class="gtable__round">' + r.id + '</span><span class="gtable__topic">' + Format.esc(r.topic) + "</span></th>" +
         '<td><div class="gtable__pick">' + PlayView.letter(l) +
           '<span class="gtable__text">' + Format.esc(r.options[l].text) +
-          '<span class="gtable__kind">' + Format.esc(kind.name) + "</span></span></div></td>" +
+          '<span class="gtable__kind">' + Format.esc(kind.name) + (r.multiplier > 1 ? " · pontos em dobro" : "") + "</span>" +
+          '<span class="gtable__effect">' + PlayView.effect(pts) + "</span>" +
+          "</span></div></td>" +
         Catalog.categories.map(function (c) { return numCell(c.key, pts[c.key]); }).join("") +
         "</tr>";
     }).join("") + "</tbody>";
@@ -149,30 +154,43 @@
   }
 
   /* ============ o que os pontos mostram ============ */
-  // Quantas escolhas tiraram pontos (as de consumo imediato) diz o tom da
-  // frase: nenhuma, algumas, a maioria ou todas.
+  // Quantas escolhas somaram e quantas tiraram pontos, o ponto forte do
+  // aluno (a categoria em que ele chegou mais perto do máximo) e uma dica
+  // pra cada armadilha em que ele caiu.
   function insightHTML(t, kinds) {
     var n = Catalog.list.length;
-    var feitas = Object.keys(Catalog.kinds).filter(function (k) { return kinds[k].count; }).map(function (k) {
-      return "<strong>" + Format.esc(kindCount(Catalog.kinds[k], kinds[k].count)) + "</strong>";
-    });
-    var perdas = Object.keys(Catalog.kinds).filter(function (k) {
+    var r = Game.range();
+    function net(k) {
       var p = Catalog.kinds[k].points;
-      return Object.keys(p).some(function (c) { return p[c] < 0; });
-    });
-    var neg = perdas.reduce(function (s, k) { return s + kinds[k].count; }, 0);
-    var nome = perdas.length ? Catalog.kinds[perdas[0]].name.toLowerCase() : "consumo imediato";
+      return Object.keys(p).reduce(function (s, c) { return s + p[c]; }, 0);
+    }
+    var keys = Object.keys(Catalog.kinds);
+    var bons = keys.filter(function (k) { return net(k) > 0; }).reduce(function (s, k) { return s + kinds[k].count; }, 0);
+    var ruins = n - bons;
 
-    var tom;
-    if (!neg) tom = "Em nenhuma rodada o dinheiro foi para o " + nome + ": em todas, ele foi trabalhar por você.";
-    else if (neg === n) tom = "Nas " + n + " rodadas, o dinheiro foi para o " + nome + ". Você aproveitou na hora, mas o placar mostra o custo: " +
-      Format.esc(Game.effectText(t)) + ".";
-    else if (neg * 2 > n) tom = "Na maior parte das rodadas (" + neg + " de " + n + "), o dinheiro foi para o " + nome + ". " +
-      "É bom aproveitar, mas o patrimônio sente cada uma dessas escolhas.";
-    else tom = "Em " + neg + " de " + n + " rodadas você escolheu o " + nome + " e, nas outras, fez o dinheiro trabalhar por você.";
+    var forte = null;
+    Catalog.categories.forEach(function (c) {
+      if (t[c.key] <= 0 || r[c.key].max <= 0) return;
+      var p = t[c.key] / r[c.key].max;
+      if (!forte || p > forte.p) forte = { c: c, p: p };
+    });
+
+    var resumo = "Nas " + n + " rodadas, você fez <strong>" + bons + (bons === 1 ? " escolha" : " escolhas") + " que " +
+      (bons === 1 ? "somou" : "somaram") + " pontos</strong> e <strong>" + ruins + " que " + (ruins === 1 ? "tirou" : "tiraram") + "</strong>. " +
+      (forte
+        ? "O seu ponto forte foi " + (forte.c.where.split(" ")[0] === "no" ? "o " : "a ") + "<strong>" + Format.esc(forte.c.name.toLowerCase()) +
+          "</strong>: " + nw(Format.points(t[forte.c.key])) + " de " + nw(Format.points(r[forte.c.key].max)) + " possíveis."
+        : "Nenhuma categoria ficou positiva: vale jogar de novo e comparar.");
+
+    var dicas = keys.filter(function (k) { return kinds[k].count && Catalog.kinds[k].tip; }).map(function (k) {
+      var kind = Catalog.kinds[k];
+      return '<li><span class="insight__tip">' + Icons.tile(kind.icon, kind.tone, "itile--xs") +
+        "<strong>" + Format.esc(kind.name) + "</strong> (" + kinds[k].count + "×)</span> " + Format.esc(kind.tip) + "</li>";
+    });
 
     return '<p class="insight__title">' + Icons.tile("lampada", "amber", "itile--xs") + "O que os seus pontos mostram</p>" +
-      "<p>Nas " + n + " rodadas, você fez " + lista(feitas) + ". " + tom + "</p>" +
+      "<p>" + resumo + "</p>" +
+      (dicas.length ? '<ul class="insight__tips">' + dicas.join("") + "</ul>" : "<p>Você não caiu em nenhuma armadilha: nem dívida, nem aposta, nem dinheiro parado. Mandou bem!</p>") +
       "<p>" + LICAO + "</p>";
   }
 
@@ -182,7 +200,8 @@
     var t = Game.totals();
     var r = Game.range();
     var kinds = Game.byKind();
-    var nome = Game.getName();
+    // o primeiro nome que a pessoa cadastrou no login
+    var nome = global.Session ? global.Session.firstName() : "";
 
     el("fn-kicker").textContent = "Fim do jogo · " + Catalog.list.length + " rodadas";
     el("fn-title").textContent = nome ? "O seu placar, " + nome : "O seu placar";
@@ -190,7 +209,7 @@
     el("fn-scores").innerHTML = Catalog.categories.map(function (c) {
       return scoreHTML(c, t[c.key], r[c.key], kinds);
     }).join("");
-    el("fn-kinds").innerHTML = Object.keys(Catalog.kinds).map(function (k) { return kindStatHTML(k, kinds[k]); }).join("");
+    el("fn-kinds").innerHTML = kindsHTML(kinds);
     el("fn-table").innerHTML = tableHTML(t);
     el("fn-insight").innerHTML = insightHTML(t, kinds);
     el("sec-final").hidden = false;

@@ -63,7 +63,7 @@
        os ícones com data-icon são desenhados pelo icons.js -->
   <section class="card gintro" aria-labelledby="intro-title">
     <div class="gintro__text">
-      <p class="card__kicker intro__tag"><span data-icon="ampulheta"></span>Atividade da Aula 4</p>
+      <p class="card__kicker intro__tag"><span data-icon="ampulheta"></span>Jogo de escolhas</p>
       <h1 id="intro-title">Seu dinheiro no tempo</h1>
       <p class="intro__lead" id="g-lead"></p>
 
@@ -80,7 +80,7 @@
           <span class="itile itile--blue" data-icon="alvo"></span>
           <div class="fact__body">
             <p class="fact__label">Em cada rodada</p>
-            <p class="fact__value">Opção A ou B</p>
+            <p class="fact__value" id="sc-opts">—</p>
           </div>
         </div>
         <div class="fact fx">
@@ -92,20 +92,26 @@
         </div>
       </div>
 
-      <!-- o nome vai no placar do fim; sem nome, o placar é "o seu placar" -->
+      <!-- as categorias do placar e o que cada uma quer dizer (game-app.js) -->
+      <p class="card__kicker intro__kicker" id="gc-title">As categorias do placar</p>
+      <ul class="gcats" id="g-cats" aria-labelledby="gc-title"></ul>
+
+      <!-- o código da turma, como o PIN do Kahoot: quem usa o mesmo código
+           aparece no mesmo ranking. No ranking vai o nome do login -->
       <div class="gstart">
         <div class="gname">
-          <label class="gname__label" for="g-name">Seu nome ou apelido <span>(opcional)</span></label>
-          <input class="gname__input" id="g-name" type="text" maxlength="24" autocomplete="nickname" spellcheck="false" enterkeyhint="go" placeholder="Como quer aparecer no placar">
+          <label class="gname__label" for="g-code">Código da turma <span>(opcional)</span></label>
+          <input class="gname__input gname__input--code" id="g-code" type="text" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go" placeholder="O professor diz qual é" aria-describedby="g-code-hint">
+          <p class="gname__hint" id="g-code-hint">Quem joga com o mesmo código aparece no mesmo ranking.</p>
         </div>
         <button class="btn btn--primary glass fx gstart__btn" type="button" id="btn-start"><span data-icon="foguete"></span><span id="btn-start-text">Começar o jogo</span></button>
       </div>
     </div>
 
-    <!-- o quadro roxo dos slides: quantos pontos vale cada tipo de escolha -->
+    <!-- o quadro roxo: quanto vale cada tipo de escolha (play.js monta) -->
     <aside class="grules" aria-labelledby="gr-title">
       <p class="grules__title" id="gr-title"><span class="itile itile--violet itile--xs" data-icon="balanca"></span>Como os pontos funcionam</p>
-      <ul class="grules__list" id="g-rules"></ul>
+      <div id="g-rules"></div>
       <p class="grules__note">Qual opção é de qual tipo? Você descobre depois de escolher.</p>
     </aside>
   </section>
@@ -124,18 +130,18 @@
 
     <!-- as rodadas respondidas e, depois delas, os pontos de cada categoria
          do placar, que o play.js põe a partir de backend/js/rounds.js -->
-    <div class="meters meters--3" id="meters">
+    <div class="meters meters--game" id="meters">
       <div class="meter meter--rounds fx">
         <div class="meter__top">
-          <p class="meter__label"><span class="meter__ico" data-icon="camadas"></span>Rodadas</p>
+          <p class="meter__label"><span class="meter__ico" data-icon="camadas"></span><span class="meter__name">Rodadas</span></p>
           <p class="meter__nums"><span class="meter__used" id="meter-rounds-used">0</span> / <span id="meter-rounds-max"></span></p>
         </div>
         <span class="meter__track" aria-hidden="true"><span class="meter__fill" id="meter-rounds-fill"></span></span>
       </div>
     </div>
 
-    <!-- as 5 rodadas vêm de backend/js/rounds.js: play.js monta as etapas e
-         um cartão pra cada, e só o da rodada aberta aparece -->
+    <!-- as rodadas vêm de backend/js/rounds.js: play.js monta as etapas e um
+         cartão pra cada, e só o da rodada aberta aparece -->
     <div class="declist" id="rounds"></div>
 
     <div class="actions actions--end">
@@ -155,7 +161,14 @@
     </div>
 
     <div class="gscores" id="fn-scores"></div>
-    <div class="stats stats--3" id="fn-kinds"></div>
+
+    <!-- quem fez mais pontos em cada categoria, na turma (ranking.js) -->
+    <div class="granking" id="fn-ranking"></div>
+
+    <div class="gtable-wrap">
+      <p class="gtable__title"><span class="itile itile--violet itile--xs" data-icon="camadas"></span>Os tipos das suas escolhas</p>
+      <ul class="gkinds" id="fn-kinds"></ul>
+    </div>
 
     <div class="gtable-wrap">
       <p class="gtable__title"><span class="itile itile--violet itile--xs" data-icon="linha"></span>A sua tabela, rodada por rodada</p>
@@ -175,7 +188,7 @@
 
 <footer>
   <div class="wrap">
-    <p>Atividade "Seu dinheiro no tempo", da Aula 4.</p>
+    <p>As situações deste jogo são hipotéticas.</p>
     <p>Copyright © 2026 Financial Experts.</p>
   </div>
 </footer>
@@ -200,6 +213,7 @@
 <script src="frontend/js/toast.js"></script>
 <script src="frontend/js/play.js"></script>
 <script src="frontend/js/score.js"></script>
+<script src="frontend/js/ranking.js"></script>
 <script src="frontend/js/auth.js"></script>
 <script src="frontend/js/ui.js"></script>
 <script src="frontend/js/session.js"></script>

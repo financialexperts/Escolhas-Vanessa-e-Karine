@@ -1,9 +1,9 @@
 # Equilibrista de Escolhas – Vanessa e Karine
 
-Duas atividades da Aula 4, cada uma numa aba no alto da tela, e um login na frente das duas:
+Duas atividades, cada uma numa aba no alto da tela, e um login na frente das duas:
 
 - **Vanessa e Karine** (`index.html`): o exercício em que o próprio aluno faz os cálculos da planilha "Escolhas Karine e Vanessa - PROFESSOR". São as 4 decisões que a Vanessa e a Karine tomaram ao longo de 40 anos. Em cada uma, ele usa os dados da história para preencher as contas, confere as respostas e, no fim, calcula a diferença total entre as duas (R$ 2.054.300,00). As 4 decisões e a diferença total são 5 etapas, feitas uma de cada vez: a próxima só abre quando todos os cálculos da etapa estão certos.
-- **Seu dinheiro no tempo** (`dinheiro-no-tempo.html`): o jogo dos slides da Aula 4, no estilo do Kahoot. São 5 rodadas, e em cada uma o aluno escolhe entre a Opção A e a Opção B. Os pontos não vêm de acertar nem de ser rápido: cada escolha é de um tipo, e cada tipo dá ou tira pontos de **receita** ou de **patrimônio**. No fim, o placar mostra quantos pontos ele fez em cada categoria. Veja [Seu dinheiro no tempo](#seu-dinheiro-no-tempo).
+- **Seu dinheiro no tempo** (`dinheiro-no-tempo.html`): um jogo de escolhas no estilo do Kahoot, para alunos de 13 a 16 anos. São 10 rodadas, do fácil ao difícil, com 3 ou 4 opções. Os pontos não vêm de acertar nem de ser rápido: cada escolha é de um tipo, e cada tipo dá ou tira pontos em 4 categorias (**receita**, **patrimônio**, **conhecimento** e **bem-estar**). No fim, o placar mostra quantos pontos o aluno fez em cada categoria, e o ranking da turma, quem fez mais em cada uma. Veja [Seu dinheiro no tempo](#seu-dinheiro-no-tempo).
 - **O login** é o mesmo do Fluxo de Caixa, com o mesmo banco (Supabase): quem já tem conta lá entra aqui com o mesmo e-mail e a mesma senha. Veja [O login](#o-login).
 
 Não tem build nem instalação: são páginas `.html` + alguns arquivos `.js` e `.css` estáticos, na mesma identidade visual do Simulador de Renda da Laura. As contas ficam no Supabase do Fluxo de Caixa. Para rodar, basta publicar a pasta no GitHub Pages (ou abrir o `index.html` no navegador, com internet, por causa do login).
@@ -80,39 +80,73 @@ O sistema não guarda as respostas prontas: ele faz as contas a partir dos dados
 
 ## Seu dinheiro no tempo
 
-A atividade dos slides "Seu dinheiro no tempo": em vez de desenhar a tabela no papel, o aluno joga no celular ou no computador, e a tabela sai pronta no fim.
+Um jogo de escolhas com o dinheiro, no estilo do Kahoot, pensado para alunos de 13 a 16 anos: difícil o bastante pra fazer pensar, sem virar prova. Não tem resposta certa: cada escolha dá ou tira pontos em 4 categorias, e o placar mostra o que as escolhas do aluno fizeram com o dinheiro dele no tempo.
 
-1. **A abertura.** O nome da atividade, como é o jogo (5 rodadas, Opção A ou B, o placar de receita e patrimônio) e, ao lado, o quadro roxo dos slides com quanto vale cada tipo de escolha. O aluno pode pôr um nome ou apelido pro placar (já vem o primeiro nome da conta) e toca em **Começar o jogo**.
+1. **A abertura.** Como é o jogo (10 rodadas, 3 ou 4 opções, 4 categorias), o que cada categoria quer dizer e, ao lado, o quadro roxo com quanto vale cada tipo de escolha (os que somam e os que tiram pontos). O aluno pode pôr o **código da turma**, que o professor diz (como o PIN do Kahoot), e toca em **Começar o jogo**.
 
-2. **As rodadas.** Uma de cada vez, como no Kahoot. A situação do slide aparece grande e, antes das opções, uma contagem (3, 2, 1) dá tempo de todo mundo ler. As duas opções são botões grandes, cada uma com a sua forma e a sua cor: a A é o triângulo rosa e a B o losango azul.
+2. **As rodadas.** Uma de cada vez. A situação aparece grande, com uma etiqueta do nível (**Fácil**, **Médio** ou **Difícil**) e, antes das opções, uma contagem (3, 2, 1) dá tempo de todo mundo ler. As opções são botões grandes, cada uma com a sua forma e a sua cor: A é o triângulo rosa, B o losango azul, C o círculo âmbar e D o quadrado verde.
 
-3. **A escolha.** Vale a primeira: depois de tocar, não dá pra trocar (só recomeçando o jogo). Aí o cartão mostra os pontos que ela deu (o número grande), o tipo da escolha e por quê, a linha da tabela do slide (minha escolha, impacto na receita, impacto no patrimônio) e o que a outra opção teria dado. O botão **Ir para a Rodada 2** abre a próxima.
+   - **Rodadas 1 a 5 (fácil), 3 opções:** as situações dos slides. A A e a B são as dos slides; a C é nova.
+   - **Rodadas 6 a 8 (médio), 4 opções:** situações do dia a dia (o tênis furou, o primeiro salário do Jovem Aprendiz, a tela do celular quebrou).
+   - **Rodadas 9 e 10 (difícil), 4 opções:** com armadilhas que parecem prudentes (guardar na gaveta pra fugir de um golpe) e a última rodada vale **pontos em dobro**, como a pergunta final do Kahoot.
 
-   Enquanto o aluno joga, o placar fica grudado no alto: quantas rodadas ele respondeu e os pontos de receita e de patrimônio, com uma barrinha que sai do 0 pra direita quando soma e pra esquerda, em vermelho, quando tira. Em cima das rodadas ficam as etapas: as respondidas ganham o selo verde e dá pra voltar nelas pra rever (sem mudar a escolha).
+   A melhor opção muda de letra de rodada pra rodada, e mais de uma opção pode somar pontos, cada uma numa categoria.
 
-4. **O placar.** Na última rodada, **Ver o meu placar** mostra quantos pontos o aluno fez em cada categoria, a régua do menor ao maior placar possível com o ponto onde ele ficou, e de que escolhas vieram os pontos. Depois vêm quantas escolhas ele fez de cada tipo, a tabela do slide preenchida rodada por rodada (com o total) e o que os pontos mostram. **Jogar de novo** apaga as escolhas e já abre a Rodada 1.
+3. **A escolha.** Vale a primeira: depois de tocar, não dá pra trocar (só recomeçando o jogo). Aí o cartão mostra os pontos que ela deu (um número grande por categoria), o tipo da escolha e por quê, a linha da tabela (a escolha e o impacto em cada categoria) e o que cada uma das outras opções teria dado. O botão **Ir para a Rodada 2** abre a próxima.
 
-### Os tipos de escolha e os pontos
+   Enquanto o aluno joga, o placar fica grudado no alto: quantas rodadas ele respondeu e os pontos de cada categoria, com uma barrinha que sai do 0 pra direita quando soma e pra esquerda, em vermelho, quando tira (no celular, fica só o ícone e o número de cada um). Em cima das rodadas ficam as etapas: as respondidas ganham o selo verde e dá pra voltar nelas pra rever (sem mudar a escolha).
 
-Como no quadro roxo dos slides:
+4. **O placar.** Na última rodada, **Ver o meu placar** mostra, pra cada categoria, quantos pontos o aluno fez, a régua do menor ao maior placar possível com o ponto onde ele ficou, e de que escolhas vieram os pontos. Depois vêm o **ranking da turma**, quantas escolhas ele fez de cada tipo, a tabela preenchida rodada por rodada (com o total) e o que os pontos mostram: quantas escolhas somaram e quantas tiraram, o ponto forte dele e uma dica pra cada armadilha em que ele caiu (consumo, dinheiro parado, dívida, aposta). **Jogar de novo** apaga as escolhas e já abre a Rodada 1.
+
+### As categorias e os tipos de escolha
+
+As categorias do placar ficam em `CATEGORIES`, em [`backend/js/rounds.js`](backend/js/rounds.js) (até 4):
+
+| Categoria | O que quer dizer |
+| --- | --- |
+| Receita | O dinheiro que entra: salário, vendas, rendimentos. |
+| Patrimônio | O que você tem: dinheiro guardado, investido e os seus bens. |
+| Conhecimento | O que você aprende e que pode virar trabalho e renda. |
+| Bem-estar | Aproveitar a vida agora, sem se apertar. |
+
+Os tipos de escolha ficam em `KINDS`, no mesmo arquivo. Os 3 primeiros são os do quadro roxo dos slides (com o bem-estar que consumir e equilibrar dão agora); os outros 4 são as armadilhas e o investimento em você:
 
 | Tipo | Pontos |
 | --- | --- |
-| Consumo imediato | −2 patrimônio |
 | Gera renda | +2 receita |
-| Equilibrada | +1 patrimônio |
+| Investir em você | +2 conhecimento |
+| Equilibrada | +1 patrimônio e +1 bem-estar |
+| Consumo imediato | −2 patrimônio e +1 bem-estar |
+| Dinheiro parado | −1 patrimônio |
+| Dívida | −1 receita e −2 patrimônio |
+| Aposta ou dinheiro fácil | −3 patrimônio |
 
-Os slides não dizem de que tipo é cada opção, então o sistema usa esta classificação (ela fica em `backend/js/rounds.js`, no `kind` de cada opção, e o professor pode mudar):
+### As rodadas
 
-| Rodada | Opção A | Opção B |
-| --- | --- | --- |
-| 1. R$ 3.000 de presente | Trocar de celular: consumo imediato | Investir o dinheiro: gera renda |
-| 2. Renda extra com cookies | Comprar um tablet novo: consumo imediato | Comprar mais material para aumentar as vendas: gera renda |
-| 3. Juntou R$ 20.000 | Dar a entrada em um carro: consumo imediato | Começar um pequeno negócio: gera renda |
-| 4. Herança | Gastar em conforto imediato: consumo imediato | Dividir entre investimentos: equilibrada |
-| 5. Sobrou dinheiro no mês | Comprar um tênis ou uma bolsa nova: consumo imediato | Investir o que sobrou: equilibrada |
+Ficam em `LIST`, em [`backend/js/rounds.js`](backend/js/rounds.js). O tipo de cada opção é o `kind` dela, e o professor pode mudar:
 
-Com ela, o placar vai de 0 a +6 na receita e de −10 a +2 no patrimônio. O sistema não guarda o placar pronto: mudando o tipo de uma opção ou os pontos de um tipo, as rodadas, o placar, as réguas e os textos acompanham.
+| Rodada | A | B | C | D |
+| --- | --- | --- | --- | --- |
+| 1. R$ 3.000 de presente (fácil) | Trocar de celular: consumo | Investir o dinheiro: gera renda | Fazer um curso de programação ou de edição de vídeo: investir em você | |
+| 2. Renda extra com cookies (fácil) | Comprar um tablet novo: consumo | Comprar mais material para aumentar as vendas: gera renda | Pagar um lanche com os amigos e guardar o resto: equilibrada | |
+| 3. Juntou R$ 20.000 (fácil) | Dar a entrada em um carro: dívida | Começar um pequeno negócio: gera renda | Deixar tudo guardado em casa, em dinheiro vivo: dinheiro parado | |
+| 4. Herança (fácil) | Gastar em conforto imediato: consumo | Dividir entre investimentos: gera renda | Colocar tudo num esquema que promete dobrar o dinheiro: aposta | |
+| 5. Sobrou dinheiro no mês (fácil) | Comprar um tênis ou uma bolsa nova: consumo | Investir o que sobrou: gera renda | Guardar como reserva para imprevistos: equilibrada | |
+| 6. Tênis furado, R$ 600 (médio) | Parcelar em 10 vezes, com juros: dívida | Um modelo mais simples, à vista, e guardar a diferença: equilibrada | O de R$ 600 à vista, com o que tinha guardado: consumo | Apostar numa bet: aposta |
+| 7. Primeiro salário (médio) | Guardar tudo numa gaveta: dinheiro parado | Pagar um curso de inglês: investir em você | Gastar tudo num fim de semana: consumo | Investir uma parte todo mês: gera renda |
+| 8. Tela quebrada, R$ 400 (médio) | Usar a reserva para imprevistos: equilibrada | Celular novo em 12 vezes: dívida | Fazer bicos pra pagar o conserto: gera renda | Trocar por um último modelo: consumo |
+| 9. "Rende 20% ao mês" (difícil) | Entrar com tudo: aposta | Deixar na gaveta: dinheiro parado | Investimento seguro, como o Tesouro Direto: gera renda | Curso de fotografia e cobrar por fotos: investir em você |
+| 10. Notebook de R$ 3.000 (difícil, pontos em dobro) | Crediário em 18 vezes: dívida | Juntar investido e comprar à vista: equilibrada | O mais caro, à vista, com todo o dinheiro: consumo | Apostar numa bet: aposta |
+
+Com essas rodadas, o placar vai de −5 a +16 na receita, de −27 a +6 no patrimônio, de 0 a +6 no conhecimento e de 0 a +9 no bem-estar. O sistema não guarda o placar pronto: mudando o tipo de uma opção, os pontos de um tipo, uma rodada ou uma categoria, as rodadas, o placar, as réguas, o ranking e os textos acompanham. Cada rodada pode ter de 2 a 4 opções, em ordem a partir da A; o nível é o `level` e os pontos em dobro, o `multiplier`.
+
+### O ranking da turma
+
+No placar final, o ranking mostra, pra cada categoria, os 5 primeiros colocados (ouro, prata e bronze nos três primeiros; empate divide a posição) e, se o aluno ficou mais pra baixo, a posição dele no fim. A linha dele fica em destaque. O nome que aparece é o que ele cadastrou no login.
+
+Entram no mesmo ranking todos que jogaram com o mesmo **código da turma** (o código vai em maiúsculas e sem espaços, então `8a` e `8A` são a mesma turma). Sem código, o ranking junta todo mundo que jogou sem código. O resultado vai pro ranking assim que o aluno responde a última rodada. Jogando de novo com o mesmo código, o resultado dele é trocado pelo novo quando o novo jogo termina. O ranking se atualiza sozinho a cada 15 segundos enquanto está na tela, e o botão **Atualizar** atualiza na hora.
+
+O ranking fica no Supabase do login, na tabela `game_scores`, que **precisa ser criada uma vez**: abra o SQL Editor do projeto no painel do Supabase, cole o conteúdo de [`backend/sql/game_scores.sql`](backend/sql/game_scores.sql) e rode. Ele não mexe em nenhuma tabela que já existe (as do Fluxo de Caixa continuam iguais). Quem está logado lê todas as linhas (é o que monta o ranking), mas só grava as próprias. Antes da tabela existir, o jogo funciona igual e, no lugar do ranking, aparece o aviso de que falta criá-la.
 
 ---
 
@@ -126,7 +160,7 @@ As duas páginas abrem numa tela de **Entrar / Criar conta**, a mesma do Fluxo d
 
 Pra os links do e-mail (trocar a senha, confirmar a conta) voltarem pra este sistema, e não pro Fluxo de Caixa, o endereço dele tem que estar em **Authentication → URL Configuration → Redirect URLs**, no painel do Supabase. No GitHub Pages, é algo como `https://financialexperts.github.io/Escolhas-Vanessa-e-Karine/**`.
 
-O banco só guarda as contas. O que o aluno faz nas atividades continua guardado no navegador, separado por conta (veja [O que fica guardado no navegador](#o-que-fica-guardado-no-navegador)).
+O banco guarda as contas e o resultado de cada jogo do Seu dinheiro no tempo, pro ranking (veja [O ranking da turma](#o-ranking-da-turma)). O andamento das atividades (os cálculos feitos, a rodada em que o aluno está) fica guardado no navegador, separado por conta (veja [O que fica guardado no navegador](#o-que-fica-guardado-no-navegador)). O nome do topo, do placar e do ranking é o "Nome completo" do Criar conta.
 
 ---
 
@@ -172,13 +206,16 @@ frontend/
   js/play.js                    as etapas, os cartões das rodadas (a contagem, as opções,
                                 o que a escolha deu) e o placar do alto
   js/score.js                   o placar final
-  js/game-app.js                a abertura, o nome, começar e recomeçar, liga tudo
+  js/ranking.js                 o ranking da turma: grava o resultado no Supabase e mostra
+                                quem fez mais pontos em cada categoria
+  js/game-app.js                a abertura, o código da turma, começar e recomeçar, liga tudo
 backend/
   js/scenario.js                o período, o objetivo e as duas personagens
   js/decisions.js               as 4 decisões: textos, dados e contas, linha por linha
                                 como na planilha
-  js/rounds.js                  as 5 rodadas, as opções e o tipo de cada uma, e os pontos
-                                de cada tipo
+  js/rounds.js                  as 10 rodadas, as opções e o tipo de cada uma, os tipos e
+                                os pontos de cada um, e as categorias do placar
+  sql/game_scores.sql           a tabela do ranking, pra rodar uma vez no Supabase
 ```
 
 Os ícones de todas as partes da tela se mexem quando o mouse passa, quando o aluno toca neles ou quando recebem o foco do teclado. No celular, só um toque de verdade anima: passar o dedo para rolar a página não mexe em nada. Quem pede menos movimento no sistema operacional não vê animação nenhuma (o número da diferença final e os do placar já aparecem prontos, e as rodadas não têm a contagem).
@@ -206,12 +243,15 @@ Os arquivos em `backend/js/` não tocam no DOM: são só dados. O `exercise.js`,
 | As regras (quando uma etapa abre e o que refazer apaga) | `blocked()`, `current()` e `redo()`, no `frontend/js/exercise.js` |
 | Os textos fixos da tela (títulos, legenda, perguntas de reflexão, rodapé) | `index.html` |
 | Cores, tamanhos e o visual | `frontend/css/styles.css` |
-| **Seu dinheiro no tempo:** as situações, as opções e a pergunta de cada rodada | `backend/js/rounds.js` |
-| De que tipo é cada opção (consumo imediato, gera renda, equilibrada) e a frase que explica | `kind` e `why` de cada opção, em `backend/js/rounds.js` |
-| Quantos pontos vale cada tipo, ou uma categoria nova do placar | `KINDS` e `CATEGORIES`, em `backend/js/rounds.js` |
+| **Seu dinheiro no tempo:** as situações, as opções e a pergunta de cada rodada | `LIST`, em `backend/js/rounds.js` |
+| De que tipo é cada opção e a frase que explica | `kind` e `why` de cada opção, em `backend/js/rounds.js` |
+| O nível de uma rodada ou os pontos em dobro | `level` e `multiplier` da rodada; os nomes dos níveis ficam em `LEVELS`, em `backend/js/rounds.js` |
+| Quantos pontos vale cada tipo, a explicação dele e a dica do placar | `points`, `about` e `tip` de cada tipo, em `KINDS` (`backend/js/rounds.js`) |
+| As categorias do placar (até 4) | `CATEGORIES`, em `backend/js/rounds.js` |
 | A contagem antes das opções (3, 2, 1) | `CONTAGEM` e `PASSO`, no `frontend/js/play.js` |
 | As mensagens do pé de cada rodada | `statusText()`, no `frontend/js/play.js` |
 | O que os pontos mostram, no placar | `insightHTML()` e `LICAO`, no `frontend/js/score.js` |
+| Quantos aparecem no ranking e de quanto em quanto tempo ele se atualiza | `TOP` e `POLL`, no `frontend/js/ranking.js` |
 | Os textos fixos do jogo (títulos, abertura, rodapé) | `dinheiro-no-tempo.html` |
 | O visual do jogo | `frontend/css/game.css` |
 | **Login:** o projeto Supabase | `frontend/js/config.js` |
@@ -228,7 +268,7 @@ A cor de cada uma (rosa para a Vanessa, azul para a Karine) aparece no fundo do 
 
 - **O tema** claro ou escuro, no `localStorage`, com a mesma chave (`tema`) do Simulador de Renda e do Fluxo de Caixa: publicados no mesmo endereço, os sistemas lembram do mesmo tema.
 - **O exercício** da Vanessa e da Karine, na chave `equilibrista-calculos:` + o id da conta: o que o aluno digitou, as células certas e as etapas já conferidas. Recarregar a página não apaga nada (a tela volta na etapa em que o aluno parou), e **Recomeçar o exercício** apaga tudo.
-- **O jogo** Seu dinheiro no tempo, na chave `dinheiro-no-tempo:` + o id da conta: a escolha de cada rodada e o nome do placar. Recarregar volta na rodada em que o aluno parou.
+- **O jogo** Seu dinheiro no tempo, na chave `dinheiro-no-tempo:` + o id da conta: a escolha de cada rodada e o código da turma. Recarregar volta na rodada em que o aluno parou. (O resultado de cada jogo terminado também vai pro Supabase, pro ranking.)
 - **A sessão do login**, guardada pelo próprio Supabase.
 
 O que o aluno faz fica guardado só naquele navegador, mas separado por conta: num computador compartilhado, cada aluno que entra vê só o que ele fez (e quem sai volta pra tela de entrar). O exercício feito antes de existir o login (na chave antiga, `equilibrista-calculos`) passa pra primeira conta que entrar naquele navegador. Numa janela anônima (ou com o armazenamento bloqueado), tudo funciona igual, só não lembra depois de recarregar. Se os dados de `decisions.js` mudarem, uma célula guardada como certa que não bate mais com a conta nova volta a ficar em aberto; se as rodadas de `rounds.js` mudarem, uma escolha que não existe mais é esquecida.

@@ -8,20 +8,21 @@
   var Icons = global.Icons;
 
   // As rodadas do jogo, uma de cada vez, como no Kahoot. Cada rodada é um
-  // cartão com a situação do slide e as duas opções em botões grandes, cada
-  // uma com a sua forma e a sua cor. Quando a rodada abre, uma contagem
-  // (3, 2, 1) segura as opções, pra todo mundo ler a situação antes.
+  // cartão com a situação e as opções em botões grandes (3 nas fáceis, 4
+  // nas outras), cada uma com a sua forma e a sua cor. Quando a rodada abre,
+  // uma contagem (3, 2, 1) segura as opções, pra todo mundo ler a situação
+  // antes.
   //
   // O aluno toca numa opção e a escolha vale na hora: o cartão mostra o tipo
-  // da escolha, os pontos que ela deu (como na tabela do slide) e o que a
-  // outra opção teria dado. Aí aparece o botão da próxima rodada.
+  // da escolha, os pontos que ela deu (a linha da tabela) e o que as outras
+  // opções teriam dado. Aí aparece o botão da próxima rodada.
   //
   // Em cima dos cartões ficam as etapas (uma por rodada) e o placar, que
   // gruda no alto: as rodadas respondidas e os pontos de cada categoria.
 
   var root = null;      // o container das etapas e dos cartões
   var on = {};          // avisa o game-app.js: picked(id) e final()
-  var active = null;    // a rodada que está na tela: "1" a "5"
+  var active = null;    // a rodada que está na tela: "1" a "10"
   var ready = {};       // as rodadas em que a contagem já acabou
   var timer = null;     // a contagem em andamento
   var shown = null;     // os pontos que o placar do alto está mostrando
@@ -39,10 +40,14 @@
     var list = Game.ids();
     return list[list.indexOf(String(id)) + 1] || null;
   }
+  function prevOf(id) {
+    var list = Game.ids();
+    return list[list.indexOf(String(id)) - 1] || null;
+  }
 
-  /* ============ montagem da tela ============ */
+  /* ============ peças que as telas repetem ============ */
   // A forma de cada opção, como no Kahoot: triângulo, losango, círculo e
-  // quadrado (C e D ficam prontos, caso uma rodada ganhe mais opções).
+  // quadrado.
   var SHAPES = {
     A: '<path d="M12 3.2l9.8 17H2.2z"/>',
     B: '<path d="M12 2l10 10-10 10L2 12z"/>',
@@ -59,25 +64,62 @@
     return '<span class="rletter rletter--' + letter.toLowerCase() + '">' + shape(letter, "rletter__shape") + letter + "</span>";
   }
 
+  // Os pontos numa frase, cada categoria na cor dela: "+2 receita",
+  // "−2 patrimônio e +1 bem-estar".
+  function effectHTML(pts) {
+    var parts = Catalog.categories.filter(function (c) { return pts[c.key]; }).map(function (c) {
+      return '<span class="nw pts" data-tone="' + Game.toneOf(c.key, pts[c.key]) + '">' +
+        Format.points(pts[c.key]) + " " + Format.esc(c.name.toLowerCase()) + "</span>";
+    });
+    if (!parts.length) return "nenhum ponto";
+    return parts.length < 2 ? parts[0] : parts.slice(0, -1).join(", ") + " e " + parts[parts.length - 1];
+  }
+
+  // As regras: quanto vale cada tipo de escolha, em dois grupos (os que
+  // somam e os que tiram pontos). Vai no quadro roxo da abertura.
+  function rulesHTML() {
+    var keys = Object.keys(Catalog.kinds);
+    function net(k) {
+      var p = Catalog.kinds[k].points;
+      return Object.keys(p).reduce(function (s, c) { return s + p[c]; }, 0);
+    }
+    function group(title, list) {
+      if (!list.length) return "";
+      return '<div class="grules__group"><p class="grules__head">' + title + "</p>" +
+        '<ul class="grules__list">' + list.map(function (k) {
+          var kind = Catalog.kinds[k];
+          return '<li class="grule fx">' + Icons.tile(kind.icon, kind.tone, "itile--sm") +
+            '<span class="grule__name">' + Format.esc(kind.name) + "</span>" +
+            '<span class="grule__pts">' + effectHTML(kind.points) + "</span>" +
+            '<span class="grule__about">' + Format.esc(kind.about) + "</span>" +
+            "</li>";
+        }).join("") + "</ul></div>";
+    }
+    return group("Somam pontos", keys.filter(function (k) { return net(k) > 0; })) +
+      group("Tiram pontos", keys.filter(function (k) { return net(k) <= 0; }));
+  }
+
+  /* ============ montagem da tela ============ */
   // As etapas, em cima dos cartões: uma por rodada. Tocar numa leva até ela,
-  // se ela já abriu.
+  // se ela já abriu. Com muitas rodadas, o celular mostra só os números.
   function stepsHTML() {
-    return '<nav class="card steps" id="steps" aria-label="Rodadas do jogo"><ol class="steps__list">' +
+    var many = Catalog.list.length > 6 ? " steps--many" : "";
+    return '<nav class="card steps' + many + '" id="steps" aria-label="Rodadas do jogo"><ol class="steps__list">' +
       Catalog.list.map(function (r) {
         var id = String(r.id);
         return '<li class="steps__item" data-step-item="' + id + '">' +
-          '<button class="steps__btn" type="button" data-step="' + id + '">' +
+          '<button class="steps__btn" type="button" data-step="' + id + '" title="Rodada ' + id + ": " + Format.esc(r.topic) + '">' +
             '<span class="steps__num" aria-hidden="true">' + id + "</span>" +
-            '<span class="steps__kicker">Rodada ' + id + "</span>" +
-            '<span class="steps__name">' + Format.esc(r.topic) +
-              '<span class="sr-only" data-step-state></span></span>' +
+            '<span class="steps__kicker" aria-hidden="true">Rodada ' + id + "</span>" +
+            '<span class="steps__name" aria-hidden="true">' + Format.esc(r.topic) + "</span>" +
+            '<span class="sr-only">Rodada ' + id + ": " + Format.esc(r.topic) + '<span data-step-state></span></span>' +
           "</button>" +
           "</li>";
       }).join("") +
       "</ol></nav>";
   }
 
-  // um botão de opção: a forma na cor dela, a letra e o texto do slide
+  // um botão de opção: a forma na cor dela, a letra e o texto
   function optHTML(r, letter) {
     return '<button class="ropt ropt--' + letter.toLowerCase() + '" type="button" data-pick="' + letter + '" data-round="' + r.id + '">' +
       '<span class="ropt__badge" aria-hidden="true">' + shape(letter, "ropt__shape") + "</span>" +
@@ -87,6 +129,27 @@
       "</span>" +
       '<span class="ropt__mark">Sua escolha</span>' +
       "</button>";
+  }
+
+  // as etiquetas do cartão: o nível e, se for o caso, os pontos em dobro
+  function chipsHTML(r) {
+    var lvl = Catalog.levels[r.level];
+    return '<span class="rchips">' +
+      (lvl ? '<span class="rchip" data-tone="' + lvl.tone + '">' + Format.esc(lvl.name) + "</span>" : "") +
+      (r.multiplier > 1 ? '<span class="rchip rchip--x" data-tone="violet">Pontos em dobro</span>' : "") +
+      "</span>";
+  }
+
+  // A frase da contagem: avisa quando a rodada é diferente das de antes
+  // (os pontos em dobro, um nível novo com mais opções).
+  function readyText(r) {
+    var n = Catalog.lettersOf(r).length;
+    if (r.multiplier > 1) return "Última rodada: os pontos valem " + (r.multiplier === 2 ? "o dobro" : r.multiplier + " vezes") + "!";
+    var prev = prevOf(r.id) && Catalog.byId(prevOf(r.id));
+    if (prev && prev.level !== r.level && Catalog.levels[r.level]) {
+      return "Nível " + Catalog.levels[r.level].name.toLowerCase() + ": agora são " + n + " opções";
+    }
+    return "Leia a situação: as opções já vão aparecer";
   }
 
   // o pé do cartão: o que fazer agora e o botão da próxima rodada (ou, na
@@ -107,10 +170,11 @@
 
   function cardHTML(r) {
     var id = String(r.id);
+    var letters = Catalog.lettersOf(r);
     return '<article class="card deccard rcard panel" id="r-' + id + '" data-card="' + id + '" tabindex="-1" aria-labelledby="r-' + id + '-title">' +
       '<div class="head fx">' + Icons.tile(r.icon, "violet", "itile--lg") +
         "<div>" +
-          '<p class="card__kicker">' + nw("Rodada " + id + " de " + Catalog.list.length) + " · " + nw(r.topic) + "</p>" +
+          '<p class="card__kicker rcard__kicker">' + nw("Rodada " + id + " de " + Catalog.list.length) + " · " + nw(r.topic) + chipsHTML(r) + "</p>" +
           '<h3 class="invcard__title" id="r-' + id + '-title">' + Format.esc(r.situation) + "</h3>" +
           '<p class="invcard__sub">' + Format.esc(r.question) + "</p>" +
         "</div>" +
@@ -118,12 +182,12 @@
       // a contagem fica por cima das opções (que ocupam o lugar delas, só
       // escondidas): quando elas aparecem, nada pula de lugar
       '<div class="rstage" data-stage>' +
-        '<div class="ropts" role="group" aria-label="Opções da Rodada ' + id + '">' +
-          Catalog.letters.map(function (l) { return optHTML(r, l); }).join("") +
+        '<div class="ropts" data-count="' + letters.length + '" role="group" aria-label="Opções da Rodada ' + id + '">' +
+          letters.map(function (l) { return optHTML(r, l); }).join("") +
         "</div>" +
         '<div class="rready" data-ready aria-hidden="true" hidden>' +
           '<span class="rready__ring"><span class="rready__num" data-ready-num></span></span>' +
-          '<span class="rready__text">Leia a situação: as opções já vão aparecer</span>' +
+          '<span class="rready__text">' + Format.esc(readyText(r)) + "</span>" +
         "</div>" +
       "</div>" +
       '<div class="rreveal" data-reveal tabindex="-1" hidden></div>' +
@@ -132,8 +196,8 @@
   }
 
   /* ============ o que a escolha deu ============ */
-  // O número grande dos pontos, um por categoria que a escolha mexe (quase
-  // sempre uma só). Sem ponto nenhum, aparece o 0.
+  // O número grande dos pontos, um por categoria que a escolha mexe. Sem
+  // ponto nenhum, aparece o 0.
   function bigPointsHTML(pts) {
     var cats = Catalog.categories.filter(function (c) { return pts[c.key]; });
     if (!cats.length) {
@@ -148,31 +212,35 @@
     }).join("");
   }
 
-  // a linha da tabela do slide: a escolha e o impacto em cada categoria
+  // a linha da tabela: a escolha e o impacto em cada categoria
   function tableRowHTML(r, letter, pts) {
     return '<div class="rrow">' +
       '<p class="rrow__title">Na sua tabela</p>' +
-      '<dl class="rrow__cells">' +
+      '<dl class="rrow__cells" data-count="' + Catalog.categories.length + '">' +
         '<div class="rrow__cell rrow__cell--pick"><dt>Minha escolha</dt>' +
-          '<dd>' + letterHTML(letter) +
-          Format.esc(r.options[letter].text) + "</dd></div>" +
+          "<dd>" + letterHTML(letter) + Format.esc(r.options[letter].text) + "</dd></div>" +
         Catalog.categories.map(function (c) {
           var v = pts[c.key];
-          return '<div class="rrow__cell"><dt>Impacto ' + Format.esc(c.where) + "</dt>" +
+          return '<div class="rrow__cell"><dt>' + Format.esc(c.name) + "</dt>" +
             '<dd class="rrow__num" data-tone="' + Game.toneOf(c.key, v) + '">' + Format.points(v) + "</dd></div>";
         }).join("") +
       "</dl>" +
       "</div>";
   }
 
-  // o que a outra opção teria dado
-  function otherHTML(r, letter) {
-    var kind = Game.kindOf(r, letter);
-    return '<p class="rother">' +
-      letterHTML(letter) +
-      "<span><strong>Se fosse a Opção " + letter + "</strong> (" + Format.esc(r.options[letter].text) + "): " +
-      Format.esc(kind.label.toLowerCase()) + ", " + nw(Game.effectText(Game.pointsOf(r, letter))) + ".</span>" +
-      "</p>";
+  // o que cada uma das outras opções teria dado
+  function othersHTML(r, letter) {
+    var rest = Catalog.lettersOf(r).filter(function (l) { return l !== letter; });
+    return '<div class="rothers">' +
+      '<p class="rrow__title">E as outras opções?</p>' +
+      '<ul class="rothers__list">' + rest.map(function (l) {
+        var kind = Game.kindOf(r, l);
+        return '<li class="rother">' + letterHTML(l) +
+          "<span><strong>" + Format.esc(r.options[l].text) + "</strong>: " +
+          Format.esc(kind.name.toLowerCase()) + ", " + effectHTML(Game.pointsOf(r, l)) + ".</span>" +
+          "</li>";
+      }).join("") + "</ul>" +
+      "</div>";
   }
 
   function revealHTML(r, letter) {
@@ -184,10 +252,14 @@
           '<p class="rreveal__kind">' + Icons.tile(kind.icon, kind.tone, "itile--sm") +
             "<span>" + Format.esc(kind.label) + '<span class="sr-only">: ' + Format.esc(Game.effectText(pts)) + ".</span></span></p>" +
           '<p class="rreveal__why">' + Format.esc(r.options[letter].why) + "</p>" +
+          (r.multiplier > 1
+            ? '<p class="rreveal__x"><span class="rchip rchip--x" data-tone="violet">Pontos em dobro</span>Nesta rodada, os pontos valem ' +
+                (r.multiplier === 2 ? "o dobro" : r.multiplier + " vezes") + ".</p>"
+            : "") +
         "</div>" +
       "</div>" +
       tableRowHTML(r, letter, pts) +
-      Catalog.letters.filter(function (l) { return l !== letter; }).map(function (l) { return otherHTML(r, l); }).join("");
+      othersHTML(r, letter);
   }
 
   /* ============ a tela acompanha o estado ============ */
@@ -197,8 +269,8 @@
   function statusText(id, letter, waiting) {
     var n = Catalog.list.length;
     if (waiting) return "Prepare-se: as opções já vão aparecer.";
-    if (!letter) return "Toque na Opção A ou na Opção B. Vale a primeira escolha: depois não dá para trocar.";
-    if (Game.isOver() && !nextOf(id)) return "Você respondeu as " + n + " rodadas! Veja quantos pontos fez em cada categoria.";
+    if (!letter) return "Toque numa das opções. Vale a primeira escolha: depois não dá para trocar.";
+    if (Game.isOver() && !nextOf(id)) return "Você respondeu as " + n + " rodadas! Veja quantos pontos fez em cada categoria e o ranking.";
     return "Rodada " + id + " respondida: " + Game.effectText(Game.pointsOf(Catalog.byId(id), letter)) + ".";
   }
 
@@ -298,11 +370,13 @@
     syncMeters();
   }
 
+  // Um medidor por categoria. No celular, o nome sai e fica o ícone (o nome
+  // continua pro leitor de tela).
   function catMetersHTML() {
     return Catalog.categories.map(function (c) {
-      return '<div class="meter meter--score fx" data-cat="' + c.key + '" data-tone="' + c.tone + '">' +
+      return '<div class="meter meter--score fx" data-cat="' + c.key + '" data-tone="' + c.tone + '" title="' + Format.esc(c.name) + '">' +
         '<div class="meter__top">' +
-          '<p class="meter__label"><span class="meter__ico">' + Icons.svg(c.icon) + "</span>" + Format.esc(c.name) + "</p>" +
+          '<p class="meter__label"><span class="meter__ico">' + Icons.svg(c.icon) + '</span><span class="meter__name">' + Format.esc(c.name) + "</span></p>" +
           '<p class="meter__nums"><span class="meter__used meter__pts" data-cat-pts>0</span><span class="meter__more">&nbsp;pts</span></p>' +
         "</div>" +
         '<span class="meter__track meter__track--mid" aria-hidden="true"><span class="meter__fill" data-cat-fill></span></span>' +
@@ -460,6 +534,8 @@
     render: render,
     begin: begin,
     show: abrir,
-    letter: letterHTML
+    letter: letterHTML,
+    effect: effectHTML,
+    rules: rulesHTML
   };
 })(window);

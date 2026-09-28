@@ -29,15 +29,22 @@
   var waiting = [];
   var user = null;
 
+  // O nome que a pessoa cadastrou no login (o "Nome completo" do Criar
+  // conta). Vem dos dados do login ou, numa conta antiga sem ele, do perfil
+  // (tabela profiles, a mesma do Fluxo de Caixa). Sem nome nenhum, fica o
+  // começo do e-mail. É o nome do topo, do placar e do ranking do jogo.
+  var fullName = "";
+
   function ready(fn) {
     if (user) fn(user);
     else waiting.push(fn);
   }
 
-  // o primeiro nome, pra sugerir no placar do jogo
+  function getFullName() { return fullName; }
+
+  // o primeiro nome, pro título do placar ("O seu placar, Ana")
   function firstName() {
-    var full = user && user.user_metadata && user.user_metadata.full_name;
-    return full ? String(full).trim().split(/\s+/)[0] : "";
+    return fullName ? fullName.split(/\s+/)[0] : "";
   }
 
   /* ============ o aviso de quando o login não funciona ============ */
@@ -53,28 +60,34 @@
   if (!DB.isConfigured) {
     showSetup("Falta ligar o Supabase",
       "O login precisa do projeto Supabase. Abra <code>frontend/js/config.js</code> e cole a URL e a chave pública do projeto (as mesmas do Fluxo de Caixa).");
-    global.Session = { ready: ready, firstName: firstName, finishRecovery: function () {} };
+    global.Session = { ready: ready, fullName: getFullName, firstName: firstName, finishRecovery: function () {} };
     return;
   }
   if (DB.libMissing) {
     showSetup("Não deu para carregar o login",
       "Confira a sua conexão com a internet e recarregue a página.");
-    global.Session = { ready: ready, firstName: firstName, finishRecovery: function () {} };
+    global.Session = { ready: ready, fullName: getFullName, firstName: firstName, finishRecovery: function () {} };
     return;
   }
 
   var db = DB.client;
 
   /* ============ a barra do topo ============ */
-  // o nome de quem entrou (ou o e-mail, sem nome) e o botão de sair
+  // o nome de quem entrou (ou o começo do e-mail, sem nome) e o botão de sair
+  function clean(s) { return String(s || "").replace(/\s+/g, " ").trim(); }
+
   function showUser(u) {
-    var meta = u.user_metadata && u.user_metadata.full_name;
+    var meta = clean(u.user_metadata && u.user_metadata.full_name);
+    fullName = meta || clean(String(u.email || "").split("@")[0]);
     el("userbox-name").textContent = meta || u.email;
     el("userbox").hidden = false;
     if (meta) return;
     // conta sem o nome nos dados do login: o nome pode estar no perfil
     db.from("profiles").select("full_name").eq("id", u.id).maybeSingle().then(function (res) {
-      if (res.data && res.data.full_name) el("userbox-name").textContent = res.data.full_name;
+      var name = clean(res.data && res.data.full_name);
+      if (!name) return;
+      fullName = name;
+      el("userbox-name").textContent = name;
     });
   }
 
@@ -144,6 +157,7 @@
 
   global.Session = {
     ready: ready,
+    fullName: getFullName,
     firstName: firstName,
     finishRecovery: function () { recovering = false; refresh(); }
   };

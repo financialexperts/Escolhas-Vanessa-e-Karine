@@ -31,7 +31,7 @@ window.Session.ready(function (user) {
       "Prefiro que o meu dinheiro trabalhe por mim.",
       "Os dados estão em laranja. As contas são com você!"
     ]
-  };
+  };              
   var fala = { vanessa: -1, karine: -1 };
   var balao = el("duo-bubble");
   var balaoQuem = el("duo-who");

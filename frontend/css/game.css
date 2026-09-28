@@ -1,24 +1,39 @@
 /* ============ Seu dinheiro no tempo ============ */
-/* O jogo da Aula 4 (dinheiro-no-tempo.html). Os tokens, os cartões, os
-   medidores, as etapas, os botões e os blocos do placar vêm do styles.css;
-   aqui fica só o que é do jogo. */
+/* O jogo Seu dinheiro no tempo (dinheiro-no-tempo.html). Os tokens, os
+   cartões, os medidores, as etapas, os botões e os blocos do placar vêm do
+   styles.css; aqui fica só o que é do jogo. */
 
 /* A cor de um número de pontos (--k) e o fundo dele (--ks): a da categoria
    quando soma, vermelho quando tira e apagado quando é 0 (toneOf, no
-   game.js). */
+   game.js). O âmbar do texto é mais escuro, pra ler bem no fundo claro. */
 [data-tone="green"]{--k:var(--accent-ink);--ks:var(--accent-soft)}
 [data-tone="violet"]{--k:var(--violet);--ks:var(--violet-soft)}
+[data-tone="blue"]{--k:var(--blue);--ks:var(--blue-soft)}
+[data-tone="amber"]{--k:color-mix(in srgb,var(--amber) 80%,var(--ink));--ks:var(--amber-soft)}
+[data-tone="pink"]{--k:var(--pink);--ks:var(--pink-soft)}
 [data-tone="down"]{--k:var(--danger);--ks:color-mix(in srgb,var(--danger) 9%,var(--surface))}
 [data-tone="zero"]{--k:var(--muted);--ks:var(--surface-2)}
+/* os pontos no meio de uma frase ("−2 patrimônio e +1 bem-estar") */
+.pts{font-family:var(--ff-mono);font-weight:600;color:var(--k)}
 
 /* ---------- A abertura ---------- */
-/* o texto e o começo do jogo à esquerda; à direita, o quadro roxo dos
-   slides com quanto vale cada tipo de escolha */
-.gintro{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:28px;margin-top:40px;padding:30px}
+/* o texto, as categorias e o começo do jogo à esquerda; à direita, o
+   quadro roxo com quanto vale cada tipo de escolha */
+.gintro{display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:28px;margin-top:40px;padding:30px}
 .gintro__text{min-width:0;container-type:inline-size}
 .gintro h1{margin-top:14px;font-size:clamp(28px,4.4vw,44px);line-height:1.05}
 
-.gstart{display:flex;align-items:flex-end;flex-wrap:wrap;gap:12px;margin-top:22px;padding-top:20px;border-top:1px dashed var(--line)}
+/* as categorias do placar, duas a duas */
+.gcats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0 0;padding:0;list-style:none}
+.gcat{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:1px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}
+.gcat .itile{grid-row:span 2;align-self:start}
+.gcat__name{font-family:var(--ff-display);font-weight:700;font-size:15px;letter-spacing:-.01em;line-height:1.25}
+.gcat__about{font-size:13px;line-height:1.4;color:var(--ink-soft)}
+@container (max-width:480px){
+  .gcats{grid-template-columns:minmax(0,1fr)}
+}
+
+.gstart{display:flex;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-top:22px;padding-top:20px;border-top:1px dashed var(--line)}
 .gname{flex:1 1 15em;min-width:0}
 .gname__label{display:block;font-family:var(--ff-mono);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .gname__label span{font-weight:400;letter-spacing:.04em;text-transform:none}
@@ -26,24 +41,32 @@
 .gname__input{display:block;width:100%;height:46px;margin-top:6px;padding:0 14px;border:1.5px solid var(--line-strong);border-radius:12px;background:var(--surface);font-family:var(--ff-body);font-size:16px;font-weight:500;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s}
 .gname__input::placeholder{font-weight:400;color:var(--muted);opacity:.8}
 .gname__input:focus{border-color:var(--focus);box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 22%,transparent)}
-.gstart__btn{flex:0 0 auto;height:46px;padding:0 22px;font-size:15px}
+/* o código da turma aparece em maiúsculas, do jeito que vai pro ranking */
+.gname__input--code:not(:placeholder-shown){font-family:var(--ff-mono);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.gname__hint{margin-top:6px;font-size:12.5px;line-height:1.45;color:var(--muted)}
+/* o botão fica na altura do campo, e não do rótulo em cima dele */
+.gstart__btn{flex:0 0 auto;height:46px;margin-top:22px;padding:0 22px;font-size:15px}
 
+/* O quadro das regras: os tipos que somam e os que tiram pontos, com o que
+   cada um quer dizer. */
 .grules{align-self:start;padding:18px;border:1px solid color-mix(in srgb,var(--violet) 32%,transparent);border-radius:var(--radius);background:color-mix(in srgb,var(--violet) 8%,var(--surface))}
 .grules__title{display:flex;align-items:center;gap:9px;font-family:var(--ff-display);font-weight:700;font-size:16px;letter-spacing:-.01em}
 .grules__title .itile{--ts:var(--surface)}
-.grules__list{display:grid;gap:8px;margin:14px 0 0;padding:0;list-style:none}
-.grule{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:1px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
-.grule .itile{grid-row:span 2}
-.grule__name{font-size:14px;font-weight:500;line-height:1.35}
-.grule__pts{font-family:var(--ff-mono);font-size:14px;font-weight:600;color:var(--k)}
+.grules__head{margin-top:14px;font-family:var(--ff-mono);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.grules__list{display:grid;gap:6px;margin:8px 0 0;padding:0;list-style:none}
+.grule{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:1px 12px;padding:9px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.grule .itile{grid-row:span 3;align-self:start}
+.grule__name{font-size:14px;font-weight:600;line-height:1.3}
+.grule__pts{font-size:13px;line-height:1.4;color:var(--ink-soft)}
+.grule__about{font-size:12.5px;line-height:1.4;color:var(--muted)}
 .grules__note{margin-top:12px;font-size:13.5px;line-height:1.5;color:var(--ink-soft)}
 
 /* ---------- O placar do alto ---------- */
 /* as rodadas respondidas e os pontos de cada categoria. A barrinha dos
    pontos sai do meio (a linha do 0): pra direita quando soma, pra esquerda,
    em vermelho, quando tira */
-.meters--3{grid-template-columns:repeat(3,minmax(0,1fr))}
-.meter--rounds{--m:var(--blue)}
+.meters--game{grid-template-columns:repeat(5,minmax(0,1fr))}
+.meter--rounds{--m:var(--ink-soft)}
 .meter--score{--m:var(--k)}
 .meter__track--mid{position:relative;display:block}
 .meter__track--mid::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:2px;margin-left:-1px;background:color-mix(in srgb,var(--ink) 28%,transparent)}
@@ -56,15 +79,20 @@
 @keyframes pts-bump{0%,100%{transform:none}35%{transform:scale(1.5)}}
 
 /* ---------- O cartão de cada rodada ---------- */
-/* a situação grande, como a pergunta do Kahoot */
+/* a situação grande, como a pergunta do Kahoot, e as etiquetas do nível e
+   dos pontos em dobro ao lado do "Rodada 6 de 10" */
 .rcard .invcard__title{font-size:clamp(22px,3vw,30px);line-height:1.15}
 .rcard .invcard__sub{margin-top:6px;font-size:15px;font-weight:500}
+.rchips{display:inline-flex;flex-wrap:wrap;gap:6px;margin-left:8px;vertical-align:1px}
+.rchip{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:999px;background:var(--ks);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--k) 35%,transparent);font-family:var(--ff-mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--k);white-space:nowrap}
 
 /* As opções: um botão grande pra cada, com a forma e a cor dela (A é o
-   triângulo rosa, B o losango azul). A contagem fica por cima delas, no
-   mesmo lugar, enquanto elas esperam escondidas. */
+   triângulo rosa, B o losango azul, C o círculo âmbar e D o quadrado
+   verde). Três ficam lado a lado; quatro, duas a duas. A contagem fica por
+   cima delas, no mesmo lugar, enquanto elas esperam escondidas. */
 .rstage{position:relative;margin-top:20px}
 .ropts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ropts[data-count="3"]{grid-template-columns:repeat(3,minmax(0,1fr))}
 .ropt{--c:var(--pink);--cs:var(--pink-soft);position:relative;display:flex;align-items:center;gap:16px;min-width:0;min-height:112px;padding:16px 18px 16px 16px;border:1.5px solid color-mix(in srgb,var(--c) 40%,transparent);border-radius:var(--radius);background:var(--cs);box-shadow:0 4px 0 color-mix(in srgb,var(--c) 45%,transparent);text-align:left;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;transition:transform .35s var(--spring),box-shadow .2s,border-color .2s,opacity .3s,filter .3s}
 .ropt--b{--c:var(--blue);--cs:var(--blue-soft)}
 .ropt--c{--c:var(--amber);--cs:var(--amber-soft)}
@@ -78,7 +106,7 @@
 .ropt__shape{width:28px;height:28px;fill:currentColor}
 .ropt__body{display:flex;flex-direction:column;gap:3px;min-width:0}
 .ropt__letter{font-family:var(--ff-mono);font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:color-mix(in srgb,var(--c) 75%,var(--ink))}
-.ropt__text{font-family:var(--ff-display);font-weight:700;font-size:clamp(17px,2vw,21px);line-height:1.2;letter-spacing:-.015em;color:var(--ink)}
+.ropt__text{font-family:var(--ff-display);font-weight:700;font-size:clamp(16px,1.9vw,20px);line-height:1.2;letter-spacing:-.015em;color:var(--ink)}
 /* a etiqueta "Sua escolha", presa na borda de cima da opção escolhida */
 .ropt__mark{position:absolute;top:-12px;right:14px;display:none;align-items:center;gap:5px;padding:3px 10px 3px 8px;border:1.5px solid var(--c);border-radius:999px;background:var(--surface);font-family:var(--ff-mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:color-mix(in srgb,var(--c) 75%,var(--ink));box-shadow:var(--shadow-sm)}
 .ropt__mark::before{content:"";width:11px;height:11px;background-color:currentColor;-webkit-mask:var(--icon-check) center/contain no-repeat;mask:var(--icon-check) center/contain no-repeat}
@@ -92,10 +120,12 @@
 .rready__ring{flex:none;display:grid;place-items:center;width:64px;height:64px;border-radius:50%;background:var(--violet);color:var(--surface);box-shadow:0 0 0 6px color-mix(in srgb,var(--violet) 18%,transparent)}
 .rready__num{font-family:var(--ff-display);font-weight:700;font-size:32px;line-height:1}
 .rready__num.is-tick{animation:ready-tick .5s var(--spring)}
-.rready__text{max-width:20ch;font-family:var(--ff-display);font-weight:600;font-size:16px;line-height:1.3;color:var(--ink-soft)}
+.rready__text{max-width:24ch;font-family:var(--ff-display);font-weight:600;font-size:16px;line-height:1.3;color:var(--ink-soft)}
 @keyframes ready-tick{from{opacity:0;transform:scale(1.9)}to{opacity:1;transform:none}}
 .rstage.is-waiting .ropts{visibility:hidden}
-.rstage.is-in .ropt{animation:ropt-in .5s var(--spring) both}
+/* backwards: a entrada só segura o começo (durante o atraso); depois, o
+   apagado das outras opções e o pulinho do mouse voltam a valer */
+.rstage.is-in .ropt{animation:ropt-in .5s var(--spring) backwards}
 .rstage.is-in .ropt:nth-child(2){animation-delay:.08s}
 .rstage.is-in .ropt:nth-child(3){animation-delay:.16s}
 .rstage.is-in .ropt:nth-child(4){animation-delay:.24s}
@@ -110,19 +140,21 @@
 .rreveal:not([hidden]){animation:panelIn .45s cubic-bezier(.16,1,.3,1)}
 .rreveal__main{display:flex;align-items:stretch;gap:16px;padding:14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface-2)}
 .rreveal__pts{flex:none;display:flex;flex-direction:column;gap:8px}
-/* o número grande dos pontos, que salta quando aparece */
-.rpts{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:112px;padding:12px 14px;border:1px solid var(--k);border-radius:14px;background:var(--ks);text-align:center}
-.rpts__num{font-family:var(--ff-display);font-weight:700;font-size:46px;line-height:1;letter-spacing:-.02em;color:var(--k);font-variant-numeric:tabular-nums;animation:pts-pop .6s .12s var(--spring) both}
-.rpts__cat{margin-top:6px;font-family:var(--ff-mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--k)}
+/* o número grande dos pontos, um por categoria, que salta quando aparece */
+.rpts{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:112px;padding:10px 14px;border:1px solid var(--k);border-radius:14px;background:var(--ks);text-align:center}
+.rpts__num{font-family:var(--ff-display);font-weight:700;font-size:40px;line-height:1;letter-spacing:-.02em;color:var(--k);font-variant-numeric:tabular-nums;animation:pts-pop .6s .12s var(--spring) both}
+.rpts + .rpts .rpts__num{animation-delay:.24s}
+.rpts__cat{margin-top:5px;font-family:var(--ff-mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--k)}
 @keyframes pts-pop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
 .rreveal__body{flex:1;min-width:0;align-self:center;padding:4px 4px 4px 0}
 .rreveal__kind{display:flex;align-items:center;gap:10px;font-family:var(--ff-display);font-weight:700;font-size:18px;letter-spacing:-.01em;line-height:1.25}
 .rreveal__why{margin-top:8px;font-size:14.5px;line-height:1.55;color:var(--ink-soft)}
+.rreveal__x{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin-top:10px;font-size:13.5px;color:var(--ink-soft)}
 
-/* a linha da tabela do slide: a escolha e o impacto em cada categoria */
+/* a linha da tabela: a escolha e o impacto em cada categoria */
 .rrow{margin-top:12px;padding:12px 14px 14px;border:1px dashed var(--line-strong);border-radius:14px}
 .rrow__title{font-family:var(--ff-mono);font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.rrow__cells{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(2,minmax(0,1fr));gap:10px 16px;margin:8px 0 0}
+.rrow__cells{display:grid;grid-template-columns:minmax(0,1.8fr) repeat(4,minmax(0,1fr));gap:10px 16px;margin:8px 0 0}
 .rrow__cell{min-width:0}
 .rrow__cell dt{font-size:12.5px;color:var(--muted)}
 .rrow__cell dd{margin:4px 0 0;font-size:14.5px;font-weight:500;line-height:1.35}
@@ -136,9 +168,11 @@
 .rletter--d{--c:var(--accent-ink);--cs:var(--accent-soft)}
 .rletter__shape{width:10px;height:10px;fill:var(--c)}
 
-/* o que a outra opção teria dado */
-.rother{display:flex;align-items:flex-start;gap:9px;margin-top:12px;padding:0 2px;font-size:13.5px;line-height:1.55;color:var(--ink-soft)}
-.rother .rletter{margin-top:-1px}
+/* o que as outras opções teriam dado */
+.rothers{margin-top:12px;padding:12px 14px 14px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}
+.rothers__list{display:grid;gap:8px;margin:8px 0 0;padding:0;list-style:none}
+.rother{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;line-height:1.55;color:var(--ink-soft)}
+.rother .rletter{margin-top:0}
 .rother strong{font-weight:600;color:var(--ink)}
 
 /* ---------- O placar final ---------- */
@@ -151,7 +185,7 @@
 .gscore .itile{--ts:var(--surface)}
 .gscore__label{font-family:var(--ff-display);font-weight:700;font-size:18px;letter-spacing:-.01em}
 .gscore__value{display:flex;align-items:baseline;gap:10px;margin-top:12px}
-.gscore__num{font-family:var(--ff-display);font-weight:700;font-size:clamp(46px,6vw,62px);line-height:1;letter-spacing:-.03em;color:var(--k);font-variant-numeric:tabular-nums}
+.gscore__num{font-family:var(--ff-display);font-weight:700;font-size:clamp(44px,5.4vw,58px);line-height:1;letter-spacing:-.03em;color:var(--k);font-variant-numeric:tabular-nums}
 .gscore__unit{font-family:var(--ff-mono);font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--k)}
 .gscore[data-tone="zero"] :is(.gscore__num,.gscore__unit){color:var(--ink-soft)}
 
@@ -169,10 +203,49 @@
 .gscore__from{display:grid;gap:4px;margin:12px 0 0;padding:12px 0 0;border-top:1px dashed color-mix(in srgb,var(--k) 35%,var(--line));list-style:none;font-size:14px;line-height:1.45;color:var(--ink-soft)}
 .gscore__from strong{font-family:var(--ff-mono);font-weight:600;color:var(--ink)}
 
-/* os tipos de escolha, nos blocos do placar do styles.css */
-.stat__label .itile{--ts:var(--surface)}
+/* O ranking da turma: um cartão por categoria, com os primeiros colocados
+   (ouro, prata e bronze nos três primeiros) e a linha de quem está jogando
+   em destaque. */
+.granking{margin-top:24px;padding-top:20px;border-top:1px dashed var(--line-strong)}
+.granking__head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.granking__head .btn{flex:none}
+.granking__sub{margin-top:4px;font-size:13.5px;color:var(--ink-soft)}
+.granking__sub:empty{display:none}
+.granking__msg{margin-top:12px;padding:12px 14px;border:1px dashed var(--warm);border-radius:12px;font-size:14px;line-height:1.5;color:var(--ink-soft)}
+.granking__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
+.rrank{min-width:0;padding:12px 10px 10px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2)}
+.rrank__title{display:flex;align-items:center;gap:8px;padding:0 4px;font-family:var(--ff-display);font-weight:700;font-size:15px;letter-spacing:-.01em}
+.rrank__title .itile{--ts:var(--surface)}
+.rrank__list{display:grid;gap:3px;margin:10px 0 0;padding:0;list-style:none}
+.rrank__row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:8px;min-height:34px;padding:4px 6px;border-radius:9px;font-size:13.5px}
+.rrank__row.is-me{background:var(--ks);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--k) 40%,transparent);font-weight:600}
+.rrank__pos{display:grid;place-items:center;min-width:30px;height:24px;padding:0 5px;border-radius:999px;background:var(--surface);box-shadow:inset 0 0 0 1px var(--line);font-family:var(--ff-mono);font-size:11.5px;font-weight:600;color:var(--ink-soft)}
+.rrank__pos--1{background:#F2C14E;box-shadow:none;color:#3B2B00}
+.rrank__pos--2{background:#CDD3DC;box-shadow:none;color:#262B33}
+.rrank__pos--3{background:#DA9A64;box-shadow:none;color:#381C06}
+.rrank__name{display:flex;align-items:baseline;gap:6px;min-width:0}
+/* o nome comprido é cortado com "…", mas o "você" fica sempre à vista */
+.rrank__who{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rrank__me{flex:none;font-family:var(--ff-mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--k)}
+.rrank__pts{font-family:var(--ff-mono);font-weight:600;color:var(--k)}
+.rrank__gap{padding:0 10px;line-height:1;color:var(--muted)}
 
-/* A tabela do slide, preenchida: uma linha por rodada e o total embaixo. */
+/* os tipos das escolhas: quantas vezes e quantos pontos cada um deu; os
+   que o aluno não escolheu ficam apagados */
+.gkinds{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 0;padding:0;list-style:none}
+.gkind{display:grid;grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"ico name count" "ico pts pts";align-items:center;gap:1px 12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--surface-2)}
+.gkind .itile{grid-area:ico;--ts:var(--surface)}
+.gkind__name{grid-area:name;min-width:0;font-size:14px;font-weight:600;line-height:1.3}
+.gkind__count{grid-area:count;font-family:var(--ff-mono);font-size:13px;font-weight:600;white-space:nowrap}
+.gkind__pts{grid-area:pts;font-size:13px;line-height:1.4;color:var(--muted)}
+.gkind.is-zero{opacity:.55}
+
+/* as dicas pra cada armadilha, no que os pontos mostram */
+.insight__tips{display:grid;gap:8px;margin:10px 0;padding:0;list-style:none}
+.insight__tips li{font-size:14.5px;line-height:1.55}
+.insight__tip{display:inline-flex;align-items:center;gap:6px;margin-right:2px;vertical-align:-5px}
+
+/* A tabela, preenchida: uma linha por rodada e o total embaixo. */
 .gtable-wrap{margin-top:22px}
 .gtable__title{display:flex;align-items:center;gap:9px;font-family:var(--ff-display);font-weight:700;font-size:16px;letter-spacing:-.01em}
 .gtable{width:100%;margin-top:12px;border:1px solid var(--line);border-collapse:separate;border-spacing:0;border-radius:14px;overflow:hidden;font-size:14px}
@@ -188,63 +261,88 @@
 .gtable__pick{display:flex;align-items:flex-start;gap:9px}
 .gtable__text{min-width:0;font-weight:500;line-height:1.4}
 .gtable__kind{display:block;margin-top:1px;font-size:12.5px;font-weight:400;color:var(--muted)}
-.gtable__short{display:none}
+/* o impacto numa frase: só no celular, no lugar das colunas */
+.gtable__effect{display:none}
 
 /* ---------- Responsive ---------- */
-/* sem largura pro quadro das regras do lado, ele desce pra baixo do texto */
+/* sem largura pro quadro das regras do lado, ele desce pra baixo do texto;
+   o ranking fica com duas categorias por linha */
 @media (max-width:1040px){
   .gintro{grid-template-columns:minmax(0,1fr);gap:22px}
-  .grules__list{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grules__list{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+  .granking__grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* Rodadas com 3 opções: sem largura pras três lado a lado, uma embaixo da
+   outra. As etapas perdem o "Rodada 6" (o número já diz) e o placar do
+   alto, o "pts". */
+@media (max-width:900px){
+  .ropts[data-count="3"]{grid-template-columns:minmax(0,1fr)}
+  .ropts[data-count="3"] .ropt{min-height:84px}
+  .steps--many .steps__kicker{display:none}
+  .meters--game .meter__more{display:none}
+  /* a escolha numa linha só dela e o impacto nas categorias embaixo */
+  .rrow__cells{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .rrow__cell--pick{grid-column:1 / -1}
 }
 
 @media (max-width:760px){
-  .grules__list{grid-template-columns:minmax(0,1fr)}
-  .gscores{grid-template-columns:minmax(0,1fr)}
-  /* a escolha fica numa linha só dela e o impacto nas duas categorias embaixo */
-  .rrow__cells{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .rrow__cell--pick{grid-column:1 / -1}
+  .gscores,.gkinds{grid-template-columns:minmax(0,1fr)}
 }
 
 @media (max-width:720px){
   .gintro{margin-top:24px;padding:20px 16px}
   .gintro h1{margin-top:12px;font-size:clamp(28px,8vw,34px)}
-  .gstart__btn{flex:1 1 100%}
+  .gstart__btn{flex:1 1 100%;margin-top:0}
   .grules{padding:14px}
   /* no celular, as opções uma embaixo da outra, na largura toda */
   .ropts{grid-template-columns:minmax(0,1fr);gap:14px}
-  .ropt{min-height:86px;gap:14px;padding:14px}
-  .ropt__badge{width:48px;height:48px;border-radius:12px}
-  .ropt__shape{width:24px;height:24px}
+  .ropt{min-height:78px;gap:14px;padding:12px 14px}
+  .ropt__badge{width:46px;height:46px;border-radius:12px}
+  .ropt__shape{width:22px;height:22px}
   .rready{flex-direction:column;gap:10px;text-align:center}
   /* os pontos vão pro alto do bloco, deitados: o número e a categoria do lado */
   .rreveal__main{flex-direction:column;gap:12px}
-  .rpts{flex-direction:row;justify-content:flex-start;gap:12px;min-width:0;padding:10px 14px}
-  .rpts__num{font-size:38px}
+  .rreveal__pts{flex-direction:row;flex-wrap:wrap}
+  .rpts{flex-direction:row;justify-content:flex-start;gap:10px;min-width:0;padding:8px 14px}
+  .rpts__num{font-size:32px}
   .rpts__cat{margin-top:0}
   .rreveal__body{padding:0 2px 2px}
   .rreveal__kind{font-size:17px}
   .gscore{padding:16px}
+  /* as etapas: só os números */
+  .steps--many .steps__name{display:none}
+  .steps--many .steps__num{margin-bottom:0}
+  /* O placar do alto numa linha só: o ícone e o número de cada um (o nome
+     fica só pro leitor de tela). */
+  .meters--game{gap:4px}
+  .meters--game .meter{padding:8px 4px 9px}
+  .meters--game .meter__top{justify-content:center;flex-wrap:nowrap;gap:5px}
+  .meters--game .meter__label{gap:0;letter-spacing:0}
+  .meters--game .meter__name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .meters--game .meter--rounds .meter__ico{display:none}
+  .meters--game .meter__track{height:5px;margin-top:7px}
+  /* a tabela: as colunas das categorias saem e o impacto vira uma frase
+     embaixo de cada escolha (o total já está no placar, em cima) */
   .gtable th,.gtable td{padding:10px}
+  .gtable .gtable__cat,.gtable tfoot{display:none}
+  .gtable__effect{display:block;margin-top:3px;font-size:12.5px;font-weight:400;line-height:1.45;color:var(--ink-soft)}
 }
 
 @media (max-width:560px){
-  /* um terço da tela pra cada medidor: sem o ícone, o nome cabe inteiro */
-  .meters--3 .meter{padding:10px 9px}
-  .meters--3 .meter__ico{display:none}
-  .meters--3 .meter__label{font-size:9.5px;letter-spacing:.05em}
-  /* a tabela: só o número da rodada e o nome curto de cada categoria */
+  .granking__grid{grid-template-columns:minmax(0,1fr)}
+  .rrow__cells{grid-template-columns:repeat(2,minmax(0,1fr))}
   .gtable{font-size:13.5px}
   .gtable th,.gtable td{padding:9px 8px}
   .gtable thead th{font-size:9.5px;letter-spacing:.05em}
   .gtable__topic{display:none}
   .gtable__round{margin-right:0}
-  .gtable__long{display:none}
-  .gtable__short{display:inline}
   .gtable__pick .rletter{display:none}
-  .gtable td.gtable__num{font-size:14px}
+  .meters--game .meter__nums{font-size:12px}
+  .meters--game .meter__used{font-size:13px}
 }
 
 @media print{
-  .gstart,.rready,.rother{display:none}
+  .gstart,.rready,.rothers,.granking__head .btn{display:none}
   .gintro{grid-template-columns:minmax(0,1fr)}
 }

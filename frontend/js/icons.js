@@ -47,7 +47,18 @@
     cookie: '<path d="M20.9 12.6A9 9 0 1 1 11.4 3.1a2.8 2.8 0 0 0 3.6 3.4 2.8 2.8 0 0 0 5.9 6.1z"/><path class="ico-chips" d="M8 10h.01M11.5 15.5h.01M15.5 14h.01M7.8 14.6h.01M11.4 11.2h.01"/>',
     carteira: '<path d="M18 7.5V5.2A1.2 1.2 0 0 0 16.8 4H5.5a2 2 0 0 0 0 4"/><path d="M3.5 6v12a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-14"/><path d="M16 14h.01"/><circle class="ico-coin" cx="12" cy="3" r="1.5"/>',
     sacola: '<g class="ico-bag"><path d="M5.2 8h13.6l-1 12.5H6.2z"/><path d="M9 10.5V7a3 3 0 0 1 6 0v3.5"/></g>',
-    trofeu: '<path d="M7.5 3.5h9V9a4.5 4.5 0 0 1-9 0z"/><path d="M7.5 5.5H5.2a2.6 2.6 0 0 0 2.9 3.8M16.5 5.5h2.3a2.6 2.6 0 0 1-2.9 3.8"/><path d="M12 13.5V17M8.5 20.5h7M9.8 17h4.4l.6 3.5H9.2z"/>'
+    trofeu: '<path d="M7.5 3.5h9V9a4.5 4.5 0 0 1-9 0z"/><path d="M7.5 5.5H5.2a2.6 2.6 0 0 0 2.9 3.8M16.5 5.5h2.3a2.6 2.6 0 0 1-2.9 3.8"/><path d="M12 13.5V17M8.5 20.5h7M9.8 17h4.4l.6 3.5H9.2z"/>',
+    // as categorias do placar e os tipos de escolha novos
+    capelo: '<g class="ico-cap"><path d="M12 4.5 2.5 9.2 12 14l9.5-4.8z"/><path d="M6.5 11.3v4.4c0 1.4 2.5 2.8 5.5 2.8s5.5-1.4 5.5-2.8v-4.4"/></g><path d="M21.5 9.2v5.3"/>',
+    coracao: '<path class="ico-heart" d="M12 20s-7.8-4.6-7.8-10.3A4.4 4.4 0 0 1 12 7a4.4 4.4 0 0 1 7.8 2.7C19.8 15.4 12 20 12 20z"/>',
+    cartao: '<g class="ico-card"><rect x="2.5" y="5.5" width="19" height="13" rx="2.2"/><path d="M2.5 9.8h19"/><path d="M6 15h4"/></g>',
+    dados: '<g class="ico-die"><rect x="4" y="4" width="16" height="16" rx="3.2"/><path class="ico-pips" d="M8.6 8.6h.01M15.4 8.6h.01M12 12h.01M8.6 15.4h.01M15.4 15.4h.01"/></g>',
+    gaveta: '<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 12h17"/><path class="ico-knob" d="M10 7.8h4M10 16.2h4"/>',
+    // as rodadas novas
+    tenis: '<path d="M2.8 15.8V8.5l3.9 1.2 1.6 2.1 2.6-.4 3 2.7 5.3 1.1a2 2 0 0 1 1.6 2v.6a1 1 0 0 1-1 1H3.8a1 1 0 0 1-1-1z"/><path d="M2.8 15.8h18.8"/><path d="M8.6 12.9l1.1-.9M11.1 13.4l1.1-.9"/>',
+    maleta: '<rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8.5 7V5.5A1.5 1.5 0 0 1 10 4h4a1.5 1.5 0 0 1 1.5 1.5V7"/><path d="M3 12.5h18"/><path d="M10.8 12.5v1.8h2.4v-1.8"/>',
+    notebook: '<rect x="4.5" y="4.5" width="15" height="10.5" rx="1.5"/><path d="M2.5 19h19l-1.8-4H4.3z"/><path d="M10.5 17h3"/>',
+    alerta: '<path d="M12 3.5 21.5 20h-19z"/><path class="ico-mark" d="M12 9.8v4.6M12 17.1h.01"/>'
   };
 
   // o quadrinho de cada decisão tem a mesma cor: a cor de cada personagem

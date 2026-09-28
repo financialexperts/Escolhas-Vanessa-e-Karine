@@ -12,11 +12,12 @@
   // escolheu na de antes. A escolha vale na hora e não muda mais (só
   // recomeçando o jogo).
   //
-  // picks: a escolha de cada rodada ("A" ou "B"), pelo id da rodada.
-  // name: o nome ou apelido de quem joga (opcional, vai no placar).
+  // picks: a escolha de cada rodada ("A" a "D"), pelo id da rodada.
+  // classCode: o código da turma (opcional): quem joga com o mesmo código
+  //   aparece no mesmo ranking, como o PIN do Kahoot.
   // begun: se o aluno já tocou em "Começar o jogo".
   var picks = {};
-  var name = "";
+  var classCode = "";
   var begun = false;
 
   // Tudo isso fica guardado no navegador, pra recarregar a página não apagar
@@ -28,11 +29,13 @@
   function ids() { return Catalog.list.map(function (r) { return String(r.id); }); }
 
   /* ============ os pontos ============ */
-  // os pontos de uma opção em cada categoria: { receita: 2, patrimonio: 0 }
+  // Os pontos de uma opção em cada categoria, já com o "pontos em dobro" da
+  // rodada: { receita: 2, patrimonio: 0, ... }
   function pointsOf(round, letter) {
     var kind = Catalog.kinds[round.options[letter].kind];
+    var m = round.multiplier || 1;
     var out = {};
-    Catalog.categories.forEach(function (c) { out[c.key] = kind.points[c.key] || 0; });
+    Catalog.categories.forEach(function (c) { out[c.key] = (kind.points[c.key] || 0) * m; });
     return out;
   }
 
@@ -40,13 +43,13 @@
     return Catalog.kinds[round.options[letter].kind];
   }
 
-  // Os pontos numa frase: "+2 receita", "−2 patrimônio" ou, num tipo que
-  // mexe nas duas categorias, "+1 receita e +1 patrimônio".
+  // Os pontos numa frase: "+2 receita", "−2 patrimônio e +1 bem-estar".
   function effectText(pts) {
     var parts = Catalog.categories.filter(function (c) { return pts[c.key]; }).map(function (c) {
       return Format.points(pts[c.key]) + " " + c.name.toLowerCase();
     });
-    return parts.length ? parts.join(" e ") : "nenhum ponto";
+    if (!parts.length) return "nenhum ponto";
+    return parts.length < 2 ? parts[0] : parts.slice(0, -1).join(", ") + " e " + parts[parts.length - 1];
   }
 
   // a cor de um número de pontos numa categoria: a da categoria quando
@@ -74,7 +77,7 @@
   }
 
   // Quantas vezes o aluno escolheu cada tipo e quantos pontos cada tipo deu:
-  // { consumo: { count: 2, points: { receita: 0, patrimonio: -4 } }, ... }
+  // { consumo: { count: 2, points: { receita: 0, patrimonio: -4, ... } }, ... }
   function byKind() {
     var out = {};
     Object.keys(Catalog.kinds).forEach(function (k) {
@@ -94,14 +97,14 @@
   }
 
   // O menor e o maior placar possíveis em cada categoria, somando a pior e a
-  // melhor opção de cada rodada: { receita: { min: 0, max: 6 }, ... }
+  // melhor opção de cada rodada: { receita: { min: -3, max: 16 }, ... }
   function range() {
     var out = {};
     Catalog.categories.forEach(function (c) {
       var min = 0;
       var max = 0;
       Catalog.list.forEach(function (r) {
-        var v = Catalog.letters.map(function (l) { return pointsOf(r, l)[c.key]; });
+        var v = Catalog.lettersOf(r).map(function (l) { return pointsOf(r, l)[c.key]; });
         min += Math.min.apply(null, v);
         max += Math.max.apply(null, v);
       });
@@ -139,13 +142,13 @@
   }
 
   // Escolhe uma opção. Devolve o motivo quando não pode (ou null): a rodada
-  // ainda não abriu ou já tem uma escolha.
+  // ainda não abriu, já tem uma escolha ou não tem essa opção.
   function pick(id, letter) {
     id = String(id);
     var err = blocked(id);
     if (err) return err;
     if (picks[id]) return "Você já escolheu nesta rodada. Para trocar, só recomeçando o jogo.";
-    if (Catalog.letters.indexOf(letter) < 0) return "Essa opção não existe.";
+    if (Catalog.lettersOf(Catalog.byId(id)).indexOf(letter) < 0) return "Essa opção não existe.";
     picks[id] = letter;
     begun = true;
     save();
@@ -157,14 +160,26 @@
     save();
   }
 
-  function getName() { return name; }
-  function setName(v) {
-    name = String(v || "").replace(/\s+/g, " ").trim().slice(0, 24);
+  // O código da turma vai em maiúsculas e sem espaços ("8a manhã" vira
+  // "8AMANHÃ"), pra quem digitar de um jeito ou de outro cair no mesmo
+  // ranking.
+  function normalizeCode(v) {
+    return String(v || "").toUpperCase().replace(/\s+/g, "").slice(0, 20);
+  }
+  function getClassCode() { return classCode; }
+  function setClassCode(v) {
+    classCode = normalizeCode(v);
     save();
   }
 
-  // volta tudo ao começo: nenhuma escolha feita. O nome fica: quem recomeça
-  // costuma ser a mesma pessoa.
+  // O resultado que vai pro ranking: os pontos de cada categoria e a escolha
+  // de cada rodada.
+  function result() {
+    return { scores: totals(), picks: JSON.parse(JSON.stringify(picks)) };
+  }
+
+  // volta tudo ao começo: nenhuma escolha feita. A turma fica: quem
+  // recomeça costuma estar na mesma aula.
   function reset() {
     picks = {};
     begun = false;
@@ -176,7 +191,7 @@
   // jogo funciona igual, só não lembra depois de recarregar.
   function save() {
     try {
-      localStorage.setItem(KEY, JSON.stringify({ picks: picks, name: name, begun: begun }));
+      localStorage.setItem(KEY, JSON.stringify({ picks: picks, classCode: classCode, begun: begun }));
     } catch (err) {}
   }
 
@@ -188,12 +203,13 @@
     try { saved = JSON.parse(localStorage.getItem(KEY) || "null"); } catch (err) { saved = null; }
     if (!saved || typeof saved !== "object") return;
     var p = saved.picks || {};
-    var list = ids();
-    for (var i = 0; i < list.length; i++) {
-      if (Catalog.letters.indexOf(p[list[i]]) < 0) break;
-      picks[list[i]] = p[list[i]];
-    }
-    name = typeof saved.name === "string" ? saved.name.slice(0, 24) : "";
+    Catalog.list.every(function (r) {
+      var l = p[r.id];
+      if (Catalog.lettersOf(r).indexOf(l) < 0) return false;
+      picks[r.id] = l;
+      return true;
+    });
+    classCode = normalizeCode(saved.classCode);
     begun = !!saved.begun;
   }
 
@@ -201,7 +217,7 @@
   function open(userId) {
     KEY = BASE + ":" + userId;
     picks = {};
-    name = "";
+    classCode = "";
     begun = false;
     load();
   }
@@ -224,8 +240,10 @@
     blocked: blocked,
     pick: pick,
     start: start,
-    getName: getName,
-    setName: setName,
+    getClassCode: getClassCode,
+    setClassCode: setClassCode,
+    normalizeCode: normalizeCode,
+    result: result,
     reset: reset
   };
 })(window);

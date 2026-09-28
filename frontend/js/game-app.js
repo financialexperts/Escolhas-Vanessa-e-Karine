@@ -1,5 +1,5 @@
 // O jogo só começa quando alguém entra (session.js): cada conta tem o seu
-// jogo guardado no navegador.
+// jogo guardado no navegador, e o ranking usa o nome cadastrado no login.
 window.Session.ready(function (user) {
   "use strict";
 
@@ -8,8 +8,10 @@ window.Session.ready(function (user) {
   var Format = window.Format;
   var Icons = window.Icons;
   var Toast = window.Toast;
+  var Session = window.Session;
   var PlayView = window.PlayView;
   var ScoreView = window.ScoreView;
+  var Ranking = window.Ranking;
 
   Game.open(user.id);
 
@@ -19,36 +21,44 @@ window.Session.ready(function (user) {
   var semAnimacao = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ============ a abertura ============ */
+  // Os números da abertura saem de backend/js/rounds.js: quantas rodadas,
+  // quantas opções, quantas categorias e se alguma vale em dobro.
   var n = Catalog.list.length;
-  var cats = Catalog.categories.map(function (c, i) { return i ? c.name.toLowerCase() : c.name; });
+  var counts = Catalog.list.map(function (r) { return Catalog.lettersOf(r).length; });
+  var minOpts = Math.min.apply(null, counts);
+  var maxOpts = Math.max.apply(null, counts);
+  var dobro = Catalog.list.some(function (r) { return r.multiplier > 1; });
+  var nCats = Catalog.categories.length;
 
-  el("g-lead").textContent = "São " + n + " rodadas. Em cada uma aparece uma situação com duas opções, A ou B, " +
-    "e você escolhe o que faria com o dinheiro. Cada escolha dá (ou tira) pontos de " +
-    Catalog.categories.map(function (c) { return c.name.toLowerCase(); }).join(" ou de ") +
-    ". No fim, você vê quantos pontos fez em cada categoria.";
+  el("g-lead").textContent = "São " + n + " rodadas, do fácil ao difícil. Em cada uma aparece uma situação do dia a dia " +
+    "e você escolhe o que faria com o dinheiro. Cada escolha dá (ou tira) pontos em " + nCats + " categorias. " +
+    "No fim, você vê o seu placar e o ranking da turma.";
   el("sc-rounds").textContent = n + " rodadas";
-  el("sc-cats").textContent = cats.slice(0, -1).join(", ") + (cats.length > 1 ? " e " : "") + cats[cats.length - 1];
-  el("gm-sub").textContent = "Leia a situação, escolha a Opção A ou a Opção B e veja quantos pontos a sua escolha faz. " +
-    "A próxima rodada só abre depois da escolha nesta.";
+  el("sc-opts").textContent = minOpts === maxOpts ? minOpts + " opções"
+    : maxOpts - minOpts === 1 ? minOpts + " ou " + maxOpts + " opções"
+    : "De " + minOpts + " a " + maxOpts + " opções";
+  el("sc-cats").textContent = nCats + " categorias";
+  el("gm-sub").textContent = "Leia a situação, escolha uma das opções e veja quantos pontos a sua escolha faz. " +
+    "A próxima rodada só abre depois da escolha nesta." + (dobro ? " A última vale pontos em dobro!" : "");
 
-  // O quadro roxo dos slides: quanto vale cada tipo de escolha. A cor dos
-  // pontos é a da categoria (ou vermelha, quando tira).
-  el("g-rules").innerHTML = Object.keys(Catalog.kinds).map(function (k) {
-    var kind = Catalog.kinds[k];
-    var main = Catalog.categories.filter(function (c) { return kind.points[c.key]; })[0];
-    var tone = main ? Game.toneOf(main.key, kind.points[main.key]) : "zero";
-    return '<li class="grule fx">' + Icons.tile(kind.icon, kind.tone, "itile--sm") +
-      '<span class="grule__name">' + Format.esc(kind.plural) + "</span>" +
-      '<span class="grule__pts" data-tone="' + tone + '">' + Format.esc(Game.effectText(kind.points)) + "</span>" +
+  // as categorias do placar e o que cada uma quer dizer
+  el("g-cats").innerHTML = Catalog.categories.map(function (c) {
+    return '<li class="gcat fx">' + Icons.tile(c.icon, c.tone, "itile--sm") +
+      '<span class="gcat__name">' + Format.esc(c.name) + "</span>" +
+      '<span class="gcat__about">' + Format.esc(c.about) + "</span>" +
       "</li>";
   }).join("");
 
-  // O nome ou apelido vai no placar. Fica guardado junto com o jogo; o Enter
-  // no campo já começa. Sem nome guardado, vem o primeiro nome da conta.
-  var nome = el("g-name");
-  nome.value = Game.getName() || window.Session.firstName();
-  nome.addEventListener("input", function () { Game.setName(nome.value); });
-  nome.addEventListener("keydown", function (e) {
+  // o quadro roxo: quanto vale cada tipo de escolha
+  el("g-rules").innerHTML = PlayView.rules();
+
+  // O código da turma: fica guardado junto com o jogo e vai em maiúsculas.
+  // O Enter no campo já começa.
+  var codigo = el("g-code");
+  codigo.value = Game.getClassCode();
+  codigo.addEventListener("input", function () { Game.setClassCode(codigo.value); });
+  codigo.addEventListener("blur", function () { codigo.value = Game.getClassCode(); });
+  codigo.addEventListener("keydown", function (e) {
     if (e.key !== "Enter") return;
     e.preventDefault();
     comecar();
@@ -57,6 +67,18 @@ window.Session.ready(function (user) {
   // o botão da abertura acompanha o jogo: começar, continuar ou ver o placar
   function syncStart() {
     el("btn-start-text").textContent = Game.isOver() ? "Ver o meu placar" : Game.started() ? "Continuar o jogo" : "Começar o jogo";
+  }
+
+  /* ============ o ranking ============ */
+  // o que vai pro ranking: quem jogou (com o nome do login), a turma e os
+  // pontos
+  function resultado() {
+    return {
+      userId: user.id,
+      name: Session.fullName() || "Aluno",
+      classCode: Game.getClassCode(),
+      result: Game.result()
+    };
   }
 
   /* ============ navegação ============ */
@@ -68,16 +90,30 @@ window.Session.ready(function (user) {
     secao.focus({ preventScroll: true });
   }
 
-  function mostrarPlacar() {
+  // o placar e o ranking da turma (que guarda o resultado de quem jogou)
+  function placar() {
     ScoreView.show();
+    Ranking.show(el("fn-ranking"), resultado());
+  }
+
+  function mostrarPlacar() {
+    placar();
     irPara(el("sec-final"));
+  }
+
+  // Na última escolha, o resultado já vai pro ranking, mesmo que o aluno
+  // não abra o placar.
+  function escolheu() {
+    syncStart();
+    if (Game.isOver()) Ranking.save(resultado());
   }
 
   // Começa o jogo (ou volta pra rodada em que o aluno parou): as rodadas
   // aparecem e a tela vai até a rodada aberta. Com as rodadas todas
   // respondidas, vai pro placar.
   function comecar() {
-    Game.setName(nome.value);
+    Game.setClassCode(codigo.value);
+    codigo.value = Game.getClassCode();
     if (Game.isOver()) {
       mostrarPlacar();
       return;
@@ -91,7 +127,7 @@ window.Session.ready(function (user) {
 
   Toast.mount();
   PlayView.mount(el("rounds"), {
-    picked: syncStart,
+    picked: escolheu,
     final: mostrarPlacar
   });
 
@@ -102,16 +138,18 @@ window.Session.ready(function (user) {
     el("sec-game").hidden = false;
     PlayView.begin(false);
   }
-  if (Game.isOver()) ScoreView.show();
+  if (Game.isOver()) placar();
   syncStart();
 
   /* ============ recomeçar ============ */
-  // Apaga as escolhas e volta tudo ao começo (o nome fica). No meio do jogo,
-  // pergunta antes; o "Jogar de novo" do placar já começa a Rodada 1.
+  // Apaga as escolhas e volta tudo ao começo (a turma fica). No meio do
+  // jogo, pergunta antes; o "Jogar de novo" do placar já começa a Rodada 1.
+  // O resultado que já está no ranking fica lá até o novo jogo terminar.
   function zerar() {
     Game.reset();
     PlayView.render();
     ScoreView.hide();
+    Ranking.hide();
     Toast.hide();
   }
 
