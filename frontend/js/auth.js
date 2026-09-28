@@ -32,7 +32,7 @@
         '<p class="card__kicker intro__tag">Educação financeira</p>' +
         "<h1>Entre para fazer as atividades.</h1>" +
         "<p>Com a sua conta, você faz os cálculos das escolhas da Vanessa e da Karine e joga o Seu dinheiro no tempo. " +
-          "Já tem conta no <strong>Fluxo de Caixa</strong>? Entre com o mesmo e-mail e a mesma senha.</p>" +
+          "O seu progresso fica guardado e o seu nome aparece no ranking do jogo.</p>" +
       "</div>" +
 
       '<div class="card auth__card">' +

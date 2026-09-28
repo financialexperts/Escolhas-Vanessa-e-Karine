@@ -9,8 +9,8 @@
 
   // O placar do fim do jogo: quantos pontos o aluno fez em cada categoria,
   // quantas escolhas ele fez de cada tipo, a tabela preenchida rodada por
-  // rodada e o que os pontos mostram. O ranking da turma fica no
-  // ranking.js (o game-app.js mostra os dois juntos).
+  // rodada e o que os pontos mostram. O ranking fica no ranking.js (o
+  // game-app.js mostra os dois juntos).
 
   // A última frase do que os pontos mostram: a lição do jogo.
   var LICAO = "Consumir não é proibido: o importante é saber o que cada escolha faz com o seu dinheiro no tempo. " +

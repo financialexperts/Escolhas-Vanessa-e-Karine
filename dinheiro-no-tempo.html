@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Seu dinheiro no tempo</title>
-<meta name="description" content="Em 5 rodadas, escolha entre a Opção A e a Opção B e veja quantos pontos de receita e de patrimônio as suas escolhas fazem.">
+<meta name="description" content="Em 10 rodadas, escolha o que fazer com o dinheiro e veja quantos pontos de receita, patrimônio, conhecimento e bem-estar as suas escolhas fazem.">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#F7F7FA" id="meta-theme-color">
 <link rel="icon" type="image/png" href="frontend/img/favicon.png">
@@ -96,13 +96,13 @@
       <p class="card__kicker intro__kicker" id="gc-title">As categorias do placar</p>
       <ul class="gcats" id="g-cats" aria-labelledby="gc-title"></ul>
 
-      <!-- o código da turma, como o PIN do Kahoot: quem usa o mesmo código
-           aparece no mesmo ranking. No ranking vai o nome do login -->
+      <!-- o apelido, como no Kahoot: no ranking, ele aparece em destaque e o
+           nome do login fica embaixo -->
       <div class="gstart">
         <div class="gname">
-          <label class="gname__label" for="g-code">Código da turma <span>(opcional)</span></label>
-          <input class="gname__input gname__input--code" id="g-code" type="text" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go" placeholder="O professor diz qual é" aria-describedby="g-code-hint">
-          <p class="gname__hint" id="g-code-hint">Quem joga com o mesmo código aparece no mesmo ranking.</p>
+          <label class="gname__label" for="g-nick">Seu apelido <span>(opcional)</span></label>
+          <input class="gname__input" id="g-nick" type="text" maxlength="24" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="go" placeholder="Como você quer aparecer no ranking" aria-describedby="g-nick-hint">
+          <p class="gname__hint" id="g-nick-hint">No ranking, o seu nome aparece embaixo do apelido.</p>
         </div>
         <button class="btn btn--primary glass fx gstart__btn" type="button" id="btn-start"><span data-icon="foguete"></span><span id="btn-start-text">Começar o jogo</span></button>
       </div>
@@ -162,7 +162,8 @@
 
     <div class="gscores" id="fn-scores"></div>
 
-    <!-- quem fez mais pontos em cada categoria, na turma (ranking.js) -->
+    <!-- quem fez mais pontos em cada categoria, entre todos que jogaram
+         (ranking.js) -->
     <div class="granking" id="fn-ranking"></div>
 
     <div class="gtable-wrap">

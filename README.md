@@ -3,7 +3,7 @@
 Duas atividades, cada uma numa aba no alto da tela, e um login na frente das duas:
 
 - **Vanessa e Karine** (`index.html`): o exercício em que o próprio aluno faz os cálculos da planilha "Escolhas Karine e Vanessa - PROFESSOR". São as 4 decisões que a Vanessa e a Karine tomaram ao longo de 40 anos. Em cada uma, ele usa os dados da história para preencher as contas, confere as respostas e, no fim, calcula a diferença total entre as duas (R$ 2.054.300,00). As 4 decisões e a diferença total são 5 etapas, feitas uma de cada vez: a próxima só abre quando todos os cálculos da etapa estão certos.
-- **Seu dinheiro no tempo** (`dinheiro-no-tempo.html`): um jogo de escolhas no estilo do Kahoot, para alunos de 13 a 16 anos. São 10 rodadas, do fácil ao difícil, com 3 ou 4 opções. Os pontos não vêm de acertar nem de ser rápido: cada escolha é de um tipo, e cada tipo dá ou tira pontos em 4 categorias (**receita**, **patrimônio**, **conhecimento** e **bem-estar**). No fim, o placar mostra quantos pontos o aluno fez em cada categoria, e o ranking da turma, quem fez mais em cada uma. Veja [Seu dinheiro no tempo](#seu-dinheiro-no-tempo).
+- **Seu dinheiro no tempo** (`dinheiro-no-tempo.html`): um jogo de escolhas no estilo do Kahoot, para alunos de 13 a 16 anos. São 10 rodadas, do fácil ao difícil, com 3 ou 4 opções. Os pontos não vêm de acertar nem de ser rápido: cada escolha é de um tipo, e cada tipo dá ou tira pontos em 4 categorias (**receita**, **patrimônio**, **conhecimento** e **bem-estar**). No fim, o placar mostra quantos pontos o aluno fez em cada categoria, e o ranking geral, quem fez mais em cada uma. Veja [Seu dinheiro no tempo](#seu-dinheiro-no-tempo).
 - **O login** é o mesmo do Fluxo de Caixa, com o mesmo banco (Supabase): quem já tem conta lá entra aqui com o mesmo e-mail e a mesma senha. Veja [O login](#o-login).
 
 Não tem build nem instalação: são páginas `.html` + alguns arquivos `.js` e `.css` estáticos, na mesma identidade visual do Simulador de Renda da Laura. As contas ficam no Supabase do Fluxo de Caixa. Para rodar, basta publicar a pasta no GitHub Pages (ou abrir o `index.html` no navegador, com internet, por causa do login).
@@ -82,7 +82,7 @@ O sistema não guarda as respostas prontas: ele faz as contas a partir dos dados
 
 Um jogo de escolhas com o dinheiro, no estilo do Kahoot, pensado para alunos de 13 a 16 anos: difícil o bastante pra fazer pensar, sem virar prova. Não tem resposta certa: cada escolha dá ou tira pontos em 4 categorias, e o placar mostra o que as escolhas do aluno fizeram com o dinheiro dele no tempo.
 
-1. **A abertura.** Como é o jogo (10 rodadas, 3 ou 4 opções, 4 categorias), o que cada categoria quer dizer e, ao lado, o quadro roxo com quanto vale cada tipo de escolha (os que somam e os que tiram pontos). O aluno pode pôr o **código da turma**, que o professor diz (como o PIN do Kahoot), e toca em **Começar o jogo**.
+1. **A abertura.** Como é o jogo (10 rodadas, 3 ou 4 opções, 4 categorias), o que cada categoria quer dizer e, ao lado, o quadro roxo com quanto vale cada tipo de escolha (os que somam e os que tiram pontos). O aluno pode pôr um **apelido** (como no Kahoot), que aparece no ranking, e toca em **Começar o jogo**.
 
 2. **As rodadas.** Uma de cada vez. A situação aparece grande, com uma etiqueta do nível (**Fácil**, **Médio** ou **Difícil**) e, antes das opções, uma contagem (3, 2, 1) dá tempo de todo mundo ler. As opções são botões grandes, cada uma com a sua forma e a sua cor: A é o triângulo rosa, B o losango azul, C o círculo âmbar e D o quadrado verde.
 
@@ -96,7 +96,7 @@ Um jogo de escolhas com o dinheiro, no estilo do Kahoot, pensado para alunos de 
 
    Enquanto o aluno joga, o placar fica grudado no alto: quantas rodadas ele respondeu e os pontos de cada categoria, com uma barrinha que sai do 0 pra direita quando soma e pra esquerda, em vermelho, quando tira (no celular, fica só o ícone e o número de cada um). Em cima das rodadas ficam as etapas: as respondidas ganham o selo verde e dá pra voltar nelas pra rever (sem mudar a escolha).
 
-4. **O placar.** Na última rodada, **Ver o meu placar** mostra, pra cada categoria, quantos pontos o aluno fez, a régua do menor ao maior placar possível com o ponto onde ele ficou, e de que escolhas vieram os pontos. Depois vêm o **ranking da turma**, quantas escolhas ele fez de cada tipo, a tabela preenchida rodada por rodada (com o total) e o que os pontos mostram: quantas escolhas somaram e quantas tiraram, o ponto forte dele e uma dica pra cada armadilha em que ele caiu (consumo, dinheiro parado, dívida, aposta). **Jogar de novo** apaga as escolhas e já abre a Rodada 1.
+4. **O placar.** Na última rodada, **Ver o meu placar** mostra, pra cada categoria, quantos pontos o aluno fez, a régua do menor ao maior placar possível com o ponto onde ele ficou, e de que escolhas vieram os pontos. Depois vêm o **ranking geral** de cada categoria, quantas escolhas ele fez de cada tipo, a tabela preenchida rodada por rodada (com o total) e o que os pontos mostram: quantas escolhas somaram e quantas tiraram, o ponto forte dele e uma dica pra cada armadilha em que ele caiu (consumo, dinheiro parado, dívida, aposta). **Jogar de novo** apaga as escolhas e já abre a Rodada 1.
 
 ### As categorias e os tipos de escolha
 
@@ -140,13 +140,15 @@ Ficam em `LIST`, em [`backend/js/rounds.js`](backend/js/rounds.js). O tipo de ca
 
 Com essas rodadas, o placar vai de −5 a +16 na receita, de −27 a +6 no patrimônio, de 0 a +6 no conhecimento e de 0 a +9 no bem-estar. O sistema não guarda o placar pronto: mudando o tipo de uma opção, os pontos de um tipo, uma rodada ou uma categoria, as rodadas, o placar, as réguas, o ranking e os textos acompanham. Cada rodada pode ter de 2 a 4 opções, em ordem a partir da A; o nível é o `level` e os pontos em dobro, o `multiplier`.
 
-### O ranking da turma
+### O ranking
 
-No placar final, o ranking mostra, pra cada categoria, os 5 primeiros colocados (ouro, prata e bronze nos três primeiros; empate divide a posição) e, se o aluno ficou mais pra baixo, a posição dele no fim. A linha dele fica em destaque. O nome que aparece é o que ele cadastrou no login.
+No placar final, o ranking geral mostra, pra cada categoria (quem fez mais receita, mais patrimônio, mais conhecimento e mais bem-estar), os 5 primeiros colocados entre todo mundo que jogou: ouro, prata e bronze nos três primeiros, e empate divide a posição. Se o aluno ficou mais pra baixo, a posição dele aparece no fim, e a linha dele fica em destaque.
 
-Entram no mesmo ranking todos que jogaram com o mesmo **código da turma** (o código vai em maiúsculas e sem espaços, então `8a` e `8A` são a mesma turma). Sem código, o ranking junta todo mundo que jogou sem código. O resultado vai pro ranking assim que o aluno responde a última rodada. Jogando de novo com o mesmo código, o resultado dele é trocado pelo novo quando o novo jogo termina. O ranking se atualiza sozinho a cada 15 segundos enquanto está na tela, e o botão **Atualizar** atualiza na hora.
+Na abertura, o aluno pode pôr um **apelido** (opcional, até 24 letras). No ranking, o apelido aparece em destaque e, embaixo dele, pequeno, o nome que o aluno cadastrou no login: os alunos se divertem com o apelido e o professor sabe quem é quem. Sem apelido, aparece só o nome do login.
 
-O ranking fica no Supabase do login, na tabela `game_scores`, que **precisa ser criada uma vez**: abra o SQL Editor do projeto no painel do Supabase, cole o conteúdo de [`backend/sql/game_scores.sql`](backend/sql/game_scores.sql) e rode. Ele não mexe em nenhuma tabela que já existe (as do Fluxo de Caixa continuam iguais). Quem está logado lê todas as linhas (é o que monta o ranking), mas só grava as próprias. Antes da tabela existir, o jogo funciona igual e, no lugar do ranking, aparece o aviso de que falta criá-la.
+O resultado vai pro ranking assim que o aluno responde a última rodada. Cada aluno tem um resultado só: jogando de novo (ou trocando o apelido e abrindo o placar), o resultado dele é trocado pelo novo. O ranking se atualiza sozinho a cada 15 segundos enquanto está na tela, e o botão **Atualizar** atualiza na hora.
+
+O ranking fica no Supabase do login, na tabela `game_scores`: uma linha por aluno, com o apelido, o nome do login, os pontos de cada categoria e a escolha de cada rodada. Quem está logado lê todas as linhas (é o que monta o ranking), mas só grava, muda e apaga as próprias. Sem a tabela, o jogo funciona igual e, no lugar do ranking, aparece o aviso de que falta criá-la.
 
 ---
 
@@ -160,7 +162,7 @@ As duas páginas abrem numa tela de **Entrar / Criar conta**, a mesma do Fluxo d
 
 Pra os links do e-mail (trocar a senha, confirmar a conta) voltarem pra este sistema, e não pro Fluxo de Caixa, o endereço dele tem que estar em **Authentication → URL Configuration → Redirect URLs**, no painel do Supabase. No GitHub Pages, é algo como `https://financialexperts.github.io/Escolhas-Vanessa-e-Karine/**`.
 
-O banco guarda as contas e o resultado de cada jogo do Seu dinheiro no tempo, pro ranking (veja [O ranking da turma](#o-ranking-da-turma)). O andamento das atividades (os cálculos feitos, a rodada em que o aluno está) fica guardado no navegador, separado por conta (veja [O que fica guardado no navegador](#o-que-fica-guardado-no-navegador)). O nome do topo, do placar e do ranking é o "Nome completo" do Criar conta.
+O banco guarda as contas e o resultado de cada jogo do Seu dinheiro no tempo, pro ranking (veja [O ranking](#o-ranking)). O andamento das atividades (os cálculos feitos, a rodada em que o aluno está) fica guardado no navegador, separado por conta (veja [O que fica guardado no navegador](#o-que-fica-guardado-no-navegador)). O nome do topo, do placar e do ranking é o "Nome completo" do Criar conta.
 
 ---
 
@@ -206,16 +208,15 @@ frontend/
   js/play.js                    as etapas, os cartões das rodadas (a contagem, as opções,
                                 o que a escolha deu) e o placar do alto
   js/score.js                   o placar final
-  js/ranking.js                 o ranking da turma: grava o resultado no Supabase e mostra
+  js/ranking.js                 o ranking geral: grava o resultado no Supabase e mostra
                                 quem fez mais pontos em cada categoria
-  js/game-app.js                a abertura, o código da turma, começar e recomeçar, liga tudo
+  js/game-app.js                a abertura, o apelido, começar e recomeçar, liga tudo
 backend/
   js/scenario.js                o período, o objetivo e as duas personagens
   js/decisions.js               as 4 decisões: textos, dados e contas, linha por linha
                                 como na planilha
   js/rounds.js                  as 10 rodadas, as opções e o tipo de cada uma, os tipos e
                                 os pontos de cada um, e as categorias do placar
-  sql/game_scores.sql           a tabela do ranking, pra rodar uma vez no Supabase
 ```
 
 Os ícones de todas as partes da tela se mexem quando o mouse passa, quando o aluno toca neles ou quando recebem o foco do teclado. No celular, só um toque de verdade anima: passar o dedo para rolar a página não mexe em nada. Quem pede menos movimento no sistema operacional não vê animação nenhuma (o número da diferença final e os do placar já aparecem prontos, e as rodadas não têm a contagem).
@@ -268,7 +269,7 @@ A cor de cada uma (rosa para a Vanessa, azul para a Karine) aparece no fundo do 
 
 - **O tema** claro ou escuro, no `localStorage`, com a mesma chave (`tema`) do Simulador de Renda e do Fluxo de Caixa: publicados no mesmo endereço, os sistemas lembram do mesmo tema.
 - **O exercício** da Vanessa e da Karine, na chave `equilibrista-calculos:` + o id da conta: o que o aluno digitou, as células certas e as etapas já conferidas. Recarregar a página não apaga nada (a tela volta na etapa em que o aluno parou), e **Recomeçar o exercício** apaga tudo.
-- **O jogo** Seu dinheiro no tempo, na chave `dinheiro-no-tempo:` + o id da conta: a escolha de cada rodada e o código da turma. Recarregar volta na rodada em que o aluno parou. (O resultado de cada jogo terminado também vai pro Supabase, pro ranking.)
+- **O jogo** Seu dinheiro no tempo, na chave `dinheiro-no-tempo:` + o id da conta: a escolha de cada rodada e o apelido. Recarregar volta na rodada em que o aluno parou. (O resultado de cada jogo terminado também vai pro Supabase, pro ranking.)
 - **A sessão do login**, guardada pelo próprio Supabase.
 
 O que o aluno faz fica guardado só naquele navegador, mas separado por conta: num computador compartilhado, cada aluno que entra vê só o que ele fez (e quem sai volta pra tela de entrar). O exercício feito antes de existir o login (na chave antiga, `equilibrista-calculos`) passa pra primeira conta que entrar naquele navegador. Numa janela anônima (ou com o armazenamento bloqueado), tudo funciona igual, só não lembra depois de recarregar. Se os dados de `decisions.js` mudarem, uma célula guardada como certa que não bate mais com a conta nova volta a ficar em aberto; se as rodadas de `rounds.js` mudarem, uma escolha que não existe mais é esquecida.

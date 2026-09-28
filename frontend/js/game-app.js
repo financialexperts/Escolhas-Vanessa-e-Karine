@@ -32,7 +32,7 @@ window.Session.ready(function (user) {
 
   el("g-lead").textContent = "São " + n + " rodadas, do fácil ao difícil. Em cada uma aparece uma situação do dia a dia " +
     "e você escolhe o que faria com o dinheiro. Cada escolha dá (ou tira) pontos em " + nCats + " categorias. " +
-    "No fim, você vê o seu placar e o ranking da turma.";
+    "No fim, você vê o seu placar e o ranking de cada categoria.";
   el("sc-rounds").textContent = n + " rodadas";
   el("sc-opts").textContent = minOpts === maxOpts ? minOpts + " opções"
     : maxOpts - minOpts === 1 ? minOpts + " ou " + maxOpts + " opções"
@@ -52,13 +52,13 @@ window.Session.ready(function (user) {
   // o quadro roxo: quanto vale cada tipo de escolha
   el("g-rules").innerHTML = PlayView.rules();
 
-  // O código da turma: fica guardado junto com o jogo e vai em maiúsculas.
-  // O Enter no campo já começa.
-  var codigo = el("g-code");
-  codigo.value = Game.getClassCode();
-  codigo.addEventListener("input", function () { Game.setClassCode(codigo.value); });
-  codigo.addEventListener("blur", function () { codigo.value = Game.getClassCode(); });
-  codigo.addEventListener("keydown", function (e) {
+  // O apelido: fica guardado junto com o jogo. O Enter no campo já começa.
+  var apelido = el("g-nick");
+  apelido.maxLength = Game.nickMax;
+  apelido.value = Game.getNickname();
+  apelido.addEventListener("input", function () { Game.setNickname(apelido.value); });
+  apelido.addEventListener("blur", function () { apelido.value = Game.getNickname(); });
+  apelido.addEventListener("keydown", function (e) {
     if (e.key !== "Enter") return;
     e.preventDefault();
     comecar();
@@ -70,13 +70,13 @@ window.Session.ready(function (user) {
   }
 
   /* ============ o ranking ============ */
-  // o que vai pro ranking: quem jogou (com o nome do login), a turma e os
+  // o que vai pro ranking: quem jogou (o nome do login e o apelido) e os
   // pontos
   function resultado() {
     return {
       userId: user.id,
       name: Session.fullName() || "Aluno",
-      classCode: Game.getClassCode(),
+      nickname: Game.getNickname(),
       result: Game.result()
     };
   }
@@ -90,7 +90,7 @@ window.Session.ready(function (user) {
     secao.focus({ preventScroll: true });
   }
 
-  // o placar e o ranking da turma (que guarda o resultado de quem jogou)
+  // o placar e o ranking (que guarda o resultado de quem jogou)
   function placar() {
     ScoreView.show();
     Ranking.show(el("fn-ranking"), resultado());
@@ -112,8 +112,8 @@ window.Session.ready(function (user) {
   // aparecem e a tela vai até a rodada aberta. Com as rodadas todas
   // respondidas, vai pro placar.
   function comecar() {
-    Game.setClassCode(codigo.value);
-    codigo.value = Game.getClassCode();
+    Game.setNickname(apelido.value);
+    apelido.value = Game.getNickname();
     if (Game.isOver()) {
       mostrarPlacar();
       return;
@@ -142,7 +142,7 @@ window.Session.ready(function (user) {
   syncStart();
 
   /* ============ recomeçar ============ */
-  // Apaga as escolhas e volta tudo ao começo (a turma fica). No meio do
+  // Apaga as escolhas e volta tudo ao começo (o apelido fica). No meio do
   // jogo, pergunta antes; o "Jogar de novo" do placar já começa a Rodada 1.
   // O resultado que já está no ranking fica lá até o novo jogo terminar.
   function zerar() {

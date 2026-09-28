@@ -3,6 +3,10 @@
    cartões, os medidores, as etapas, os botões e os blocos do placar vêm do
    styles.css; aqui fica só o que é do jogo. */
 
+/* No computador, o jogo usa mais da tela que a página da Vanessa e da
+   Karine: o .wrap (styles.css) lê a largura daqui. */
+:root{--wrap:1320px}
+
 /* A cor de um número de pontos (--k) e o fundo dele (--ks): a da categoria
    quando soma, vermelho quando tira e apagado quando é 0 (toneOf, no
    game.js). O âmbar do texto é mais escuro, pra ler bem no fundo claro. */
@@ -41,8 +45,6 @@
 .gname__input{display:block;width:100%;height:46px;margin-top:6px;padding:0 14px;border:1.5px solid var(--line-strong);border-radius:12px;background:var(--surface);font-family:var(--ff-body);font-size:16px;font-weight:500;color:var(--ink);outline:none;transition:border-color .15s,box-shadow .15s}
 .gname__input::placeholder{font-weight:400;color:var(--muted);opacity:.8}
 .gname__input:focus{border-color:var(--focus);box-shadow:0 0 0 3px color-mix(in srgb,var(--focus) 22%,transparent)}
-/* o código da turma aparece em maiúsculas, do jeito que vai pro ranking */
-.gname__input--code:not(:placeholder-shown){font-family:var(--ff-mono);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
 .gname__hint{margin-top:6px;font-size:12.5px;line-height:1.45;color:var(--muted)}
 /* o botão fica na altura do campo, e não do rótulo em cima dele */
 .gstart__btn{flex:0 0 auto;height:46px;margin-top:22px;padding:0 22px;font-size:15px}
@@ -144,7 +146,7 @@
 .rpts{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:112px;padding:10px 14px;border:1px solid var(--k);border-radius:14px;background:var(--ks);text-align:center}
 .rpts__num{font-family:var(--ff-display);font-weight:700;font-size:40px;line-height:1;letter-spacing:-.02em;color:var(--k);font-variant-numeric:tabular-nums;animation:pts-pop .6s .12s var(--spring) both}
 .rpts + .rpts .rpts__num{animation-delay:.24s}
-.rpts__cat{margin-top:5px;font-family:var(--ff-mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--k)}
+.rpts__cat{margin-top:5px;font-family:var(--ff-mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;color:var(--k)}
 @keyframes pts-pop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
 .rreveal__body{flex:1;min-width:0;align-self:center;padding:4px 4px 4px 0}
 .rreveal__kind{display:flex;align-items:center;gap:10px;font-family:var(--ff-display);font-weight:700;font-size:18px;letter-spacing:-.01em;line-height:1.25}
@@ -203,13 +205,16 @@
 .gscore__from{display:grid;gap:4px;margin:12px 0 0;padding:12px 0 0;border-top:1px dashed color-mix(in srgb,var(--k) 35%,var(--line));list-style:none;font-size:14px;line-height:1.45;color:var(--ink-soft)}
 .gscore__from strong{font-family:var(--ff-mono);font-weight:600;color:var(--ink)}
 
-/* O ranking da turma: um cartão por categoria, com os primeiros colocados
+/* O ranking geral: um cartão por categoria, com os primeiros colocados
    (ouro, prata e bronze nos três primeiros) e a linha de quem está jogando
-   em destaque. */
+   em destaque. Em cada linha, o apelido e, embaixo, o nome do login. */
 .granking{margin-top:24px;padding-top:20px;border-top:1px dashed var(--line-strong)}
-.granking__head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
-.granking__head .btn{flex:none}
-.granking__sub{margin-top:4px;font-size:13.5px;color:var(--ink-soft)}
+/* o título e o Atualizar na mesma linha, e a frase embaixo, na largura toda
+   (no celular estreito ela não fica espremida ao lado do botão) */
+.granking__head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:4px 12px}
+.granking__head > div{display:contents}
+.granking__head .btn{grid-column:2;grid-row:1}
+.granking__sub{grid-column:1 / -1;font-size:13.5px;color:var(--ink-soft)}
 .granking__sub:empty{display:none}
 .granking__msg{margin-top:12px;padding:12px 14px;border:1px dashed var(--warm);border-radius:12px;font-size:14px;line-height:1.5;color:var(--ink-soft)}
 .granking__grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:12px}
@@ -223,9 +228,11 @@
 .rrank__pos--1{background:#F2C14E;box-shadow:none;color:#3B2B00}
 .rrank__pos--2{background:#CDD3DC;box-shadow:none;color:#262B33}
 .rrank__pos--3{background:#DA9A64;box-shadow:none;color:#381C06}
-.rrank__name{display:flex;align-items:baseline;gap:6px;min-width:0}
+.rrank__name{display:flex;flex-direction:column;min-width:0;line-height:1.3}
+.rrank__line{display:flex;align-items:baseline;gap:6px;min-width:0}
 /* o nome comprido é cortado com "…", mas o "você" fica sempre à vista */
 .rrank__who{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rrank__real{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:11.5px;font-weight:400;color:var(--muted)}
 .rrank__me{flex:none;font-family:var(--ff-mono);font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--k)}
 .rrank__pts{font-family:var(--ff-mono);font-weight:600;color:var(--k)}
 .rrank__gap{padding:0 10px;line-height:1;color:var(--muted)}
@@ -265,6 +272,25 @@
 .gtable__effect{display:none}
 
 /* ---------- Responsive ---------- */
+/* Tela grande de computador: a abertura, as opções e o placar crescem junto
+   com a página. */
+@media (min-width:1200px){
+  .gintro{grid-template-columns:minmax(0,1fr) 440px;gap:44px;padding:40px 44px}
+  .gintro h1{font-size:clamp(44px,4vw,58px)}
+  .gintro .intro__lead{max-width:62ch;font-size:16.5px}
+  .gcat{padding:12px 14px}
+  .gcat__name{font-size:16px}
+  .gcat__about{font-size:13.5px}
+  .grules{padding:22px}
+  .rcard .invcard__title{font-size:34px}
+  .rcard .invcard__sub{font-size:16px}
+  .ropt{min-height:128px;padding:18px 20px 18px 18px}
+  .ropt__badge{width:62px;height:62px}
+  .ropt__text{font-size:22px}
+  .gscores{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .gkinds{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+
 /* sem largura pro quadro das regras do lado, ele desce pra baixo do texto;
    o ranking fica com duas categorias por linha */
 @media (max-width:1040px){
@@ -304,9 +330,10 @@
   /* os pontos vão pro alto do bloco, deitados: o número e a categoria do lado */
   .rreveal__main{flex-direction:column;gap:12px}
   .rreveal__pts{flex-direction:row;flex-wrap:wrap}
-  .rpts{flex-direction:row;justify-content:flex-start;gap:10px;min-width:0;padding:8px 14px}
-  .rpts__num{font-size:32px}
-  .rpts__cat{margin-top:0}
+  /* sem espaço pros dois lado a lado, o segundo desce (e não encolhe) */
+  .rpts{flex:1 0 auto;flex-direction:row;justify-content:flex-start;gap:8px;min-width:0;padding:8px 12px}
+  .rpts__num{font-size:30px}
+  .rpts__cat{margin-top:0;letter-spacing:.06em}
   .rreveal__body{padding:0 2px 2px}
   .rreveal__kind{font-size:17px}
   .gscore{padding:16px}
@@ -315,8 +342,10 @@
   .steps--many .steps__num{margin-bottom:0}
   /* O placar do alto numa linha só: o ícone e o número de cada um (o nome
      fica só pro leitor de tela). */
-  .meters--game{gap:4px}
+  /* o "10 / 10" das rodadas é o mais comprido: a coluna dele é mais larga */
+  .meters--game{grid-template-columns:minmax(0,1.3fr) repeat(4,minmax(0,1fr));gap:4px}
   .meters--game .meter{padding:8px 4px 9px}
+  .meters--game .meter__nums{white-space:nowrap}
   .meters--game .meter__top{justify-content:center;flex-wrap:nowrap;gap:5px}
   .meters--game .meter__label{gap:0;letter-spacing:0}
   .meters--game .meter__name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -340,6 +369,18 @@
   .gtable__pick .rletter{display:none}
   .meters--game .meter__nums{font-size:12px}
   .meters--game .meter__used{font-size:13px}
+}
+
+/* celular pequeno: as 10 bolinhas das etapas menores, pra não se encostarem,
+   e o Atualizar do ranking só com o ícone (o nome fica pro leitor de tela),
+   pra "Ranking geral" caber numa linha */
+@media (max-width:380px){
+  .granking__btntext{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .granking__head .btn{padding:8px}
+  .steps--many .steps__num{width:25px;height:25px;border-width:1.5px;font-size:11.5px}
+  .steps--many .steps__item.is-done .steps__num{background-size:12px}
+  .steps--many .steps__item.is-active .steps__num{box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 22%,transparent)}
+  .steps--many .steps__item.is-done.is-active .steps__num{box-shadow:0 0 0 3px color-mix(in srgb,var(--accent-ink) 25%,transparent)}
 }
 
 @media print{

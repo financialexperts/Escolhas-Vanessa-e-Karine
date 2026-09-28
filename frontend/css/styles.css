@@ -114,7 +114,9 @@ button{font:inherit;color:inherit}
 /* um valor ("R$ 1.800,00", "20 trocas") nunca quebra no meio */
 .nw{white-space:nowrap}
 
-.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+/* a largura da página: o jogo (game.css) muda o --wrap pra ocupar mais do
+   computador */
+.wrap{max-width:var(--wrap,1080px);margin:0 auto;padding:0 20px}
 
 /* ---------- Liquid glass ---------- */
 .glass{
@@ -886,6 +888,8 @@ footer{margin-top:46px;border-top:1px solid var(--line);padding:22px 0 40px;font
   .intro__text{padding-top:16px}
 }
 @media (max-width:380px){
+  /* as abas do tamanho do nome, pra "Seu dinheiro no tempo" caber inteiro */
+  .tabs__link{flex:1 1 auto;padding:0 6px;font-size:12.5px}
   .card__body{padding:16px}
   .meter__label{font-size:9.5px;letter-spacing:.05em}
   .meter__nums{font-size:11.5px;white-space:normal}

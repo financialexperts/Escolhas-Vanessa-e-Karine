@@ -13,11 +13,11 @@
   // recomeçando o jogo).
   //
   // picks: a escolha de cada rodada ("A" a "D"), pelo id da rodada.
-  // classCode: o código da turma (opcional): quem joga com o mesmo código
-  //   aparece no mesmo ranking, como o PIN do Kahoot.
+  // nickname: o apelido (opcional), que aparece no ranking junto com o nome
+  //   que o aluno cadastrou no login.
   // begun: se o aluno já tocou em "Começar o jogo".
   var picks = {};
-  var classCode = "";
+  var nickname = "";
   var begun = false;
 
   // Tudo isso fica guardado no navegador, pra recarregar a página não apagar
@@ -160,15 +160,15 @@
     save();
   }
 
-  // O código da turma vai em maiúsculas e sem espaços ("8a manhã" vira
-  // "8AMANHÃ"), pra quem digitar de um jeito ou de outro cair no mesmo
-  // ranking.
-  function normalizeCode(v) {
-    return String(v || "").toUpperCase().replace(/\s+/g, "").slice(0, 20);
+  // O apelido vai sem espaços sobrando e com até 24 letras (cabe no ranking
+  // do celular).
+  var NICK_MAX = 24;
+  function normalizeNick(v) {
+    return String(v || "").replace(/\s+/g, " ").trim().slice(0, NICK_MAX).trim();
   }
-  function getClassCode() { return classCode; }
-  function setClassCode(v) {
-    classCode = normalizeCode(v);
+  function getNickname() { return nickname; }
+  function setNickname(v) {
+    nickname = normalizeNick(v);
     save();
   }
 
@@ -178,8 +178,7 @@
     return { scores: totals(), picks: JSON.parse(JSON.stringify(picks)) };
   }
 
-  // volta tudo ao começo: nenhuma escolha feita. A turma fica: quem
-  // recomeça costuma estar na mesma aula.
+  // volta tudo ao começo: nenhuma escolha feita. O apelido fica.
   function reset() {
     picks = {};
     begun = false;
@@ -191,7 +190,7 @@
   // jogo funciona igual, só não lembra depois de recarregar.
   function save() {
     try {
-      localStorage.setItem(KEY, JSON.stringify({ picks: picks, classCode: classCode, begun: begun }));
+      localStorage.setItem(KEY, JSON.stringify({ picks: picks, nickname: nickname, begun: begun }));
     } catch (err) {}
   }
 
@@ -209,7 +208,7 @@
       picks[r.id] = l;
       return true;
     });
-    classCode = normalizeCode(saved.classCode);
+    nickname = normalizeNick(saved.nickname);
     begun = !!saved.begun;
   }
 
@@ -217,7 +216,7 @@
   function open(userId) {
     KEY = BASE + ":" + userId;
     picks = {};
-    classCode = "";
+    nickname = "";
     begun = false;
     load();
   }
@@ -240,9 +239,9 @@
     blocked: blocked,
     pick: pick,
     start: start,
-    getClassCode: getClassCode,
-    setClassCode: setClassCode,
-    normalizeCode: normalizeCode,
+    getNickname: getNickname,
+    setNickname: setNickname,
+    nickMax: NICK_MAX,
     result: result,
     reset: reset
   };

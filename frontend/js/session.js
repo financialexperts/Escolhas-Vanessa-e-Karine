@@ -59,7 +59,7 @@
 
   if (!DB.isConfigured) {
     showSetup("Falta ligar o Supabase",
-      "O login precisa do projeto Supabase. Abra <code>frontend/js/config.js</code> e cole a URL e a chave pública do projeto (as mesmas do Fluxo de Caixa).");
+      "O login precisa do projeto Supabase. Abra <code>frontend/js/config.js</code> e cole a URL e a chave pública do projeto.");
     global.Session = { ready: ready, fullName: getFullName, firstName: firstName, finishRecovery: function () {} };
     return;
   }

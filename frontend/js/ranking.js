@@ -5,14 +5,13 @@
   var Format = global.Format;
   var Icons = global.Icons;
 
-  // O ranking do jogo: quem fez mais pontos em cada categoria, entre quem
-  // jogou com o mesmo código de turma (sem código, entre todo mundo que
-  // jogou sem código). Os resultados ficam no Supabase do login, na tabela
-  // game_scores: uma linha por aluno e por turma, com o nome que ele
-  // cadastrou no login e os pontos de cada categoria. Jogando de novo com o
-  // mesmo código, a linha é atualizada.
+  // O ranking do jogo: quem fez mais pontos em cada categoria (receita,
+  // patrimônio...), entre todo mundo que jogou. Os resultados ficam no
+  // Supabase do login, na tabela game_scores: uma linha por aluno, com o
+  // apelido, o nome que ele cadastrou no login e os pontos de cada
+  // categoria. Jogando de novo, a linha é atualizada.
   //
-  // O SQL que cria a tabela está em backend/sql/game_scores.sql. Sem ela, o
+  // A tabela é criada uma vez, no SQL Editor do Supabase. Sem ela, o
   // jogo funciona igual e o ranking mostra o aviso de que falta criá-la.
 
   var GAME = "dinheiro-no-tempo";
@@ -21,7 +20,7 @@
   var POLL = 15000;     // de quanto em quanto tempo o ranking se atualiza sozinho
 
   var box = null;       // o container do ranking
-  var ctx = null;       // { userId, name, classCode, result }
+  var ctx = null;       // { userId, name, nickname, result }
   var timer = null;
   var busy = false;
 
@@ -35,20 +34,20 @@
     return db().from(TABLE).upsert({
       user_id: c.userId,
       game: GAME,
-      class_code: c.classCode,
       player_name: c.name,
+      nickname: c.nickname,
       scores: c.result.scores,
       picks: c.result.picks,
       updated_at: new Date().toISOString()
-    }, { onConflict: "user_id,game,class_code" }).then(function (res) {
+    }, { onConflict: "user_id,game" }).then(function (res) {
       return res.error || null;
     }, function (err) { return err || { message: "network" }; });
   }
 
-  function load(classCode) {
+  function load() {
     if (!db()) return Promise.resolve({ error: { message: "sem banco" } });
-    return db().from(TABLE).select("user_id,player_name,scores")
-      .eq("game", GAME).eq("class_code", classCode).limit(1000)
+    return db().from(TABLE).select("user_id,player_name,nickname,scores")
+      .eq("game", GAME).limit(1000)
       .then(function (res) {
         return res.error ? { error: res.error } : { rows: res.data || [] };
       }, function (err) { return { error: err || { message: "network" } }; });
@@ -57,20 +56,27 @@
   // o aviso de cada erro, do jeito que o professor e o aluno entendem
   function errorText(err) {
     var msg = (err && (err.message || err.code)) || "";
+    // a tabela existe, mas é a da versão antiga do SQL (a do código da turma)
+    if (/column|ON CONFLICT/i.test(msg)) {
+      return "O ranking precisa de uma atualização no banco: falta rodar no Supabase o SQL novo da tabela game_scores.";
+    }
     if (/relation .* does not exist|42P01|could not find the table|schema cache/i.test(msg)) {
-      return "O ranking ainda não está ligado: falta criar a tabela game_scores no Supabase (o SQL está em backend/sql/game_scores.sql).";
+      return "O ranking ainda não está ligado: falta criar a tabela game_scores no Supabase.";
     }
     if (/failed to fetch|network/i.test(msg)) return "Sem conexão com o servidor. Confira a internet e toque em Atualizar.";
     return "Não deu para carregar o ranking agora. Toque em Atualizar para tentar de novo.";
   }
 
   /* ============ as posições ============ */
+  // o nome que aparece em destaque: o apelido ou, sem apelido, o do login
+  function shownName(row) { return row.nickname || row.player_name || ""; }
+
   // As posições numa categoria, com empate dividindo a posição ("1º, 1º,
   // 3º"); no empate, a ordem é a do nome.
   function positions(rows, key) {
     var sorted = rows.slice().sort(function (a, b) {
       return ((b.scores || {})[key] || 0) - ((a.scores || {})[key] || 0) ||
-        String(a.player_name).localeCompare(String(b.player_name), "pt-BR");
+        shownName(a).localeCompare(shownName(b), "pt-BR");
     });
     var pos = 0;
     var prev = null;
@@ -81,12 +87,20 @@
     });
   }
 
+  // Uma linha do ranking: a posição, o apelido em destaque com o nome do
+  // login embaixo (sem apelido, só o nome) e os pontos.
   function rowHTML(item, c) {
     var mine = item.row.user_id === ctx.userId;
     var medal = item.pos <= 3 ? " rrank__pos--" + item.pos : "";
+    var real = item.row.nickname && item.row.player_name
+      ? '<span class="rrank__real">' + Format.esc(item.row.player_name) + "</span>" : "";
     return '<li class="rrank__row' + (mine ? " is-me" : "") + '">' +
       '<span class="rrank__pos' + medal + '">' + item.pos + "º</span>" +
-      '<span class="rrank__name"><span class="rrank__who">' + Format.esc(item.row.player_name) + "</span>" + (mine ? '<span class="rrank__me">você</span>' : "") + "</span>" +
+      '<span class="rrank__name">' +
+        '<span class="rrank__line"><span class="rrank__who">' + Format.esc(shownName(item.row)) + "</span>" +
+          (mine ? '<span class="rrank__me">você</span>' : "") + "</span>" +
+        real +
+      "</span>" +
       '<span class="rrank__pts" data-tone="' + (item.v < 0 ? "down" : item.v > 0 ? c.tone : "zero") + '">' + Format.points(item.v) + "</span>" +
       "</li>";
   }
@@ -108,18 +122,16 @@
 
   /* ============ a tela ============ */
   function headHTML(n) {
-    var code = ctx.classCode;
     return '<div class="granking__head">' +
       "<div>" +
-        '<p class="gtable__title">' + Icons.tile("trofeu", "amber", "itile--xs") +
-          (code ? "Ranking da turma " + nw(code) : "Ranking geral") + "</p>" +
+        '<p class="gtable__title">' + Icons.tile("trofeu", "amber", "itile--xs") + "Ranking geral</p>" +
         '<p class="granking__sub" data-rank-sub>' +
           (n == null ? "Carregando…" :
-            n === 1 ? "Por enquanto, só você jogou" + (code ? " com esse código" : " sem código de turma") + "."
-            : "Quem fez mais pontos em cada categoria, entre " + n + " jogadores" + (code ? " da turma" : " sem código de turma") + ".") +
+            n === 1 ? "Por enquanto, só você jogou."
+            : "Quem fez mais pontos em cada categoria, entre " + nw(n + " jogadores") + ".") +
         "</p>" +
       "</div>" +
-      '<button class="btn btn--ghost glass btn--sm fx" type="button" data-rank-refresh><span data-icon="recomecar"></span>Atualizar</button>' +
+      '<button class="btn btn--ghost glass btn--sm fx" type="button" title="Atualizar o ranking" data-rank-refresh><span data-icon="recomecar"></span><span class="granking__btntext">Atualizar</span></button>' +
       "</div>";
   }
 
@@ -134,15 +146,15 @@
     Icons.mount(box);
   }
 
-  // Salva o resultado de quem está jogando e carrega o ranking da turma. O
-  // resultado dele sempre aparece, mesmo que a leitura venha antes da
-  // gravação terminar.
+  // Salva o resultado de quem está jogando e carrega o ranking. O resultado
+  // dele sempre aparece, mesmo que a leitura venha antes da gravação
+  // terminar.
   function refresh(withSave) {
     if (busy || !ctx) return;
     busy = true;
     var saving = withSave ? save(ctx) : Promise.resolve(null);
     saving.then(function (saveErr) {
-      return load(ctx.classCode).then(function (state) {
+      return load().then(function (state) {
         busy = false;
         if (!box || !ctx) return;
         if (state.error || (saveErr && !state.rows.length)) {
@@ -150,7 +162,7 @@
           return;
         }
         var rows = state.rows.filter(function (r) { return r.user_id !== ctx.userId; });
-        rows.push({ user_id: ctx.userId, player_name: ctx.name, scores: ctx.result.scores });
+        rows.push({ user_id: ctx.userId, player_name: ctx.name, nickname: ctx.nickname, scores: ctx.result.scores });
         render({ rows: rows });
       });
     });
@@ -166,7 +178,7 @@
 
   /* ============ API ============ */
   // mostra o ranking de quem acabou de jogar: { userId, name (o nome do
-  // login), classCode, result }
+  // login), nickname, result }
   function show(container, c) {
     box = container;
     ctx = c;
