@@ -90,7 +90,7 @@ A atividade dos slides "Seu dinheiro no tempo": em vez de desenhar a tabela no p
 
    Enquanto o aluno joga, o placar fica grudado no alto: quantas rodadas ele respondeu e os pontos de receita e de patrimônio, com uma barrinha que sai do 0 pra direita quando soma e pra esquerda, em vermelho, quando tira. Em cima das rodadas ficam as etapas: as respondidas ganham o selo verde e dá pra voltar nelas pra rever (sem mudar a escolha).
 
-4. **O placar.** Na última rodada, **Ver o meu placar** mostra quantos pontos o aluno fez em cada categoria, a régua do menor ao maior placar possível com o ponto onde ele ficou, e de que escolhas vieram os pontos. Depois vêm quantas escolhas ele fez de cada tipo, a tabela do slide preenchida rodada por rodada (com o total), o que os pontos mostram e as perguntas para refletir com a turma. **Jogar de novo** apaga as escolhas e já abre a Rodada 1.
+4. **O placar.** Na última rodada, **Ver o meu placar** mostra quantos pontos o aluno fez em cada categoria, a régua do menor ao maior placar possível com o ponto onde ele ficou, e de que escolhas vieram os pontos. Depois vêm quantas escolhas ele fez de cada tipo, a tabela do slide preenchida rodada por rodada (com o total) e o que os pontos mostram. **Jogar de novo** apaga as escolhas e já abre a Rodada 1.
 
 ### Os tipos de escolha e os pontos
 
@@ -212,7 +212,7 @@ Os arquivos em `backend/js/` não tocam no DOM: são só dados. O `exercise.js`,
 | A contagem antes das opções (3, 2, 1) | `CONTAGEM` e `PASSO`, no `frontend/js/play.js` |
 | As mensagens do pé de cada rodada | `statusText()`, no `frontend/js/play.js` |
 | O que os pontos mostram, no placar | `insightHTML()` e `LICAO`, no `frontend/js/score.js` |
-| As perguntas de reflexão do jogo e os textos fixos | `dinheiro-no-tempo.html` |
+| Os textos fixos do jogo (títulos, abertura, rodapé) | `dinheiro-no-tempo.html` |
 | O visual do jogo | `frontend/css/game.css` |
 | **Login:** o projeto Supabase | `frontend/js/config.js` |
 | Os textos da tela de entrar e as mensagens de erro | `markup()` e `friendlyError()`, no `frontend/js/auth.js` |
