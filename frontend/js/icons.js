@@ -38,7 +38,16 @@
     // o resultado
     barras: '<path d="M3 21h18"/><rect class="ico-b1" x="5" y="12" width="3.5" height="8" rx="1"/><rect class="ico-b2" x="10.25" y="6" width="3.5" height="14" rx="1"/><rect class="ico-b3" x="15.5" y="9" width="3.5" height="11" rx="1"/>',
     lampada: '<path d="M9.5 18h5M10.5 21h3"/><path d="M12 4a5.5 5.5 0 0 0-3.3 9.9c.5.4.8 1 .8 1.6V16h5v-.5c0-.6.3-1.2.8-1.6A5.5 5.5 0 0 0 12 4z"/><path class="ico-rays" d="M12 .8v.4M4.3 3.8l.4.4M19.7 3.8l-.4.4M1.3 10h.4M22.3 10h.4"/>',
-    duvida: '<path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.6L3.5 20.5l1.4-4.4A8.5 8.5 0 1 1 20.5 11.5z"/><path d="M9.7 9.4a2.4 2.4 0 0 1 4.6.9c0 1.6-2.3 2-2.3 3.4"/><path d="M12 16.6h.01"/>'
+    duvida: '<path d="M20.5 11.5a8.5 8.5 0 0 1-12.4 7.6L3.5 20.5l1.4-4.4A8.5 8.5 0 1 1 20.5 11.5z"/><path d="M9.7 9.4a2.4 2.4 0 0 1 4.6.9c0 1.6-2.3 2-2.3 3.4"/><path d="M12 16.6h.01"/>',
+
+    // o jogo "Seu dinheiro no tempo": a aba, as rodadas (o "icon" de
+    // backend/js/rounds.js), os tipos de escolha e o placar
+    ampulheta: '<path d="M6 3h12M6 21h12"/><path d="M7.5 3c0 4.6 4.5 5.4 4.5 9s-4.5 4.4-4.5 9M16.5 3c0 4.6-4.5 5.4-4.5 9s4.5 4.4 4.5 9"/><path class="ico-sand" d="M10 18.5h4"/>',
+    presente: '<rect x="3.5" y="8.5" width="17" height="4" rx="1"/><path d="M5 12.5v8h14v-8"/><path d="M12 8.5v12"/><g class="ico-bow"><path d="M12 8.5C10.6 5 6.8 4.4 6.8 6.7c0 1.4 2.2 1.8 5.2 1.8z"/><path d="M12 8.5c1.4-3.5 5.2-4.1 5.2-1.8 0 1.4-2.2 1.8-5.2 1.8z"/></g>',
+    cookie: '<path d="M20.9 12.6A9 9 0 1 1 11.4 3.1a2.8 2.8 0 0 0 3.6 3.4 2.8 2.8 0 0 0 5.9 6.1z"/><path class="ico-chips" d="M8 10h.01M11.5 15.5h.01M15.5 14h.01M7.8 14.6h.01M11.4 11.2h.01"/>',
+    carteira: '<path d="M18 7.5V5.2A1.2 1.2 0 0 0 16.8 4H5.5a2 2 0 0 0 0 4"/><path d="M3.5 6v12a2 2 0 0 0 2 2h14a1 1 0 0 0 1-1V9a1 1 0 0 0-1-1h-14"/><path d="M16 14h.01"/><circle class="ico-coin" cx="12" cy="3" r="1.5"/>',
+    sacola: '<g class="ico-bag"><path d="M5.2 8h13.6l-1 12.5H6.2z"/><path d="M9 10.5V7a3 3 0 0 1 6 0v3.5"/></g>',
+    trofeu: '<path d="M7.5 3.5h9V9a4.5 4.5 0 0 1-9 0z"/><path d="M7.5 5.5H5.2a2.6 2.6 0 0 0 2.9 3.8M16.5 5.5h2.3a2.6 2.6 0 0 1-2.9 3.8"/><path d="M12 13.5V17M8.5 20.5h7M9.8 17h4.4l.6 3.5H9.2z"/>'
   };
 
   // o quadrinho de cada decisão tem a mesma cor: a cor de cada personagem

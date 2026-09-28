@@ -1,8 +1,12 @@
 # Equilibrista de Escolhas – Vanessa e Karine
 
-Exercício da Aula 4 (Equilibrista de Escolhas) em que o próprio aluno faz os cálculos da planilha "Escolhas Karine e Vanessa - PROFESSOR". São as 4 decisões que a Vanessa e a Karine tomaram ao longo de 40 anos. Em cada uma, ele usa os dados da história para preencher as contas, confere as respostas e, no fim, calcula a diferença total entre as duas (R$ 2.054.300,00). As 4 decisões e a diferença total são 5 etapas, feitas uma de cada vez: a próxima só abre quando todos os cálculos da etapa estão certos.
+Duas atividades da Aula 4, cada uma numa aba no alto da tela, e um login na frente das duas:
 
-Não tem build, instalação nem banco de dados: é `index.html` + alguns arquivos `.js` e `.css` estáticos, na mesma identidade visual do Simulador de Renda da Laura. Para rodar, basta abrir o `index.html` no navegador (ou publicar a pasta no GitHub Pages).
+- **Vanessa e Karine** (`index.html`): o exercício em que o próprio aluno faz os cálculos da planilha "Escolhas Karine e Vanessa - PROFESSOR". São as 4 decisões que a Vanessa e a Karine tomaram ao longo de 40 anos. Em cada uma, ele usa os dados da história para preencher as contas, confere as respostas e, no fim, calcula a diferença total entre as duas (R$ 2.054.300,00). As 4 decisões e a diferença total são 5 etapas, feitas uma de cada vez: a próxima só abre quando todos os cálculos da etapa estão certos.
+- **Seu dinheiro no tempo** (`dinheiro-no-tempo.html`): o jogo dos slides da Aula 4, no estilo do Kahoot. São 5 rodadas, e em cada uma o aluno escolhe entre a Opção A e a Opção B. Os pontos não vêm de acertar nem de ser rápido: cada escolha é de um tipo, e cada tipo dá ou tira pontos de **receita** ou de **patrimônio**. No fim, o placar mostra quantos pontos ele fez em cada categoria. Veja [Seu dinheiro no tempo](#seu-dinheiro-no-tempo).
+- **O login** é o mesmo do Fluxo de Caixa, com o mesmo banco (Supabase): quem já tem conta lá entra aqui com o mesmo e-mail e a mesma senha. Veja [O login](#o-login).
+
+Não tem build nem instalação: são páginas `.html` + alguns arquivos `.js` e `.css` estáticos, na mesma identidade visual do Simulador de Renda da Laura. As contas ficam no Supabase do Fluxo de Caixa. Para rodar, basta publicar a pasta no GitHub Pages (ou abrir o `index.html` no navegador, com internet, por causa do login).
 
 
 ## O caminho do aluno
@@ -74,38 +78,112 @@ O sistema não guarda as respostas prontas: ele faz as contas a partir dos dados
 
 ---
 
+## Seu dinheiro no tempo
+
+A atividade dos slides "Seu dinheiro no tempo": em vez de desenhar a tabela no papel, o aluno joga no celular ou no computador, e a tabela sai pronta no fim.
+
+1. **A abertura.** O nome da atividade, como é o jogo (5 rodadas, Opção A ou B, o placar de receita e patrimônio) e, ao lado, o quadro roxo dos slides com quanto vale cada tipo de escolha. O aluno pode pôr um nome ou apelido pro placar (já vem o primeiro nome da conta) e toca em **Começar o jogo**.
+
+2. **As rodadas.** Uma de cada vez, como no Kahoot. A situação do slide aparece grande e, antes das opções, uma contagem (3, 2, 1) dá tempo de todo mundo ler. As duas opções são botões grandes, cada uma com a sua forma e a sua cor: a A é o triângulo rosa e a B o losango azul.
+
+3. **A escolha.** Vale a primeira: depois de tocar, não dá pra trocar (só recomeçando o jogo). Aí o cartão mostra os pontos que ela deu (o número grande), o tipo da escolha e por quê, a linha da tabela do slide (minha escolha, impacto na receita, impacto no patrimônio) e o que a outra opção teria dado. O botão **Ir para a Rodada 2** abre a próxima.
+
+   Enquanto o aluno joga, o placar fica grudado no alto: quantas rodadas ele respondeu e os pontos de receita e de patrimônio, com uma barrinha que sai do 0 pra direita quando soma e pra esquerda, em vermelho, quando tira. Em cima das rodadas ficam as etapas: as respondidas ganham o selo verde e dá pra voltar nelas pra rever (sem mudar a escolha).
+
+4. **O placar.** Na última rodada, **Ver o meu placar** mostra quantos pontos o aluno fez em cada categoria, a régua do menor ao maior placar possível com o ponto onde ele ficou, e de que escolhas vieram os pontos. Depois vêm quantas escolhas ele fez de cada tipo, a tabela do slide preenchida rodada por rodada (com o total), o que os pontos mostram e as perguntas para refletir com a turma. **Jogar de novo** apaga as escolhas e já abre a Rodada 1.
+
+### Os tipos de escolha e os pontos
+
+Como no quadro roxo dos slides:
+
+| Tipo | Pontos |
+| --- | --- |
+| Consumo imediato | −2 patrimônio |
+| Gera renda | +2 receita |
+| Equilibrada | +1 patrimônio |
+
+Os slides não dizem de que tipo é cada opção, então o sistema usa esta classificação (ela fica em `backend/js/rounds.js`, no `kind` de cada opção, e o professor pode mudar):
+
+| Rodada | Opção A | Opção B |
+| --- | --- | --- |
+| 1. R$ 3.000 de presente | Trocar de celular: consumo imediato | Investir o dinheiro: gera renda |
+| 2. Renda extra com cookies | Comprar um tablet novo: consumo imediato | Comprar mais material para aumentar as vendas: gera renda |
+| 3. Juntou R$ 20.000 | Dar a entrada em um carro: consumo imediato | Começar um pequeno negócio: gera renda |
+| 4. Herança | Gastar em conforto imediato: consumo imediato | Dividir entre investimentos: equilibrada |
+| 5. Sobrou dinheiro no mês | Comprar um tênis ou uma bolsa nova: consumo imediato | Investir o que sobrou: equilibrada |
+
+Com ela, o placar vai de 0 a +6 na receita e de −10 a +2 no patrimônio. O sistema não guarda o placar pronto: mudando o tipo de uma opção ou os pontos de um tipo, as rodadas, o placar, as réguas e os textos acompanham.
+
+---
+
+## O login
+
+As duas páginas abrem numa tela de **Entrar / Criar conta**, a mesma do Fluxo de Caixa e com o mesmo banco: o projeto Supabase `xorqsuqjmvkyzgagdxfz`, em [`frontend/js/config.js`](frontend/js/config.js). Quem já tem conta no Fluxo de Caixa entra com o mesmo e-mail e a mesma senha, e quem cria a conta aqui também pode usar ela lá. A atividade só aparece depois que o aluno entra. No alto, ficam o nome dele e o botão **Sair**.
+
+- **Criar conta** pede o nome completo, o e-mail e uma senha de pelo menos 6 caracteres. O nome vai pros dados do login e pra tabela `profiles` (a mesma do Fluxo de Caixa). Se o projeto pedir a confirmação do e-mail, a tela avisa que o link foi enviado.
+- **Esqueceu a senha?** manda um link pro e-mail. O link volta pra página em que o aluno estava, que pede a senha nova.
+- **Sair** volta pra tela de entrar. A página recarrega, pra nada do aluno anterior ficar na tela.
+
+Pra os links do e-mail (trocar a senha, confirmar a conta) voltarem pra este sistema, e não pro Fluxo de Caixa, o endereço dele tem que estar em **Authentication → URL Configuration → Redirect URLs**, no painel do Supabase. No GitHub Pages, é algo como `https://financialexperts.github.io/Escolhas-Vanessa-e-Karine/**`.
+
+O banco só guarda as contas. O que o aluno faz nas atividades continua guardado no navegador, separado por conta (veja [O que fica guardado no navegador](#o-que-fica-guardado-no-navegador)).
+
+---
+
 ## Estrutura de arquivos
 
 ```
-index.html                      a tela: abertura, como fazer, linha do tempo, decisões,
-                                diferença total e diferença final
+index.html                      Vanessa e Karine: abertura, como fazer, linha do tempo,
+                                decisões, diferença total e diferença final
+dinheiro-no-tempo.html          Seu dinheiro no tempo: abertura, rodadas e placar
 frontend/
-  css/styles.css                todo o visual (identidade Financial Experts)
+  css/styles.css                o visual das duas páginas (identidade Financial Experts),
+                                as abas do topo e o login
+  css/game.css                  o visual que é só do jogo Seu dinheiro no tempo
   img/                          logos, favicon e as duas (vanessa.png e karine.png, já
                                 sem fundo; Vanessa.jpg e Karine.avif são as originais)
-  js/format.js                  formatação de dinheiro, porcentagem, anos, meses e trocas
+  js/config.js                  o projeto Supabase do login (o mesmo do Fluxo de Caixa)
+  js/supabaseClient.js          liga o cliente do Supabase
+  js/auth.js                    a tela de entrar / criar conta / esqueci a senha
+  js/session.js                 o login das duas páginas: qual tela aparece, quem entrou,
+                                o botão de sair; a atividade só começa depois dele
+  js/ui.js                      o que as duas páginas têm em comum: tema claro/escuro,
+                                o brilho do vidro e as animações dos ícones
+  js/format.js                  formatação de dinheiro, porcentagem, anos, meses, trocas
+                                e pontos
+  js/icons.js                   os desenhos dos ícones, os quadrinhos e os retratos das duas
+  js/toast.js                   o aviso de quando uma ação ainda não pode
+
+  (Vanessa e Karine)
   js/parse.js                   lê o que o aluno digitou numa célula: o número ou a conta
   js/mask.js                    a máscara das células: os pontos de milhar enquanto o aluno
                                 digita um número
-  js/icons.js                   os desenhos dos ícones, os quadrinhos e os retratos das duas
   js/exercise.js                o estado do exercício, as contas da planilha, a conferência,
                                 as regras e o que fica guardado no navegador
-  js/toast.js                   o aviso de quando uma ação ainda não pode
   js/sheet.js                   as etapas, os cartões das decisões e o da diferença total,
                                 do jeito da planilha, e os medidores do alto
   js/timeline.js                a linha do tempo das decisões
   js/result.js                  a diferença final
-  js/app.js                     tema claro/escuro, as duas e o balão, as animações dos
-                                ícones, o botão de recomeçar, liga tudo
+  js/app.js                     as duas e o balão, o botão de recomeçar, liga tudo
+
+  (Seu dinheiro no tempo)
+  js/game.js                    o estado do jogo, os pontos, as regras e o que fica
+                                guardado no navegador
+  js/play.js                    as etapas, os cartões das rodadas (a contagem, as opções,
+                                o que a escolha deu) e o placar do alto
+  js/score.js                   o placar final
+  js/game-app.js                a abertura, o nome, começar e recomeçar, liga tudo
 backend/
   js/scenario.js                o período, o objetivo e as duas personagens
   js/decisions.js               as 4 decisões: textos, dados e contas, linha por linha
                                 como na planilha
+  js/rounds.js                  as 5 rodadas, as opções e o tipo de cada uma, e os pontos
+                                de cada tipo
 ```
 
-Os ícones de todas as partes da tela se mexem quando o mouse passa, quando o aluno toca neles ou quando recebem o foco do teclado. No celular, só um toque de verdade anima: passar o dedo para rolar a página não mexe em nada. Quem pede menos movimento no sistema operacional não vê animação nenhuma (e o número da diferença final já aparece pronto).
+Os ícones de todas as partes da tela se mexem quando o mouse passa, quando o aluno toca neles ou quando recebem o foco do teclado. No celular, só um toque de verdade anima: passar o dedo para rolar a página não mexe em nada. Quem pede menos movimento no sistema operacional não vê animação nenhuma (o número da diferença final e os do placar já aparecem prontos, e as rodadas não têm a contagem).
 
-Os dois arquivos em `backend/js/` não tocam no DOM: são só dados. O `exercise.js`, o `parse.js` e o `mask.js` também não. É o `exercise.js` que guarda o que o aluno fez, faz as contas, confere e aplica as regras; as telas só leem dele.
+Os arquivos em `backend/js/` não tocam no DOM: são só dados. O `exercise.js`, o `game.js`, o `parse.js` e o `mask.js` também não. São o `exercise.js` e o `game.js` que guardam o que o aluno fez, fazem as contas e aplicam as regras; as telas só leem deles.
 
 ---
 
@@ -128,6 +206,17 @@ Os dois arquivos em `backend/js/` não tocam no DOM: são só dados. O `exercise
 | As regras (quando uma etapa abre e o que refazer apaga) | `blocked()`, `current()` e `redo()`, no `frontend/js/exercise.js` |
 | Os textos fixos da tela (títulos, legenda, perguntas de reflexão, rodapé) | `index.html` |
 | Cores, tamanhos e o visual | `frontend/css/styles.css` |
+| **Seu dinheiro no tempo:** as situações, as opções e a pergunta de cada rodada | `backend/js/rounds.js` |
+| De que tipo é cada opção (consumo imediato, gera renda, equilibrada) e a frase que explica | `kind` e `why` de cada opção, em `backend/js/rounds.js` |
+| Quantos pontos vale cada tipo, ou uma categoria nova do placar | `KINDS` e `CATEGORIES`, em `backend/js/rounds.js` |
+| A contagem antes das opções (3, 2, 1) | `CONTAGEM` e `PASSO`, no `frontend/js/play.js` |
+| As mensagens do pé de cada rodada | `statusText()`, no `frontend/js/play.js` |
+| O que os pontos mostram, no placar | `insightHTML()` e `LICAO`, no `frontend/js/score.js` |
+| As perguntas de reflexão do jogo e os textos fixos | `dinheiro-no-tempo.html` |
+| O visual do jogo | `frontend/css/game.css` |
+| **Login:** o projeto Supabase | `frontend/js/config.js` |
+| Os textos da tela de entrar e as mensagens de erro | `markup()` e `friendlyError()`, no `frontend/js/auth.js` |
+| As abas do topo (uma por atividade) | o `<nav class="tabs">` no alto de `index.html` e de `dinheiro-no-tempo.html` (a mesma lista nas duas) |
 
 Cada conta de `decisions.js` é uma lista como `["desv", "×", "preco"]`: os nomes são linhas de cima da mesma pessoa, `"v.total"` e `"k.total"` são linhas da Vanessa e da Karine (usado na diferença), e `"years"` são os anos que a decisão pesa (40, 32 ou 25). Um número fixo é `{ n: 12, unit: "meses" }`. A dica que o aluno vê quando erra é essa mesma conta, escrita com os nomes das linhas. Nos textos, `{v.perda}` e `{k.perda}` viram os valores da Vanessa e da Karine, `{diff}` a diferença entre as duas, `{years}` os anos da decisão e `{end}` o último ano do período.
 
@@ -137,10 +226,12 @@ A cor de cada uma (rosa para a Vanessa, azul para a Karine) aparece no fundo do 
 
 ## O que fica guardado no navegador
 
-- **O tema** claro ou escuro, no `localStorage`, com a mesma chave (`tema`) do Simulador de Renda: publicados no mesmo endereço, os dois sistemas lembram do mesmo tema.
-- **O exercício**, na chave `equilibrista-calculos`: o que o aluno digitou, as células certas e as etapas já conferidas. Recarregar a página não apaga nada (a tela volta na etapa em que o aluno parou), e **Recomeçar o exercício** apaga tudo.
+- **O tema** claro ou escuro, no `localStorage`, com a mesma chave (`tema`) do Simulador de Renda e do Fluxo de Caixa: publicados no mesmo endereço, os sistemas lembram do mesmo tema.
+- **O exercício** da Vanessa e da Karine, na chave `equilibrista-calculos:` + o id da conta: o que o aluno digitou, as células certas e as etapas já conferidas. Recarregar a página não apaga nada (a tela volta na etapa em que o aluno parou), e **Recomeçar o exercício** apaga tudo.
+- **O jogo** Seu dinheiro no tempo, na chave `dinheiro-no-tempo:` + o id da conta: a escolha de cada rodada e o nome do placar. Recarregar volta na rodada em que o aluno parou.
+- **A sessão do login**, guardada pelo próprio Supabase.
 
-O exercício fica guardado só naquele navegador. Num computador compartilhado, cada aluno deve tocar em **Recomeçar o exercício** antes de começar. Numa janela anônima (ou com o armazenamento bloqueado), o exercício funciona igual, só não lembra depois de recarregar. Se os dados de `decisions.js` mudarem, uma célula guardada como certa que não bate mais com a conta nova volta a ficar em aberto.
+O que o aluno faz fica guardado só naquele navegador, mas separado por conta: num computador compartilhado, cada aluno que entra vê só o que ele fez (e quem sai volta pra tela de entrar). O exercício feito antes de existir o login (na chave antiga, `equilibrista-calculos`) passa pra primeira conta que entrar naquele navegador. Numa janela anônima (ou com o armazenamento bloqueado), tudo funciona igual, só não lembra depois de recarregar. Se os dados de `decisions.js` mudarem, uma célula guardada como certa que não bate mais com a conta nova volta a ficar em aberto; se as rodadas de `rounds.js` mudarem, uma escolha que não existe mais é esquecida.
 
 ---
 

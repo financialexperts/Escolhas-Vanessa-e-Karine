@@ -36,6 +36,13 @@
 
   function int(n) { return fmtInt.format(n || 0); }
 
+  // os pontos do jogo "Seu dinheiro no tempo", com o sinal: "+2", "−2" (com
+  // o traço de menos de verdade) e "0"
+  function points(n) {
+    n = n || 0;
+    return n > 0 ? "+" + fmtInt.format(n) : n < 0 ? "−" + fmtInt.format(-n) : "0";
+  }
+
   // Um valor com a unidade dele, como nas células da planilha: "R$ 4.500,00",
   // "40%", "2 anos", "384 meses", "20 trocas" (e "13,33 trocas" quando a
   // conta do aluno não dá redondo). compact tira os centavos que não existem.
@@ -74,6 +81,7 @@
     signed: signed,
     pct: pct,
     int: int,
+    points: points,
     unit: unit,
     plain: plain,
     unitWord: unitWord,

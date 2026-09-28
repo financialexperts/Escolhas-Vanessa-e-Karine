@@ -25,9 +25,12 @@
   var done = {};
   var checked = {};
 
-  // tudo isso fica guardado no navegador, pra recarregar a página não apagar
-  // o que o aluno já fez
-  var KEY = "equilibrista-calculos";
+  // Tudo isso fica guardado no navegador, pra recarregar a página não apagar
+  // o que o aluno já fez, e separado por conta ("equilibrista-calculos:" e o
+  // id de quem entrou): num computador compartilhado, cada aluno vê só o que
+  // ele fez. O open() escolhe a conta.
+  var BASE = "equilibrista-calculos";
+  var KEY = BASE;
 
   function round2(n) { return Math.round(n * 100) / 100; }
 
@@ -373,9 +376,25 @@
     groups().forEach(function (g) { if (c[g] === true) checked[g] = true; });
   }
 
-  load();
+  // Abre o exercício de quem entrou, com o que ficou guardado na conta dele.
+  // O que foi feito antes de existir o login (guardado sem conta) passa pra
+  // primeira conta que entrar neste navegador.
+  function open(userId) {
+    KEY = BASE + ":" + userId;
+    text = {};
+    done = {};
+    checked = {};
+    try {
+      if (localStorage.getItem(KEY) === null && localStorage.getItem(BASE) !== null) {
+        localStorage.setItem(KEY, localStorage.getItem(BASE));
+        localStorage.removeItem(BASE);
+      }
+    } catch (err) {}
+    load();
+  }
 
   global.Exercise = {
+    open: open,
     yearsOf: yearsOf,
     sheetOf: sheetOf,
     diffOf: diffOf,

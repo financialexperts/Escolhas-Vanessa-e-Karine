@@ -20,9 +20,21 @@
     <a class="brand" href="index.html" aria-label="Recarregar a página">
       <img class="brand__logo brand__logo--light" src="frontend/img/finexperts-preto.png" alt="Financial Experts">
       <img class="brand__logo brand__logo--dark" src="frontend/img/financial-experts-branco.png" alt="Financial Experts">
-      <span class="brand__sep" aria-hidden="true"></span>
-      <span class="brand__name">Escolhas - Vanessa e Karine</span>
     </a>
+    <span class="brand__sep" aria-hidden="true"></span>
+
+    <!-- as abas do sistema: a mesma lista nas duas páginas, com a da página
+         aberta marcada no aria-current -->
+    <nav class="tabs" aria-label="Atividades">
+      <a class="tabs__link fx" href="index.html" aria-current="page"><span data-icon="balanca"></span><span class="tabs__text">Vanessa e Karine</span></a>
+      <a class="tabs__link fx" href="dinheiro-no-tempo.html"><span data-icon="ampulheta"></span><span class="tabs__text">Seu dinheiro no tempo</span></a>
+    </nav>
+
+    <!-- quem entrou e o botão de sair (session.js) -->
+    <div class="userbox" id="userbox" hidden>
+      <span class="userbox__name" id="userbox-name"></span>
+      <button class="btn btn--ghost glass btn--sm" id="btn-logout" type="button">Sair</button>
+    </div>
 
     <button class="iconbtn glass" id="tema" type="button" aria-label="Alternar tema claro e escuro" title="Alternar tema claro e escuro">
       <svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
@@ -32,6 +44,18 @@
 </header>
 
 <main class="wrap">
+
+  <!-- ============ O LOGIN ============ -->
+  <!-- até alguém entrar, o session.js mostra uma destas telas no lugar do
+       exercício; a de entrar / criar conta é montada pelo auth.js -->
+  <section id="view-loading" class="loading">
+    <div class="spinner" aria-hidden="true"></div>
+    <p>Carregando…</p>
+  </section>
+  <section id="view-setup" class="panel" hidden></section>
+  <section id="view-auth" class="panel auth" hidden></section>
+
+  <div id="view-app" hidden>
 
   <!-- ============ A VANESSA, A KARINE E O PONTO DE PARTIDA ============ -->
   <!-- os valores vêm de backend/js/scenario.js e as falas do balão do app.js;
@@ -85,7 +109,6 @@
     </div>
   </section>
 
-  <!-- ============ AS DECISÕES ============ -->
   <!-- os medidores grudam no alto só dentro desta seção: quando o resultado
        aparece embaixo, eles saem junto com as decisões -->
   <section class="sim" aria-labelledby="dc-title">
@@ -187,6 +210,8 @@
     </div>
   </section>
 
+  </div>
+
 </main>
 
 <footer>
@@ -204,6 +229,9 @@
   </button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="frontend/js/config.js"></script>
+<script src="frontend/js/supabaseClient.js"></script>
 <!-- os dados vêm antes: os módulos do frontend leem deles assim que carregam -->
 <script src="backend/js/scenario.js"></script>
 <script src="backend/js/decisions.js"></script>
@@ -216,6 +244,9 @@
 <script src="frontend/js/sheet.js"></script>
 <script src="frontend/js/timeline.js"></script>
 <script src="frontend/js/result.js"></script>
+<script src="frontend/js/auth.js"></script>
+<script src="frontend/js/ui.js"></script>
+<script src="frontend/js/session.js"></script>
 <script src="frontend/js/app.js"></script>
 </body>
 </html>

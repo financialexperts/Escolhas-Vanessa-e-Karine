@@ -18,3 +18,7 @@ _backup-*.zip
 # a planilha do professor é o gabarito do exercício: fica só no computador
 # (o repositório é público e, com o GitHub Pages, ela ficaria no site)
 Escolhas Karine e Vanessa - PROFESSOR.xlsx
+
+# o sistema do Fluxo de Caixa, guardado aqui só de referência (o login veio
+# dele): é outro repositório, com o próprio git
+Fluxo de Caixa/
