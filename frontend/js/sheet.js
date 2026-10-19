@@ -376,8 +376,8 @@
   var SINAIS = [
     { s: "+", nome: "mais" },
     { s: "−", nome: "menos" },
-    { s: "×", nome: "vezes" },
-    { s: "÷", nome: "dividido por" },
+    { s: "*", nome: "vezes" },
+    { s: "/", nome: "dividido por" },
     { s: "(", nome: "abre parênteses" },
     { s: ")", nome: "fecha parênteses" },
     { s: "%", nome: "por cento" },
