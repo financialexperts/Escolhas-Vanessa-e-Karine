@@ -405,8 +405,9 @@
     barra.addEventListener("click", handleSinal);
 
     if (global.visualViewport) {
-      global.visualViewport.addEventListener("resize", posicionarSinais);
-      global.visualViewport.addEventListener("scroll", posicionarSinais);
+      // o teclado abriu ou mudou de tamanho: a célula pode ter ficado atrás
+      global.visualViewport.addEventListener("resize", function () { posicionarSinais(true); });
+      global.visualViewport.addEventListener("scroll", function () { posicionarSinais(false); });
     }
   }
 
@@ -416,24 +417,25 @@
     return input && root.contains(input) && input.matches("[data-field]") && !input.readOnly ? input : null;
   }
 
-  function syncSinais() {
+  function syncSinais(ajustar) {
     if (!barra) return;
     var aberta = !!(toque && toque.matches && celulaAtiva());
     barra.hidden = !aberta;
     document.documentElement.classList.toggle("com-sinais", aberta);
-    if (aberta) posicionarSinais();
+    if (aberta) posicionarSinais(ajustar);
   }
 
-  // A barrinha fica no pé da parte da tela que sobra acima do teclado. Se a
-  // célula ficou atrás dela, a página sobe o que falta.
-  function posicionarSinais() {
+  // A barrinha fica no pé da parte da tela que sobra acima do teclado. Com
+  // ajustar, se a célula ficou atrás dela, a página sobe o que falta (só
+  // quando o foco chega ou o teclado abre: rolando, quem manda é o aluno).
+  function posicionarSinais(ajustar) {
     if (!barra || barra.hidden) return;
     var vv = global.visualViewport;
     if (!vv) return;
     var topo = vv.offsetTop + vv.height - barra.offsetHeight;
     barra.style.top = topo + "px";
     barra.style.bottom = "auto";
-    var input = celulaAtiva();
+    var input = ajustar && celulaAtiva();
     if (!input) return;
     var falta = input.getBoundingClientRect().bottom + 8 - topo;
     if (falta > 0) global.scrollBy(0, falta);
@@ -459,7 +461,7 @@
   // o foco entrou ou saiu de uma célula; na saída, o foco ainda não chegou
   // no lugar novo, então espera um instante
   function handleFoco() {
-    setTimeout(syncSinais, 0);
+    setTimeout(function () { syncSinais(true); }, 0);
   }
 
   /* ============ medidores grudados no alto ============ */

@@ -489,7 +489,7 @@ button{font:inherit;color:inherit}
 .howto__tip{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);font-size:13.5px;color:var(--ink-soft)}
 .howto__tip code{padding:1px 6px;border-radius:5px;background:var(--surface-2);border:1px solid var(--line);font-family:var(--ff-mono);font-size:12.5px;color:var(--ink);white-space:nowrap}
 .howto__tip strong{font-weight:600;color:var(--ink)}
-/* no toque (celular, tablet) vale a dica sem Enter e sem contas */
+/* no toque (celular, tablet) vale a dica sem Enter e com a barrinha dos sinais */
 .howto__tip--touch{display:none}
 @media (hover:none),(pointer:coarse){
   .howto__tip--mouse{display:none}
@@ -718,6 +718,16 @@ button{font:inherit;color:inherit}
 /* ---------- Aviso (toast) ---------- */
 /* preso no pé da tela, pra aparecer onde o aluno estiver na página */
 @keyframes toastIn{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+/* Os sinais das contas, no celular: enquanto o aluno escreve numa célula, a
+   barrinha fica logo acima do teclado (o sheet.js põe ela no lugar). O
+   scroll-padding deixa a célula com o foco acima dela. */
+.sinais{position:fixed;left:0;right:0;bottom:0;z-index:40;display:flex;gap:6px;padding:6px 8px;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);border-top:1px solid var(--line);box-shadow:0 -10px 24px -20px rgba(39,34,89,.55)}
+.sinais[hidden]{display:none}
+.sinais__btn{flex:1;min-width:0;height:44px;display:grid;place-items:center;padding:0;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface);color:var(--ink);font-family:var(--ff-mono);font-size:19px;font-weight:600;line-height:1;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none;transition:background .1s,transform .1s}
+.sinais__btn:active{background:var(--surface-2);transform:scale(.94)}
+.sinais__btn--igual{background:var(--accent-soft);border-color:var(--accent-ink);color:var(--accent-ink)}
+html.com-sinais{scroll-padding-bottom:72px}
+
 .toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:50;width:min(560px,calc(100% - 32px));display:flex;align-items:flex-start;gap:10px;padding:13px 12px 13px 16px;background:var(--surface);border:1px solid var(--warm);border-radius:var(--radius);box-shadow:var(--shadow)}
 .toast:not([hidden]){animation:toastIn .3s cubic-bezier(.16,1,.3,1)}
 .toast::before{content:"";flex:none;width:15px;height:15px;margin-top:3px;background-color:var(--warm);-webkit-mask:var(--icon-warning) center/contain no-repeat;mask:var(--icon-warning) center/contain no-repeat}
@@ -908,7 +918,7 @@ footer{margin-top:46px;border-top:1px solid var(--line);padding:22px 0 40px;font
   *{transition:none!important;animation:none!important}
 }
 @media print{
-  .topbar,.actions,.steps,.sfoot__btns,.howto__tip,footer,.toast,.bubble{display:none}
+  .topbar,.actions,.steps,.sfoot__btns,.howto__tip,footer,.toast,.bubble,.sinais{display:none}
   .meters{position:static}
   body{background:#fff}
   .card{box-shadow:none}
