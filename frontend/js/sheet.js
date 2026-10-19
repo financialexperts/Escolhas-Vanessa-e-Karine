@@ -362,6 +362,104 @@
     Ex.groups().forEach(syncGroup);
     syncSteps();
     syncMeters();
+    // a célula com o foco pode ter acabado de ficar resolvida (só leitura)
+    syncSinais();
+  }
+
+  /* ============ os sinais das contas, no celular ============ */
+  // O teclado de números do celular não tem os sinais das contas. Enquanto o
+  // aluno escreve numa célula com o dedo, uma barrinha com eles fica logo
+  // acima do teclado: tocar num sinal escreve ele onde está o cursor, e o
+  // "=" põe o resultado da conta na célula, como o Enter (na célula vazia,
+  // ele só começa a conta, do jeito da planilha). Os botões não tiram o foco
+  // da célula, pro teclado não fechar.
+  var SINAIS = [
+    { s: "+", nome: "mais" },
+    { s: "−", nome: "menos" },
+    { s: "×", nome: "vezes" },
+    { s: "÷", nome: "dividido por" },
+    { s: "(", nome: "abre parênteses" },
+    { s: ")", nome: "fecha parênteses" },
+    { s: "%", nome: "por cento" },
+    { s: "=", nome: "resultado da conta" }
+  ];
+  var toque = global.matchMedia ? global.matchMedia("(hover: none), (pointer: coarse)") : null;
+  var barra = null;
+
+  function montarSinais() {
+    barra = document.createElement("div");
+    barra.className = "sinais";
+    barra.setAttribute("role", "toolbar");
+    barra.setAttribute("aria-label", "Sinais das contas");
+    barra.hidden = true;
+    barra.innerHTML = SINAIS.map(function (x) {
+      return '<button class="sinais__btn' + (x.s === "=" ? " sinais__btn--igual" : "") + '" type="button" tabindex="-1" ' +
+        'data-sinal="' + x.s + '" aria-label="' + x.nome + '">' + x.s + "</button>";
+    }).join("");
+    document.body.appendChild(barra);
+
+    // sem isso, o toque no botão tira o foco da célula e o teclado fecha
+    function segurar(e) { if (e.target.closest("[data-sinal]")) e.preventDefault(); }
+    barra.addEventListener("pointerdown", segurar);
+    barra.addEventListener("mousedown", segurar);
+    barra.addEventListener("click", handleSinal);
+
+    if (global.visualViewport) {
+      global.visualViewport.addEventListener("resize", posicionarSinais);
+      global.visualViewport.addEventListener("scroll", posicionarSinais);
+    }
+  }
+
+  // a célula em aberto que está com o foco, ou null
+  function celulaAtiva() {
+    var input = document.activeElement;
+    return input && root.contains(input) && input.matches("[data-field]") && !input.readOnly ? input : null;
+  }
+
+  function syncSinais() {
+    if (!barra) return;
+    var aberta = !!(toque && toque.matches && celulaAtiva());
+    barra.hidden = !aberta;
+    document.documentElement.classList.toggle("com-sinais", aberta);
+    if (aberta) posicionarSinais();
+  }
+
+  // A barrinha fica no pé da parte da tela que sobra acima do teclado. Se a
+  // célula ficou atrás dela, a página sobe o que falta.
+  function posicionarSinais() {
+    if (!barra || barra.hidden) return;
+    var vv = global.visualViewport;
+    if (!vv) return;
+    var topo = vv.offsetTop + vv.height - barra.offsetHeight;
+    barra.style.top = topo + "px";
+    barra.style.bottom = "auto";
+    var input = celulaAtiva();
+    if (!input) return;
+    var falta = input.getBoundingClientRect().bottom + 8 - topo;
+    if (falta > 0) global.scrollBy(0, falta);
+  }
+
+  function escrever(input, s) {
+    var ini = input.selectionStart == null ? input.value.length : input.selectionStart;
+    var fim = input.selectionEnd == null ? ini : input.selectionEnd;
+    input.setRangeText(s, ini, fim, "end");
+    // passa pelo mesmo caminho do que o aluno digita (handleInput)
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+
+  function handleSinal(e) {
+    var b = e.target.closest("[data-sinal]");
+    var input = celulaAtiva();
+    if (!b || !input) return;
+    var s = b.getAttribute("data-sinal");
+    if (s === "=" && input.value.trim()) completar(input.getAttribute("data-field"), true);
+    else escrever(input, s);
+  }
+
+  // o foco entrou ou saiu de uma célula; na saída, o foco ainda não chegou
+  // no lugar novo, então espera um instante
+  function handleFoco() {
+    setTimeout(syncSinais, 0);
   }
 
   /* ============ medidores grudados no alto ============ */
@@ -540,11 +638,14 @@
   function mount(container, changeCallback) {
     root = container;
     onChange = changeCallback || null;
+    montarSinais();
     render();
     root.addEventListener("click", handleClick);
     root.addEventListener("input", handleInput);
     root.addEventListener("focusout", handleBlur);
     root.addEventListener("keydown", handleKey);
+    root.addEventListener("focusin", handleFoco);
+    root.addEventListener("focusout", handleFoco);
 
     document.getElementById("meter-ok-max").textContent = String(Ex.counts().total);
     document.getElementById("meter-dec-max").textContent = String(Catalog.list.length);
